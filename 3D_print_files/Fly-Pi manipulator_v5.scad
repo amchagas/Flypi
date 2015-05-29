@@ -4,7 +4,7 @@ wall = 3;
 
 X_range = 44; // Length(70) - B_X(20) - 2*wall(6) = 44
 Y_range = 35; // Width(70) - C_Y(23) - 4*wall(12) = 38
-Z_range = 15; // C_Topheight(40) - D_Z(12) - 2*Wall(6) = 22
+Z_range = 30; // C_Topheight(40) - D_Z(12) - 2*Wall(6) = 22
 
 Sliding_Gap = 0.1;
 
@@ -155,7 +155,7 @@ C_Y = 23;
 C_X = B_X-2*(wall+gap);
 C_Z_bottom = 12;
 D_Z = 10;
-D_Z_extra = 10;
+D_Z_extra = 5;
 C_Z_top = Z_range + 2*wall + D_Z + D_Z_extra;
 C_Z = C_Z_bottom + C_Z_top;
 
