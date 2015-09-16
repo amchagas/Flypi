@@ -30,11 +30,11 @@ except ImportError:
 class flypiApp:
     #use these flags to make whole pieces of the GUI disappear
     cameraFlag = 1       
-    ringFlag = 0#1
+    ringFlag = 1
     led1Flag = 0#1
     led2Flag = 0
-    matrixFlag = 0#1    
-    peltierFlag= 0   
+    matrixFlag = 1#1    
+    peltierFlag= 1   
     protocolFlag = 1
     quitFlag = 1
     
@@ -63,8 +63,8 @@ class flypiApp:
     ringZapAdd="52000"
     ringRedAdd="49000"
     ringGreenAdd="50000"
-    ringBlueAdd="51000"
-    ringBrightAdd="46000"
+    ringBlueAdd="46000"
+    ringAllAdd="51000"
     ringRotAdd="47500"
     
     ##PELTIER##
@@ -90,11 +90,11 @@ class flypiApp:
         row2Frame = tk.Frame(master=frame,bd=2,relief="ridge")
         row3Frame = tk.Frame(master=frame,bd=2,relief="ridge")
         
-        ##create variables for the scales
+
         #self.var=0
         if serialAvail==True:
             #self.ser = serial.Serial('/dev/ttyACM0', 115200) # for Arduino Uno from RPi
-            self.ser = serial.Serial('/dev/ttyUSB0', 115200, timeout = 0.2) # for Arduino Nano from RPi                         
+            self.ser = serial.Serial('/dev/ttyUSB0', 115200) # for Arduino Nano from RPi                         
 
         ##show the pieces of the GUI 
         ##depending on which flags are on (see above): 
@@ -142,7 +142,7 @@ class flypiApp:
                              ringOnAdd=self.ringOnAdd,ringOffAdd=self.ringOffAdd,
                              ringZapAdd=self.ringZapAdd,redAdd=self.ringRedAdd,
                              greenAdd=self.ringGreenAdd,blueAdd=self.ringBlueAdd,
-                             brightAdd=self.ringBrightAdd,rotAdd=self.ringRotAdd,ser=self.ser) 
+                             allAdd=self.ringAllAdd,rotAdd=self.ringRotAdd,ser=self.ser) 
 
 
         if self.matrixFlag==1:
@@ -205,7 +205,7 @@ class Ring:
     def __init__(self,parent="none",label="none",ser="",protFrame="",
                  ringOnAdd="",ringOffAdd="",ringZapAdd="",
                  greenAdd="",redAdd="",blueAdd="",
-                 brightAdd="",rotAdd=""):
+                 allAdd="",rotAdd=""):
         
        
         #self.label=label 
@@ -217,7 +217,7 @@ class Ring:
         self.greenAdd=greenAdd
         self.redAdd=redAdd
         self.blueAdd=blueAdd
-        self.brightAdd=brightAdd
+        self.allAdd=allAdd
         self.rotAdd=rotAdd
         
         
@@ -225,12 +225,12 @@ class Ring:
         ringGreenVar = tk.IntVar()                        
         ringRedVar = tk.IntVar()                    
         ringBlueVar = tk.IntVar()                    
-        ringBrightVar = tk.IntVar()
+        ringAllVar = tk.IntVar()
         ringRotVar = tk.IntVar()
         
         
     ############callbacks for ring sliders
-        def GreenUpdate(self,ser=self.ser,address1=self.greenAdd):
+        def greenUpdate(self,ser=self.ser,address1=self.greenAdd):
             address=int(address1)
             output = address+ringGreenVar.get()
             output=str(output)+"*"
@@ -238,28 +238,32 @@ class Ring:
             ser.write(output.encode("utf-8"))
         
         
-        def RedUpdate(self,ser=self.ser,address1=self.redAdd):
+        def redUpdate(self,ser=self.ser,address1=self.redAdd):
             address=int(address1)
             output = address+ringRedVar.get()
             output=str(output)+"*"
             print("red hue: " +output[2:-1])
             ser.write(output.encode("utf-8"))
 
-        def BlueUpdate(self,ser=self.ser,address1=self.blueAdd):
+        def blueUpdate(self,ser=self.ser,address1=self.blueAdd):
             address=int(address1)
             output = address+ringBlueVar.get()
             output=str(output)+"*"
-            print("blue hue: " + output[2:-1])
+            print("blue hue: " +output[2:-1])
             ser.write(output.encode("utf-8"))
 
-        def BrightUpdate(self,ser=self.ser,address1=brightAdd):
+        def allUpdate(self,ser=self.ser,address1=self.allAdd):
             address=int(address1)
-            output = address+ringBrightVar.get()
+            output = ringAllVar.get()	
+            ringBlueVar.set(output)
+            ringGreenVar.set(output)
+            ringRedVar.set(output)
+            output=address+ringAllVar.get()
             output=str(output)+"*"
-            print("ring Bright: "+ output[2:-1])
+            print("ring all: "+ output[2:-1])
             ser.write(output.encode("utf-8"))
         
-        def RotUpdate(self,ser=self.ser,address=rotAdd):
+        def rotUpdate(self,ser=self.ser,address=self.rotAdd):
             address=int(address)
             output = address+ringRotVar.get()
             output=str(output)+"*"
@@ -301,32 +305,32 @@ class Ring:
         
         
         self.ringGreen = self.ringSlider(parent=frame2,  text_="Green",                                 
-                                        func=GreenUpdate,
+                                        func=greenUpdate,
                                         fill_="x",
                                         var=ringGreenVar,
                                         rowIndx=0,colIndx=1,sticky="WE",
-                                        from__=100,to__=0,res=1,set_=0)
+                                        from__=255,to__=0,res=1,set_=0)
                    
         self.ringRed = self.ringSlider(parent=frame2,  text_="Red",            
-                                       func=RedUpdate,fill_="x",
+                                       func=redUpdate,fill_="x",
                                        var=ringRedVar,
                                        rowIndx=0,colIndx=2,sticky="WE",
-                                       from__=100,to__=0,res=1,set_=0)
+                                       from__=255,to__=0,res=1,set_=0)
                                        
         self.ringBlue = self.ringSlider(parent=frame2,  text_="Blue",            
-                                        func=BlueUpdate,
+                                        func=blueUpdate,
                                         var=ringBlueVar,fill_="x",
                                         rowIndx=0,colIndx=3,sticky="WE",
-                                        from__=100,to__=0,res=1,set_=0)
+                                        from__=255,to__=0,res=1,set_=0)
 
-        self.ringBright = self.ringSlider(parent=frame2,  text_="Brightness",            
-                                          func=BrightUpdate,fill_="x", 
-                                          var=ringBrightVar,colSpan=1,
+        self.ringAll = self.ringSlider(parent=frame2,  text_="All",            
+                                          func=allUpdate,fill_="x", 
+                                          var=ringAllVar,colSpan=1,
                                           rowIndx=0,colIndx=4,sticky="WE",
                                           from__=255,to__=0,res=1,set_=0)
 
         self.ringRot = self.ringSlider(parent=frame2,  text_="Rotate",
-                                       func=RotUpdate,colSpan=2,
+                                       func=rotUpdate,colSpan=2,delay=1000,
                                        var=ringRotVar,orient_="vertical",
                                        rowIndx=0,colIndx=5,fill_="x",
                                        from__=100,to__=-100,res=5,set_=0)
@@ -343,14 +347,14 @@ class Ring:
     def ringSlider(self,parent="none",  text_="empty",side="right",          
                    func="", var="",color="black",fill_="x",
                    rowIndx=1,colIndx=0,sticky="",orient_="vertical",
-                   colSpan=1,
+                   colSpan=1,delay=300,
                    from__=100,to__=0,res=1,set_=0):
         
         frame_loc=tk.Frame(master=parent)
         Label = tk.Label(master=frame_loc,text=text_,fg=color)
         Label.pack(fill=fill_)       
         #Label.grid(row=rowLabel,column=colIndx,columnspan=colSpan)        
-        Slider = tk.Scale(master=frame_loc,
+        Slider = tk.Scale(master=frame_loc,repeatdelay=delay,
                           from_=from__,to=to__,resolution=res,
                           command=func,variable=var,orient=orient_)
         Slider.set(set_)
@@ -591,26 +595,30 @@ class Protocol:
             
             protMatLabel=tk.Label(master=protFrame,text="MATRIX:")
             protMatLabel.grid(row=4,column=0)
-            matMods =[ ("ON", flypiApp.matOnAdd,matV1),
-                        ("OFF", flypiApp.matOffAdd,matV1),
+            matMods =[ ("OFF", flypiApp.matOffAdd,matV1),                      
                         ("PATT1", flypiApp.matPat1Add,matV1),
                         ("PATT2", flypiApp.matPat2Add,matV1),
-                        ("ON", flypiApp.matOnAdd,matV2),
+                        ("PATT3", flypiApp.matOnAdd,matV1),
+                        
                         ("OFF", flypiApp.matOffAdd,matV2),
                         ("PATT1", flypiApp.matPat1Add,matV2),
                         ("PATT2", flypiApp.matPat2Add,matV2),
-                        ("ON", flypiApp.matOnAdd,matV3),
+                        ("PATT3", flypiApp.matOnAdd,matV2),
+                        
                         ("OFF", flypiApp.matOffAdd,matV3),
                         ("PATT1", flypiApp.matPat1Add,matV3),
                         ("PATT2", flypiApp.matPat2Add,matV3),
-                        ("ON", flypiApp.matOnAdd,matV4),
+                        ("PATT3", flypiApp.matOnAdd,matV3),                        
+                        
                         ("OFF", flypiApp.matOffAdd,matV4),
                         ("PATT1", flypiApp.matPat1Add,matV4),
                         ("PATT2", flypiApp.matPat2Add,matV4),
-                        ("ON", flypiApp.matOnAdd,matV5),
+                        ("PATT3", flypiApp.matOnAdd,matV4),                        
                         ("OFF", flypiApp.matOffAdd,matV5),
                         ("PATT1", flypiApp.matPat1Add,matV5),
-                        ("PATT2", flypiApp.matPat2Add,matV5),]
+                        ("PATT2", flypiApp.matPat2Add,matV5),
+                        ("PATT3", flypiApp.matOnAdd,matV5),]
+
 #            row1=1
 #            column1=1
             buttonsFrame=tk.Frame(master=protFrame,bd=3)
@@ -898,9 +906,7 @@ class Matrix:
         self.matrixLabel = tk.Label(master=frame1,text = self.label)
         self.matrixLabel.pack(side="top")#grid(row = 0, column = 0,sticky="NW")
         
-        self.matrixOnButt = self.MatButton(parent=frame1,side="top",
-                                      buttText="ON",color="green",
-                                      func=self.matrixOn,fill="x")
+       
                   
         self.matrixOffButt = self.MatButton(parent=frame1,side="top",
                                             buttText="OFF",color="red",
@@ -913,12 +919,16 @@ class Matrix:
         self.matrixPat2Butt = self.MatButton(parent=frame1,side="top",
                                       buttText="PATTERN 2",color="black",
                                       func=self.matrixPattern2,fill="x")
+        
+        self.matrixPat3Butt = self.MatButton(parent=frame1,side="top",
+                                      buttText="PATTERN3",color="black",
+                                      func=self.matrixPattern3,fill="x")
 
         frame4=tk.Frame(master=frame1)
         
         self.matrixBrightLabel=tk.Label(master=frame4,text="Brightness")
         self.matrixBrightLabel.pack()
-        self.matrixBright = tk.Scale(master=frame4,from_=0, to=255,
+        self.matrixBright = tk.Scale(master=frame4,from_=15, to=0,
                                      orient="vertical",
                                      var=matBrightVar, command=matrixUpdate,
                                      width=15,length=90)
@@ -937,10 +947,7 @@ class Matrix:
         button.pack(side=side,fill=fill)#grid(row=rowIndx,column=colIndx,columnspan=colSpan);
         
         
-    def matrixOn(self):
-        output=str(self.onAdd)+"*"
-        print ("matrix on " + output)
-        self.ser.write(output.encode("utf-8"))
+    
         
     def matrixOff(self):
         output=str(self.offAdd)+"*"
@@ -956,26 +963,34 @@ class Matrix:
         output=str(self.pat2Add)+"*"
         print("matrix pattern2 "+ output )
         self.ser.write(output.encode("utf-8"))
+
+    def matrixPattern3(self):
+        output=str(self.onAdd)+"*"
+        print ("matrix pattern3 " + output)
+        self.ser.write(output.encode("utf-8"))
     
     ################PELTIER
 class Peltier:
     def __init__(self,parent="none",label="",ser="",
                  onAdd="",offAdd="",tempAdd=""):
         import tkinter as tk 
-        
+        self.onAdd=onAdd
+        self.offAdd=offAdd
         self.peltParent=parent
         self.ser=ser
         
         self.peltTempArd=tk.StringVar()    
         peltTempVar=tk.IntVar()
         
-        self.peltGetTempArd()
+        
 
         def peltSetTemp(self):
             tempVal=peltTempVar.get()
             tempVal=tempVal+int(tempAdd)
+            tempVal=str(tempVal)+"*"
             print(tempVal)
-            ser.write(str(tempVal)+"*")
+            ser.write(tempVal.encode("utf-8"))
+
         frame1=tk.Frame(master=self.peltParent)
         frame1.grid(row=0,column=0,sticky="NW")    
         frame2=tk.Frame(master=self.peltParent)
@@ -1005,35 +1020,37 @@ class Peltier:
         
         self.peltTemp = tk.Scale(master=frame2,
                                     from_=37, to=15,resolution=1,
-                                    orient="vertical",repeatinterval=300,
+                                    orient="vertical",repeatinterval=700,
                                      variable=peltTempVar, command=peltSetTemp)
         self.peltTemp.set(str(25.0))
         self.peltTemp.pack(side="top")
     
-   
+        self.peltGetTempArd()
    
                           
     def peltOn(self):
         print("peltier on")
-        #print(peltTempVar)
-        #ser
+        output=str(self.onAdd)+"*"
+        self.ser.write(output.encode("utf-8"))
+        #tempVal=peltTempVar.get()
+        #tempVal=tempVal+int(tempAdd)
+        #tempVal=str(tempVal)+"*"
+        #ser.write(tempVal.encode("utf-8"))
+
     def peltOff(self):
         print("peltier off")
-        #print(peltSetTemp)
-        #ser
+        output=str(self.offAdd)+"*"
+        self.ser.write(output.encode("utf-8"))
+
 
     def peltGetTempArd(self):
-        self.peltParent.after(900, self.peltGetTempArd)
-        #print("func")
+        self.peltParent.after(700, self.peltGetTempArd)
+        getTemp=str(99)+"*"
+        self.ser.write(getTemp.encode("utf-8"))
         test=self.ser.inWaiting()
-        print(type(test))
         if test > 0:
-            print("working")
             dummie=self.ser.readline() 
             self.peltTempArd.set(dummie)
-        #    print ("temperature: " + dummie)
-#        else:
-#            print("nothing to read")
         
     
 
