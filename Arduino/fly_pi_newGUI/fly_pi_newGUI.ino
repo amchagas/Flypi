@@ -21,7 +21,7 @@
   int peltierHeatPin1 = 3;//12
   int peltierCoolPin1 = 2;//8
   int tempSensorPin = A7;//A5
-  
+  int startFlag = 0;
   //variables needed for peripherical functions
   //ring
   int ring_nPixels = 12;
@@ -40,7 +40,7 @@
   float newTemp = 0;
   unsigned long time1 = 0;
   unsigned long time2 = 0;
-
+  //string incomingData1='';
   //*********************************//
   //int stimDurLight = 6000; //time in milliseconds
   //int stimDurHeat = 30000;
@@ -48,9 +48,9 @@
   //int numOfTrials = 5;
   //float coldTemp = 19.0;//temperature in celsius
   //float hotTemp = 29.0; //temperature in celsius
-  float TempTol = 0.3; // tolerance 
+  float TempTol = 0.5; // tolerance 
   float highLimit = 40;
-  float lowLimit = 11;
+  float lowLimit = 13;
 
   float coldTempEmergency = 16.0;//temperature in celsius
   float hotTempEmergency = 40.0; //temperature in celsius
@@ -85,7 +85,9 @@ matrixPattern2[] =
 void setup()
 { //start serial port
   Serial.begin(115200);
+  //Serial.print("flushing");
   Serial.flush();
+  //Serial.println("...done.");
   //set digital pin modes
   pinMode(LED1Pin, OUTPUT); 
   pinMode(LED2Pin, OUTPUT); 
@@ -103,17 +105,37 @@ void setup()
   //tempToAnalog = 255/((hotTemp-coldTemp)+20);
 
   //  initialize NeoPixel library (LED Ring).
-  pixels.begin(); 
+  pixels.begin();
+//  //set all pixels to 0
+//  for(int i=0;i<ring_nPixels;i++){
+//       Serial.println("turning pixels off");
+//       pixels.setPixelColor(i, pixels.Color(0,0,0));
+//       //update ring hardware
+//  pixels.show();}//end for
+ 
   // pass in the address for LED Matrix
   matrix.begin(0x70);
+  matrix.clear();
   matrix.setBrightness(0); 
-}
+  matrix.writeDisplay();
+  
+}//end void setup
   
   
 
 
 void loop(){ 
-
+//  if (startFlag==0){
+//    while(incomingData != 99){
+//      if(Serial.available() > 0) {
+//        //store data into a variable
+//        incomingData = Serial.parseInt();
+//        Serial.println(incomingData);
+//        //Serial.println(incomingData);
+//  }//end if serial available
+//    }//end while
+//    Serial.println("starting flypi");
+//   startFlag=1; }//end if startflag=0
 
   if(Serial.available() > 0) {
     //store data into a variable
@@ -132,14 +154,19 @@ void loop(){
           digitalWrite (peltierEnablePin,LOW);
           digitalWrite(peltierHeatPin1,LOW);
           digitalWrite(peltierCoolPin1,LOW);
+          digitalWrite(RedGBPin,LOW);
+          digitalWrite(RGreenBPin,LOW);
+          digitalWrite(RGBluePin,LOW);
           peltOn=0; 
           newTemp=temperature; 
       }//end if temperature >=...
     }//end if incomingData==99
-      if(incomingData==31){Serial.println("led1on");}
-      if(incomingData==32){Serial.println("led1off");}
-      if(incomingData==35){Serial.println("led2on");}
-      if(incomingData==36){Serial.println("led1off");}
+      //LED1
+      if(incomingData==31){digitalWrite(LED1Pin,HIGH);}
+      if(incomingData==32){digitalWrite(LED1Pin,LOW);}
+      //LED2
+      if(incomingData==35){digitalWrite(LED2Pin,HIGH);}
+      if(incomingData==36){digitalWrite(LED2Pin,LOW);}
 
       
 
@@ -175,22 +202,24 @@ void loop(){
           matrix.writeDisplay(); // write changes to the display
          time1=millis();
          time2=time1;
-         while(time2-time1<100){time2=millis();}
-         }}}
+         while(time2-time1<100){time2=millis();}//end while
+         }//end for i
+       }//end for j
+      }//end if incomingData==39
          
       //RING         
       if (incomingData==44){//ring on
           incomingData=0;
+          //Serial.println("ringOn");
           ringOn=1;
-          for(int i=0;i<ring_nPixels;i++){                            
-            pixels.setPixelColor(i, pixels.Color(ringRedHue,ringGreenHue,ringBlueHue));}
+          updateRing(ringRedHue,ringGreenHue,ringBlueHue);
           pixels.show();}
       if (incomingData==45){//ring off
           incomingData=0;
           ringOn=0;
-          for(int i=0;i<ring_nPixels;i++){
-            pixels.setPixelColor(i, pixels.Color(0,0,0));}
+          updateRing(0,0,0);
           pixels.show();}
+          
       //PELTIER
       if (incomingData==53){//Peltier on
         digitalWrite(peltierEnablePin,HIGH);
@@ -199,8 +228,13 @@ void loop(){
         digitalWrite(peltierEnablePin,LOW);
         digitalWrite(peltierHeatPin1,LOW);
         digitalWrite(peltierCoolPin1,LOW);
+        digitalWrite(RedGBPin,LOW);
+        digitalWrite(RGreenBPin,LOW);
+        digitalWrite(RGBluePin,LOW);
         peltOn = 0;}      
-                          }
+                          
+                        
+      }//end if incoming data<100
     else{//if incoming data >1000
       //if the incoming data is bigger than 1000
       // we will have "graded values", such as brightness,
@@ -221,7 +255,11 @@ void loop(){
       //MATRIX
       if (address==43){//matrix brightness slider
         //set brightness of the matrix
-        matrix.setBrightness(correction);}
+        //if (correction==0){
+         //matrix.clear();
+         //matrix.writeDisplay();}
+        //else{
+        matrix.setBrightness(correction);}//}
 //      if (address==34){Serial.println("led1zap: ");}
 //      if (address==38){Serial.println("led2zap: ");}
      
@@ -231,56 +269,47 @@ void loop(){
       if(address==49){//ring red
         //set the brightness of the red channel
         ringRedHue=correction;
+        updateRing(ringRedHue,ringGreenHue,ringBlueHue);
         if(ringOn==1){//if the ring is on
-        //update the pixels
-        for(int i=0;i<ring_nPixels;i++){
-          pixels.setPixelColor
-        (i, pixels.Color(ringRedHue,ringGreenHue,ringBlueHue));}
           //and show the updat
-          pixels.show();}}
+          pixels.show();}//end if ringOn==1
+        }//end if address==49
 
 
       if (address==50){//ring green
         //set the brightness of the green channel          
         ringGreenHue=correction;
-    
+        updateRing(ringRedHue,ringGreenHue,ringBlueHue);
         if(ringOn==1){
-        for(int i=0;i<ring_nPixels;i++){
-          pixels.setPixelColor
-        (i, pixels.Color(ringRedHue,ringGreenHue,ringBlueHue));}
           pixels.show();}}
           
       if (address==46){//ring blue
         ringBlueHue=correction;
-        if(ringOn==1){
-          for(int i=0;i<ring_nPixels;i++){
-            pixels.setPixelColor
-            (i, pixels.Color(ringRedHue,ringGreenHue,ringBlueHue));}
+          updateRing(ringRedHue,ringGreenHue,ringBlueHue);
+        if(ringOn==1){      
           pixels.show();}}
       if (address==51){//ring all together
         ringBlueHue=correction;
         ringGreenHue=correction;
         ringRedHue=correction;
-        if(ringOn==1){
-          for(int i=0;i<ring_nPixels;i++){
-            pixels.setPixelColor(i, pixels.Color(ringRedHue,ringGreenHue,ringBlueHue));}
-          pixels.show();}}
+          updateRing(ringRedHue,ringGreenHue,ringBlueHue);
+        if(ringOn==1){pixels.show();}}
+        
       if (address==52){//ring zap
-        for(int i=0;i<ring_nPixels;i++){
-            pixels.setPixelColor(i, pixels.Color(ringRedHue,ringGreenHue,ringBlueHue));}
+          updateRing(ringRedHue,ringGreenHue,ringBlueHue);
           pixels.show();
           //measure time without blocking the arduino board
           time1=millis();
           time2=time1;
           while(time2-time1<correction){time2=millis();}
           //loop through all pixels in ring to update their colours
-          for(int i=0;i<ring_nPixels;i++){
-            pixels.setPixelColor(i, pixels.Color(0,0,0));}
+          updateRing(0,0,0);
           //update ring hardware
           pixels.show();
         }
      
-      if (address==47){//ring rotation}
+      if (address==47){
+      //ring rotation
         time1=millis();
         time2=time1;
         while(time2-time1<1000){
@@ -301,7 +330,7 @@ void loop(){
           delay(correction-450);
         }//end if correction>500
         
-        else{
+        if(correction<500){
           for(int i=ring_nPixels;i>=0;i=i-2){
             pixels.setPixelColor(i, pixels.Color(0,0,0));
             if(i>0){pixels.setPixelColor(i+1,pixels.Color(ringRedHue,ringGreenHue,ringBlueHue));}//end if
@@ -328,11 +357,13 @@ void loop(){
       if(address==55){
         newTemp=correction;}
         //temperature=checkTemp(tempSensorPin);
-        //HoldTemp(newTemp,temperature,peltierCoolPin1,peltierHeatPin1);}       
+        //HoldTemp(newTemp,temperature,peltierCoolPin1,peltierHeatPin1);       
       
 //
-    }           
-}//end void loop
+}//end else incomingData>1000
+    }//end void loop
+               
+
 
 
 // function to get the temperature in °C by reading the AD22100 output
@@ -372,7 +403,7 @@ float HoldTemp(float finalTemp,int tempSensorPin,
        analogWrite(RedGBPin,255);
        analogWrite(RGreenBPin,0);
        analogWrite(RGBluePin,0);
-     }
+     }//end if temperature<finalTemp
      if (temperature>finalTemp+TempTol){
        //digitalWrite(peltierEnablePin,HIGH);
        digitalWrite(peltierHeatPin1,LOW);
@@ -380,18 +411,24 @@ float HoldTemp(float finalTemp,int tempSensorPin,
        analogWrite(RedGBPin,0);
        analogWrite(RGreenBPin,0);
        analogWrite(RGBluePin,255);
-     }
+     }//end if temperature > finaTemp
      if (temperature<finalTemp+TempTol && temperature>finalTemp-TempTol  ){
        //digitalWrite(peltierEnablePin,LOW);
+       //Serial.println("temp reached!");
        digitalWrite(peltierHeatPin1,LOW);
        digitalWrite(peltierCoolPin1,LOW);
        analogWrite(RGreenBPin,255);
        analogWrite(RedGBPin,0);
        analogWrite(RGBluePin,0);
-     
-       if (finalTemp<temperature) { analogWrite(RedGBPin,50); }
-       if (finalTemp>temperature) { analogWrite(RGBluePin,50); }
-     }
+          }// end if temperature < finalTemp && temperature>finalTemp
+       //if (finalTemp<temperature) { analogWrite(RedGBPin,50); }
+       //if (finalTemp>temperature) { analogWrite(RGBluePin,50); }
+
      
 }
 
+void updateRing(int hue1,int hue2,int hue3){
+  //Serial.println("update ring");
+  for(int i=0;i<ring_nPixels;i++){
+  pixels.setPixelColor(i, pixels.Color(hue1,hue2,hue3));} 
+}

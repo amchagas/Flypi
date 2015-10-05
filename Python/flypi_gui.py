@@ -2,8 +2,8 @@
 
 #import libraries
 import tkinter as tk
-
-
+import os
+import time
     
 #import serial module   
 try:
@@ -28,11 +28,14 @@ except ImportError:
         
 
 class flypiApp:
+    #filepath for output:
+    basePath = '/home/pi/Desktop/flypi_output/'
+
     #use these flags to make whole pieces of the GUI disappear
     cameraFlag = 1       
     ringFlag = 1
-    led1Flag = 0#1
-    led2Flag = 0
+    led1Flag = 1#1
+    led2Flag = 1
     matrixFlag = 1#1    
     peltierFlag= 1   
     protocolFlag = 1
@@ -75,13 +78,18 @@ class flypiApp:
     
     #row4Frame = tk.Frame()
     def __init__(self,master,ser=""):
-
-        
-        
+     
            
 #        ##create the mainframe
 #        self.frame = tk.Frame()
 #        self.frame.grid(row=0,column=0,rowspan=1,columnspan=1)
+        
+        #create base path for storing files, temperature curves, etc:
+        if not os.path.exists(self.basePath):
+            #os.chdir('/home/pi/Desktop/')
+            os.mkdir(self.basePath)
+            os.chown(self.basePath,1000,1000)
+    
         ##create the mainframe
         frame = tk.Frame()
         frame.grid(row=0,column=0,rowspan=1,columnspan=1)
@@ -110,12 +118,14 @@ class flypiApp:
 #            protLabel.grid(row=0,column=0,columnspan=2,sticky="NW")
 
         else:
-            self.frameProt=""
-            
+            self.frameProt=""         
+
+        ###camera###
         if self.cameraFlag==1:
             self.frameCam = tk.Frame(master=row2Frame,bd=3)
             self.frameCam.pack(side="top")#.grid(row=2,column=0,columnspan=5,rowspan=1,sticky="NW")            
-            self.Camera=Camera(parent=self.frameCam,label="CAMERA")
+            self.Camera=Camera(parent=self.frameCam,label="CAMERA")       
+
 
         
         if self.led1Flag==1:
@@ -124,9 +134,9 @@ class flypiApp:
             
             self.LED1=LED(parent = self.frameLed1,label="LED 1",
                           onAdd=self.led1OnAdd,offAdd=self.led1OffAdd,
-                          zapDurAdd=self.led1ZapDurAdd,ser = self.ser)            
-            #self.LED1(self.frameLed1)
-            #LED1 = self.basicFrame("LED1",self.led1On,self.led1Off,self.led1Zap)
+                          zapDurAdd=self.led1ZapDurAdd,ser = self.ser) 
+            self.ser.write(self.led1OffAdd.encode('utf-8'))           
+
             
         if self.led2Flag==1:
             self.frameLed2 = tk.Frame(row1Frame,bd=3)
@@ -134,15 +144,16 @@ class flypiApp:
             self.LED2=LED(parent=self.frameLed2, label = "LED 2",
                           onAdd=self.led2OnAdd,offAdd=self.led2OffAdd,
                           zapDurAdd=self.led2ZapDurAdd,ser=self.ser)
-                          
+            self.ser.write(self.led2OffAdd.encode('utf-8'))
         if self.ringFlag==1:
             self.frameRing = tk.Frame(row1Frame,bd=3)
             self.frameRing.grid(row=1,column=0,sticky="NW",columnspan=3,rowspan=1)
-            self.RING = Ring(self.frameRing,label="RING",protFrame=self.frameProt,
+            self.Ring = Ring(self.frameRing,label="RING",protFrame=self.frameProt,
                              ringOnAdd=self.ringOnAdd,ringOffAdd=self.ringOffAdd,
                              ringZapAdd=self.ringZapAdd,redAdd=self.ringRedAdd,
                              greenAdd=self.ringGreenAdd,blueAdd=self.ringBlueAdd,
                              allAdd=self.ringAllAdd,rotAdd=self.ringRotAdd,ser=self.ser) 
+            self.ser.write(self.ringOffAdd.encode('utf-8'))
 
 
         if self.matrixFlag==1:
@@ -152,6 +163,7 @@ class flypiApp:
                                onAdd=self.matOnAdd,offAdd=self.matOffAdd,
                                pat1Add=self.matPat1Add,pat2Add=self.matPat2Add,
                                brightAdd=self.matBrightAdd,ser=self.ser)
+            self.ser.write(self.matOffAdd.encode('utf-8'))
                                
         
             
@@ -165,16 +177,16 @@ class flypiApp:
                                    onAdd=self.peltOnAdd,offAdd=self.peltOffAdd,
                                    tempAdd=self.peltTempAdd,
                                    ser=self.ser)
+            self.ser.write(self.peltOffAdd.encode('utf-8'))
             
             
         
 
-#            self.Protocol=Protocols(parent=self.frameProt,
-#                                    label="PROTOCOLS:")
+
         
         if self.quitFlag ==1:
             self.frameQuit = tk.Frame(master=frame)
-            self.frameQuit.grid(row=5,column=0,sticky="NW")
+            self.frameQuit.grid(row=5,column=2,sticky="NW")
             self.quitAPP(parent=self.frameQuit)
         
         #draw all frames on screen
@@ -182,14 +194,18 @@ class flypiApp:
         row1Frame.grid(row=1,column=0,sticky="NWE",columnspan=1)#pack(side="top",fill="x")        
         row3Frame.grid(row=0,column=2,sticky="NWE")#pack(after=row1Frame,side="right",fill="x")        
         row2Frame.grid(row=0,column=0,sticky="NWE",columnspan=1)#pack(fill="x")        
-        
+        #send starting code to arduino
+        #startCode="99*"
+        #self.ser.write(startCode.encode("utf-8"))
     ######################################## QUIT
     def quitAPP(self,parent="none"):
         ##callback to close the program and close serial port
         def quitNcloseSerial():
             if serialAvail==True:
+                
                 self.ser.flush()
                 self.ser.close()
+
             self.quit.quit()
             
         #self.rowCount=self.rowCount+1
@@ -209,7 +225,7 @@ class Ring:
         
        
         #self.label=label 
-        self.protFrame=protFrame     
+        #self.protFrame=protFrame     
         self.ser=ser
         self.ringOnAdd=ringOnAdd
         self.ringOffAdd=ringOffAdd
@@ -234,7 +250,7 @@ class Ring:
             address=int(address1)
             output = address+ringGreenVar.get()
             output=str(output)+"*"
-            print("green hue: "+ output[2:-1])
+            #print("green hue: "+ output[2:-1])
             ser.write(output.encode("utf-8"))
         
         
@@ -242,14 +258,14 @@ class Ring:
             address=int(address1)
             output = address+ringRedVar.get()
             output=str(output)+"*"
-            print("red hue: " +output[2:-1])
+            #print("red hue: " +output[2:-1])
             ser.write(output.encode("utf-8"))
 
         def blueUpdate(self,ser=self.ser,address1=self.blueAdd):
             address=int(address1)
             output = address+ringBlueVar.get()
             output=str(output)+"*"
-            print("blue hue: " +output[2:-1])
+            #print("blue hue: " +output[2:-1])
             ser.write(output.encode("utf-8"))
 
         def allUpdate(self,ser=self.ser,address1=self.allAdd):
@@ -260,14 +276,14 @@ class Ring:
             ringRedVar.set(output)
             output=address+ringAllVar.get()
             output=str(output)+"*"
-            print("ring all: "+ output[2:-1])
+            #print("ring all: "+ output[2:-1])
             ser.write(output.encode("utf-8"))
         
         def rotUpdate(self,ser=self.ser,address=self.rotAdd):
             address=int(address)
             output = address+ringRotVar.get()
             output=str(output)+"*"
-            print("rotation: " + output[2:-1])
+            #print("rotation: " + output[2:-1])
             ser.write(output.encode("utf-8"))
             
             
@@ -309,25 +325,25 @@ class Ring:
                                         fill_="x",
                                         var=ringGreenVar,
                                         rowIndx=0,colIndx=1,sticky="WE",
-                                        from__=255,to__=0,res=1,set_=0)
-                   
+                                        from__=255,to__=0,res=1,set_=10)
+                 
         self.ringRed = self.ringSlider(parent=frame2,  text_="Red",            
                                        func=redUpdate,fill_="x",
                                        var=ringRedVar,
                                        rowIndx=0,colIndx=2,sticky="WE",
-                                       from__=255,to__=0,res=1,set_=0)
+                                       from__=255,to__=0,res=1,set_=10)
                                        
         self.ringBlue = self.ringSlider(parent=frame2,  text_="Blue",            
                                         func=blueUpdate,
                                         var=ringBlueVar,fill_="x",
                                         rowIndx=0,colIndx=3,sticky="WE",
-                                        from__=255,to__=0,res=1,set_=0)
+                                        from__=255,to__=0,res=1,set_=10)
 
         self.ringAll = self.ringSlider(parent=frame2,  text_="All",            
                                           func=allUpdate,fill_="x", 
                                           var=ringAllVar,colSpan=1,
                                           rowIndx=0,colIndx=4,sticky="WE",
-                                          from__=255,to__=0,res=1,set_=0)
+                                          from__=255,to__=0,res=1,set_=10)
 
         self.ringRot = self.ringSlider(parent=frame2,  text_="Rotate",
                                        func=rotUpdate,colSpan=2,delay=1000,
@@ -363,12 +379,12 @@ class Ring:
         #Slider.grid(row=rowIndx,column=colIndx,columnspan=colSpan)  
         
     def ringOn(self):
-        output=str(self.ringOnAdd)
+        output=str(self.ringOnAdd)+"*"
         print("ring on " + output)
         self.ser.write(output.encode("utf-8"))
         
     def ringOff(self):
-        output=str(self.ringOffAdd)        
+        output=str(self.ringOffAdd)+"*"      
         print("ringOff" + output)
         self.ser.write(output.encode("utf-8"))
         
@@ -864,6 +880,9 @@ class Protocol:
             if flypiApp.cameraFlag==1:
                 print ("recording")
                 ###wait a couple of seconds for the camera to settle
+                Camera.start_recording('my_video.h264')
+                Camera.cam.wait_recording(5)
+                Camera.cam.stop_recording()
                 ###start recording
             #send prot address to arduino and send code to be run
                 
@@ -928,11 +947,11 @@ class Matrix:
         
         self.matrixBrightLabel=tk.Label(master=frame4,text="Brightness")
         self.matrixBrightLabel.pack()
-        self.matrixBright = tk.Scale(master=frame4,from_=15, to=0,
+        self.matrixBright = tk.Scale(master=frame4,from_=16, to=0,
                                      orient="vertical",
                                      var=matBrightVar, command=matrixUpdate,
                                      width=15,length=90)
-                                     
+        matBrightVar.set(1)                            
         self.matrixBright.pack(after=self.matrixBrightLabel,side="left")#grid(row=1,column=5,sticky="N")
         frame4.pack(after=self.matrixLabel,side="right")
 #        self.matrixBrightLabel=tk.Label(master=frame1,text = "brightness")
@@ -978,7 +997,6 @@ class Peltier:
         self.offAdd=offAdd
         self.peltParent=parent
         self.ser=ser
-        
         self.peltTempArd=tk.StringVar()    
         peltTempVar=tk.IntVar()
         
@@ -988,7 +1006,6 @@ class Peltier:
             tempVal=peltTempVar.get()
             tempVal=tempVal+int(tempAdd)
             tempVal=str(tempVal)+"*"
-            print(tempVal)
             ser.write(tempVal.encode("utf-8"))
 
         frame1=tk.Frame(master=self.peltParent)
@@ -1031,11 +1048,9 @@ class Peltier:
     def peltOn(self):
         print("peltier on")
         output=str(self.onAdd)+"*"
+        self.sendFlag=1
         self.ser.write(output.encode("utf-8"))
-        #tempVal=peltTempVar.get()
-        #tempVal=tempVal+int(tempAdd)
-        #tempVal=str(tempVal)+"*"
-        #ser.write(tempVal.encode("utf-8"))
+
 
     def peltOff(self):
         print("peltier off")
@@ -1044,7 +1059,7 @@ class Peltier:
 
 
     def peltGetTempArd(self):
-        self.peltParent.after(700, self.peltGetTempArd)
+        self.peltParent.after(100, self.peltGetTempArd)
         getTemp=str(99)+"*"
         self.ser.write(getTemp.encode("utf-8"))
         test=self.ser.inWaiting()
@@ -1150,13 +1165,22 @@ class Camera:
                             buttText="OFF",color="red",func=self.camOff)
      
 
+        self.camResLabel = tk.Label(master=self.camFrame1,text = " Resolution ")
+        self.camResLabel.pack(fill="x")#grid(row=3, column=0,sticky="WE")
+        self.camResMenu = tk.OptionMenu(self.camFrame1,
+                                       self.resVar,
+                                       '2592x1944','1920x1080','1296x972','1296x730','640x480')
+        self.resVar.set("2592x1944")
+        self.camResMenu.pack(fill="x")#grid(row=4,column=0,columnspan=2,sticky="WE")  
+        self.camResMenu.pack_propagate(flag=False) 
+
 
         
         self.camAWLabel = tk.Label(master=self.camFrame1,text = " White balance ")
         self.camAWLabel.pack(fill="x")#grid(row=3, column=0,sticky="WE")
         self.camAWMenu = tk.OptionMenu(self.camFrame1,
                                        self.camAWVar,
-                                       'auto','green','red','blue','sunlight','cloudy',
+                                       'off','auto','green','red','blue','sunlight','cloudy',
                                        'shade','tungsten','fluorescent','incandescent',
                                        'flash','horizon')
         self.camAWVar.set("auto")
@@ -1189,87 +1213,75 @@ class Camera:
         self.camColEffVar.set("none")
         self.camColEff.pack_propagate(flag=False)
 
-        
-        self.camResLabel = tk.Label(master=self.camFrame1,text = " Resolution ")
-        self.camResLabel.pack(fill="x")#grid(row=3, column=0,sticky="WE")
-        self.camResMenu = tk.OptionMenu(self.camFrame1,
-                                       self.resVar,
-                                       '2592x1944','1920x1080','1296x972','1296x730','640x480')
-        self.resVar.set("2592x1944")
-        self.camResMenu.pack(fill="x")#grid(row=4,column=0,columnspan=2,sticky="WE")  
-        self.camResMenu.pack_propagate(flag=False)    
-
-
-        
 
         self.camFPS=self.camSlider(parent=frame2,  label_="FPS",        
                                    var=self.FPSVar,len=90,
-                                   rowIndx=0,colIndx=0,sticky="",
+                                   rowIndx=1,colIndx=2,sticky="",
                                    orient_="horizontal",
                                    colSpan=1,from__=15,to__=90,res=5,set_=15)            
     
-        self.camBin=self.camSlider(parent=frame2,  label_="BINNING",        
+        self.camBin=self.camSlider(parent=frame2,  label_="Binning",        
                                    var=self.binVar,len=90,
-                                   rowIndx=0,colIndx=1,sticky="",
+                                   rowIndx=0,colIndx=2,sticky="",
                                    orient_="horizontal",
                                    colSpan=1,from__=0,to__=4,res=2,set_=0)
       
 
 
-        self.camSize=self.camSlider(parent=frame2,  label_="Size",        
+        self.camSize=self.camSlider(parent=frame2,  label_="Window size",        
                                    var=self.sizeVar,
-                                   rowIndx=1,colIndx=2,sticky="",
+                                   rowIndx=0,colIndx=0,sticky="",
                                    orient_="horizontal",len=90,
                                    colSpan=1,from__=180,to__=2000,res=20,set_=240) 
 
-        self.camZoon=self.camSlider(parent=frame2,  label_="ZOOM",        
+        self.camZoon=self.camSlider(parent=frame2,  label_="Digi Zoom",        
                                    var=self.zoomVar,len=90,
-                                   rowIndx=1,colIndx=1,sticky="",
+                                   rowIndx=0,colIndx=1,sticky="",
                                    orient_="horizontal",
                                    colSpan=1,from__=1,to__=10,res=1,set_=1.0)
 
         
-        self.camHor=self.camSlider(parent=frame2,  label_="HOR OFFSET",        
+        self.camHor=self.camSlider(parent=frame2,  label_="Horiz. Offset",        
                                    var=self.horVar,len=90,
-                                   rowIndx=2,colIndx=1,sticky="",
+                                   rowIndx=1,colIndx=0,sticky="",
                                    orient_="horizontal",
                                    colSpan=1,from__=1,to__=100,res=5,set_=1)
 
 
-        self.camVer=self.camSlider(parent=frame2,  label_="VER OFFSET",        
+        self.camVer=self.camSlider(parent=frame2,  label_="Verti. Offset",        
                                    var=self.verVar,len=90,
-                                   rowIndx=2,colIndx=2,sticky="",
+                                   rowIndx=1,colIndx=1,sticky="",
                                    orient_="horizontal",
                                    colSpan=1,from__=1,to__=100,res=5,set_=1)       
 
 
         
-        self.camBright=self.camSlider(parent=frame2,  label_="BRIGHTNESS",        
+        self.camBright=self.camSlider(parent=frame2,  label_="Brightness",        
                                    var=self.brightVar,len=90,
-                                   rowIndx=1,colIndx=0,sticky="",
+                                   rowIndx=2,colIndx=0,sticky="",
                                    orient_="horizontal",
                                    colSpan=1,from__=0,to__=100,res=5,set_=50)
 
 
-        self.camCont=self.camSlider(parent=frame2,  label_="CONTRAST",        
+        self.camCont=self.camSlider(parent=frame2,  label_="Contrast",        
                                    var=self.contVar,len=90,
-                                   rowIndx=2,colIndx=0,sticky="",
+                                   rowIndx=2,colIndx=1,sticky="",
                                    orient_="horizontal",
                                    colSpan=1,from__=0,to__=100,res=5,set_=50)       
 
 
              
 
-        self.camExp=self.camSlider(parent=frame2,  label_="EXPOSURE",        
+        self.camExp=self.camSlider(parent=frame2,  label_="Exposure",        
                                    var=self.expVar,len=90,
-                                   rowIndx=3,colIndx=0,sticky="",
+                                   rowIndx=2,colIndx=2,sticky="",
                                    orient_="horizontal",
                                    colSpan=1,from__=-25,to__=25,res=5,set_=0)    
 
         
-        self.camRot=self.camSlider(parent=frame2,  label_="ROTATION",        
+        self.camRot=self.camSlider(parent=frame2,  label_="Rotation",        
                                    var=self.rotVar,len=90,
-                                   rowIndx=0,colIndx=2,sticky="",
+                                   rowIndx=3,colIndx=0,sticky="",
                                    orient_="horizontal",
                                    colSpan=1,from__=0,to__=270,res=90,set_=0)
         
@@ -1356,6 +1368,9 @@ class Camera:
                elif self.camAWVal == "blue":
                    self.cam.awb_mode = "off"
                    self.cam.awb_gains = (0.9,8.0)
+               elif self.camAWVal == "off":
+                   self.cam.awb_mode = "off"
+
                else:
                    self.cam.awb_mode = self.camAWVal 
 
@@ -1530,15 +1545,67 @@ class Camera:
             
     def camRec(self):
         dur=self.TLdur.get()
-        print ("recording for: " +dur+ " secs" )
+        videoPath=flypiApp.basePath+'/videos/'
+        if not os.path.exists(videoPath):
+            #if not, create it:
+            os.makedirs(videoPath)
+            os.chown(videoPath,1000,1000)
+
+        #print ("recording for: " +dur+ " secs" )
+        self.cam.start_recording(videoPath+'video_'+time.strftime('%Y-%m-%d-%H-%M-%S')+'.h264')
+        self.cam.wait_recording(int(dur))
+        self.cam.stop_recording()
+
     def camTL(self):
         dur=self.TLdur.get()
         interval = self.TLinter.get()
-        print("timeLapse:")
-        print("duration " + dur)
-        print("interval "+interval)
+        tlPath=flypiApp.basePath+'/time_lapse/'
+
+        #check to see if the time lapse output folder is present:
+        if not os.path.exists(tlPath):
+            #if not, create it:
+            os.makedirs(tlPath)
+            os.chown(tlPath,1000,1000)
+
+        #get the present time, down to seconds
+        tlFold=time.strftime("%Y-%m-%d-%H-%M-%S")
+
+        #make a new folder to store all time lapse photos
+        os.makedirs(tlPath+tlFold)
+        os.chown(tlPath+tlFold,1000,1000)
+        #os.chdir(tlPath+tlFold)
+        
+        shots=int(int(dur)/int(interval))
+        if shots <= 0:
+            print("something wrong with time specifications!")
+        else:
+            print('time lapse:')
+            print('number of shots: '+ str(shots))
+            for i in range(0,shots):
+                print("TL "+ str(i+1)+"/"+str(shots))
+                self.cam.capture(tlPath+tlFold+"/TL_"+str(i+1)+".jpg")
+                time.sleep(float(interval))
+            print("done.")   
+        
+
+        #print("timeLapse:")
+        #print("duration " + dur)
+        #print("interval "+interval)
+
     def camSnap(self):
-        print("Click!")
+        photoPath=flypiApp.basePath+'/snaps/'
+        #check to see if the snap output folder is present:
+        if not os.path.exists(photoPath):
+            #if not, create it:
+            os.makedirs(photoPath)
+            os.chown(photoPath,1000,1000)
+            
+        #get the present time, down to seconds
+        #print (time.strftime("%Y-%m-%d-%H-%M-%S"))
+        # Camera warm-up time
+        time.sleep(2)
+        self.cam.capture(photoPath+'snap_'+time.strftime("%Y-%m-%d-%H-%M-%S")+'.jpg')
+        
         
 
 
