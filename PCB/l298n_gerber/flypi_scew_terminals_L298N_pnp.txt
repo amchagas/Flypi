@@ -1,0 +1,42 @@
+*Pick And Place List
+*Company=
+*Author=
+*eMail=
+*
+*Project=flypi_scew_terminals_L298N
+*Date=15:10:43
+*CreatedBy=Fritzing 0.9.1b.11.19.8d2d5970658f0bed09c661c9ea9a515b5f40f44c
+*
+*
+*Coordinates in mm, always center of component
+*Origin 0/0=Lower left corner of PCB
+*Rotation in degree (0-360, math. pos.)
+*
+*No;Value;Package;X;Y;Rotation;Side;Name
+1;;THT;10.9409;-41.2941;-90;Bottom;PS LED1-+
+2;;multiwatt15;41.073;-12.3068;0;Bottom;U5
+3;;;24.0792;-30.8733;0;Bottom;Via4
+4;;TO92 [THT];54.949;-38.4365;90;Bottom;trans-LED1
+5;;THT;3.72993;-12.099;180;Bottom;Ring -+s+-
+6;15;THT;60.1179;-38.246;-90;Bottom;R4-15ohm
+7;;THT;18.5609;-41.2941;-90;Bottom;PS LED2 -+
+8;;THT;3.72993;-32.8689;180;Bottom;M+-SS-+
+9;;;50.9016;-30.8733;0;Bottom;Via3
+10;;THT;45.7111;-41.2939;-90;Bottom;Therm+s-
+11;;THT;26.181;-41.2941;-90;Bottom;LED1 +-
+12;;;29.6464;-28.086;-90;Bottom;arduino nano
+13;;THT;55.5459;-12.803;0;Bottom;Peltier +-P+P-
+14;1µF;100 mil [THT, electrolytic];25.8279;-7.76597;0;Bottom;C1
+15;;;51.5112;-29.0445;0;Bottom;Via1
+16;;;50.9016;-18.0717;0;Bottom;Via6
+17;15;THT;60.1179;-25.546;90;Bottom;R5-15Ohm
+18;1µF;100 mil [THT, electrolytic];25.8279;-15.386;0;Bottom;C2
+19;220;THT;14.3979;-15.386;0;Bottom;R1-220ohm
+20;220;THT;14.3979;-10.306;0;Bottom;R3-220ohm
+21;220;THT;14.3979;-12.846;0;Bottom;R2-220ohm
+22;;THT;33.801;-41.2941;-90;Bottom;LED2 -+
+23;1;0603 [SMD];33.0278;-2.68598;0;Top;R1
+24;;THT;16.8949;-4.71795;90;Bottom;RBGs-ss
+25;;TO92 [THT];54.949;-28.2765;90;Bottom;trans-LED2
+26;;;16.764;-43.6749;0;Bottom;Via5
+27;;;44.196;-30.8733;0;Bottom;Via2
