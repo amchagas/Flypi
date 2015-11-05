@@ -1528,7 +1528,7 @@ class Camera:
         print ("cam on")
         res=self.resVar.get()
         size=self.sizeVar.get()
-        self.cam.resolution=(640,480)
+        self.cam.resolution=(2592,1944)
         self.cam.preview_window = (0,0,size,size)
         self.zoomVar.set(1)
         self.horVar.set(0)
