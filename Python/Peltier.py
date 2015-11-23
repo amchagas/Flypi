@@ -1,0 +1,108 @@
+    ################PELTIER
+import tkinter as tk
+import os
+import time
+
+
+class Peltier:
+
+    def __init__(self, parent="none", label="", ser="",
+                 onAdd="", offAdd="", tempAdd="", basePath=""):
+
+        self.onAdd = onAdd
+        self.offAdd = offAdd
+        self.peltParent = parent
+        self.ser = ser
+        self.peltTempArd = tk.StringVar()
+        peltTempVar = tk.IntVar()
+        self.logTemp = tk.IntVar()
+        self.basePath = basePath
+
+        def peltSetTemp(self):
+            tempVal = peltTempVar.get()
+            tempVal = tempVal + int(tempAdd)
+            tempVal = str(tempVal) + "*"
+            ser.write(tempVal.encode("utf-8"))
+
+        frame1 = tk.Frame(master=self.peltParent)
+        frame1.grid(row=0, column=0, sticky="NW")
+        frame2 = tk.Frame(master=self.peltParent)
+        frame2.grid(row=0, column=1, sticky="NW")
+
+        self.peltLabel = tk.Label(master=frame1, text=label)
+        self.peltLabel.pack(side="top")
+        self.peltOnButt = tk.Button(master=frame1, text="ON ", fg="green",
+                                    command=self.peltOn)
+        self.peltOnButt.pack(side="top", fill="x")
+
+        self.peltOffButt = tk.Button(master=frame1, text="OFF", fg="red",
+                                     command=self.peltOff)
+        self.peltOffButt.pack(side="top", fill="x")
+
+        self.peltTempDisLabel = tk.Label(master=frame1, text="temp(C):")
+        self.peltTempDisLabel.pack(side="top")
+
+        self.peltTempDis = tk.Label(master=frame1,
+                                    width=10,
+                                    textvariable=self.peltTempArd)
+
+        self.peltTempDis.pack(side="top")
+
+        self.tempLabel = tk.Label(master=frame2, text="set temp(C)")
+        self.tempLabel.pack(side="top")
+
+        self.peltTemp = tk.Scale(master=frame2,
+                                    from_=37, to=15, resolution=1,
+                                    orient="vertical", repeatinterval=700,
+                                    variable=peltTempVar,
+                                    command=peltSetTemp)
+        self.peltTemp.set(str(25.0))
+        self.peltTemp.pack(side="top")
+        self.peltLog = tk.Checkbutton(master=frame2,
+                                   text="Log temp?",
+                                   variable=self.logTemp,
+                                   onvalue=1, offvalue=0)
+        self.peltLog.pack(side="top")
+        self.peltGetTempArd()
+
+    def peltOn(self):
+        print("peltier on")
+        output = str(self.onAdd) + "*"
+        self.sendFlag = 1
+        self.ser.write(output.encode("utf-8"))
+
+    def peltOff(self):
+        print("peltier off")
+        output = str(self.offAdd) + "*"
+        self.ser.write(output.encode("utf-8"))
+
+    def peltGetTempArd(self):
+        self.peltParent.after(100, self.peltGetTempArd)
+        getTemp = str(99) + "*"
+        self.ser.write(getTemp.encode("utf-8"))
+        test = self.ser.inWaiting()
+        if test > 0:
+            dummie = self.ser.readline()
+            self.peltTempArd.set(dummie)
+        if self.logTemp.get() == 1:
+            #create a folder path to store temperature logs
+            logPath = self.basePath + '/log_temp/'
+            #check if folder exists
+            if not os.path.exists(logPath):
+                #if not, create it:
+                os.makedirs(logPath)
+                os.chown(logPath, 1000, 1000)
+            fileName = "temp_log_" + time.strftime('%Y-%m-%d') + ".txt"
+            #check if the file already exists
+#            os.chdir(basePath)
+            if os.path.isfile(logPath + fileName) == False:
+                #if it does not exist, create it
+                #print("opening file")
+                self.fh = open(logPath + fileName, "w")
+            else:
+                #open file and append to it
+                self.fh = open(logPath + fileName, "a")
+
+            #print("writing to file")
+            self.fh.write(time.strftime('%Y-%m-%d-%H-%M-%S') + "\n")
+            self.fh.write(dummie.decode("utf-8"))
