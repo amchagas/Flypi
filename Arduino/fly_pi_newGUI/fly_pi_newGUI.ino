@@ -375,7 +375,7 @@ float checkTemp(int pinToRead){
   baseLine = analogRead(pinToRead);
   //temps = ((baseLine*(5.0 / 1023.0)) - 1.375) / 0.0225;
   //convert the value into volts
-  volts = (baseLine/1023.0) * 5;
+  volts = (baseLine/1024.0) * 5;
   //convert the volt value into temperature (celsius)
   // the AD22100 has 200°C span (-50 to 150) for 4.5 V
   //therefore we need to subtract -1.375 to compensate 
