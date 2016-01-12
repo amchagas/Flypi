@@ -103,9 +103,8 @@ class LED:
     def ledZap(self):
         time = self.ledZapTime.get()
         if time == "zap in ms":
-            time = 0
+            time = str(10)
             print("you didn't set a value!")
-        time = int(time)
-        time = str(int(self.zapDurAddress) + time)
+        self.ser.write(self.zapDurAddress.encode("utf-8") + "*")
         self.ser.write(time.encode("utf-8") + "*")
         print(self.label + " ZAP for " + time[1:])

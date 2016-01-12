@@ -26,13 +26,13 @@ class flypiApp:
     basePath = '/home/pi/Desktop/flypi_output/'
 
     #use these flags to make whole pieces of the GUI disappear
-    cameraFlag = 1
-    ringFlag = 1
-    led1Flag = 1
-    led2Flag = 1
-    matrixFlag = 1
+    cameraFlag = 0
+    ringFlag = 0
+    led1Flag = 0
+    led2Flag = 0
+    matrixFlag = 0
     peltierFlag = 1
-    protocolFlag = 1
+    protocolFlag = 0
     quitFlag = 1
 
     #############adresses for all arduino components:
@@ -94,18 +94,10 @@ class flypiApp:
 
         ##show the pieces of the GUI
         ##depending on which flags are on (see above):
-        if self.protocolFlag == 1:
-            self.frameProt = tk.Frame(master=row4Frame,
-                                      bd=3,
-                                      relief="ridge")
-            self.frameProt.pack(side="top")
-            self.prot = True
-            #self.protocol = Protocol(parent=self.frameProt, ser=self.ser)
 
-        else:
-            self.frameProt = ""
 
-        ###camera###
+
+        ###CAMERA###
         if self.cameraFlag == 1:
             import Camera
             self.frameCam = tk.Frame(master=row2Frame, bd=3)
@@ -113,7 +105,7 @@ class flypiApp:
             self.Camera = Camera.Camera(parent=self.frameCam,
                                         label="CAMERA",
                                         basePath=self.basePath)
-
+        ###LED1###
         if self.led1Flag == 1:
             import LED
             self.frameLed1 = tk.Frame(row1Frame, bd=3)
@@ -121,27 +113,32 @@ class flypiApp:
 
             self.LED1 = LED.LED(parent=self.frameLed1, label="LED 1",
                           onAdd=self.led1OnAdd, offAdd=self.led1OffAdd,
-                          zapDurAdd=self.led1ZapDurAdd, prot=self.prot,
-                          protFrame=self.frameProt, ser=self.ser)
+                          zapDurAdd=self.led1ZapDurAdd, ser=self.ser,
+                          #prot=self.prot,
+                          #protFrame=self.frameProt,
+                          )
             self.ser.write(self.led1OffAdd.encode('utf-8'))
 
+        ###LED2###
         if self.led2Flag == 1:
             import LED
             self.frameLed2 = tk.Frame(row1Frame, bd=3)
             self.frameLed2.grid(row=0, column=1, sticky="NW")
             self.LED2 = LED.LED(parent=self.frameLed2, label="LED 2",
                           onAdd=self.led2OnAdd, offAdd=self.led2OffAdd,
-                          zapDurAdd=self.led2ZapDurAdd, prot=self.prot,
-                          protFrame=self.frameProt, ser=self.ser)
+                          zapDurAdd=self.led2ZapDurAdd, ser=self.ser,
+                          #prot=self.prot, protFrame=self.frameProt,
+                          )
             self.ser.write(self.led2OffAdd.encode('utf-8'))
 
+        ###RING###
         if self.ringFlag == 1:
             import Ring
             self.frameRing = tk.Frame(row1Frame, bd=3)
             self.frameRing.grid(row=1, column=0, sticky="NW",
                                 columnspan=3, rowspan=1)
             self.Ring = Ring.Ring(self.frameRing, label="RING",
-                             protFrame=self.frameProt,
+                             #protFrame=self.frameProt,
                              ringOnAdd=self.ringOnAdd,
                              ringOffAdd=self.ringOffAdd,
                              ringZapAdd=self.ringZapAdd,
@@ -152,6 +149,7 @@ class flypiApp:
                              rotAdd=self.ringRotAdd, ser=self.ser)
             self.ser.write(self.ringOffAdd.encode('utf-8'))
 
+        ###MATRIX###
         if self.matrixFlag == 1:
             import Matrix
             self.frameMatrix = tk.Frame(row1Frame, bd=3)
@@ -159,10 +157,12 @@ class flypiApp:
             self.Matrix = Matrix.Matrix(parent=self.frameMatrix, label="MATRIX",
                                pat3Add=self.matPat3Add, offAdd=self.matOffAdd,
                                pat1Add=self.matPat1Add, pat2Add=self.matPat2Add,
-                               brightAdd=self.matBrightAdd, prot=self.prot,
-                               protFrame=self.frameProt, ser=self.ser)
+                               brightAdd=self.matBrightAdd,
+                               # prot=self.prot, protFrame=self.frameProt,
+                               ser=self.ser)
             self.ser.write(self.matOffAdd.encode('utf-8'))
 
+        ###PELTIER###
         if self.peltierFlag == 1:
             import Peltier
             self.framePelt = tk.Frame(row3Frame, bd=3)
@@ -176,6 +176,20 @@ class flypiApp:
                                            ser=self.ser)
             self.ser.write(self.peltOffAdd.encode('utf-8'))
 
+        ###Protocol###
+        if self.protocolFlag == 1:
+            self.frameProt = tk.Frame(master=row4Frame,
+                                      bd=3,
+                                      relief="ridge")
+            self.frameProt.pack(side="top")
+            self.prot = True
+            #self.protocol = Protocol(parent=self.frameProt, ser=self.ser)
+
+        else:
+            self.frameProt = ""
+            self.prot = False
+
+        ###QUIT###
         if self.quitFlag == 1:
             self.frameQuit = tk.Frame(master=frame)
             self.frameQuit.grid(row=5, column=2, sticky="NW")
@@ -191,7 +205,7 @@ class flypiApp:
     def quitAPP(self, parent="none"):
         ##callback to close the program and close serial port
         def quitNcloseSerial():
-            if self.peltierFlag == 1:
+            if self.peltierFlag == 1 and self.Peltier.peltFlag1 == 1:
                 print("close pelt file")
                 self.Peltier.fh.close()
             if serialAvail == True:

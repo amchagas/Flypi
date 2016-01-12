@@ -6,7 +6,7 @@ class Matrix:
 
     def __init__(self, parent="none", label="none",
                  pat3Add="39", offAdd="40", pat1Add="41",
-                 pat2Add="42", brightAdd="43000", prot=False,
+                 pat2Add="42", brightAdd="143", prot=False,
                  protFrame="", ser=""):
 
         self.label = label
@@ -21,10 +21,11 @@ class Matrix:
         matBrightVar = tk.IntVar()
 
         def matrixUpdate(self, ser=self.ser, brightAdd=self.brightAdd):
-            address = int(brightAdd)
-            output = address + matBrightVar.get()
+            address = brightAdd + "*"
+            output = matBrightVar.get()
             output = str(output) + "*"
-            print("mat bright " + output[2:-1])
+            print("mat bright " + output)
+            ser.write(address.encode("utf-8"))
             ser.write(output.encode("utf-8"))
 
         frame1 = tk.Frame(master=self.matParent, width=10)
@@ -91,30 +92,6 @@ class Matrix:
 
             protMatLabel = tk.Label(master=tempFrame, text="MATRIX:")
             protMatLabel.grid(row=0, column=0)
-#            matMods = [("OFF", self.offAdd, matV1),
-#                        ("PATT1", self.pat1Add, matV1),
-#                        ("PATT2", self.pat2Add, matV1),
-#                        ("PATT3", self.pat3Add, matV1),
-#
-#                        ("OFF", self.offAdd, matV2),
-#                        ("PATT1", self.pat1Add, matV2),
-#                        ("PATT2", self.pat2Add, matV2),
-#                        ("PATT3", self.pat3Add, matV2),
-#
-#                        ("OFF", self.offAdd, matV3),
-#                        ("PATT1", self.pat1Add, matV3),
-#                        ("PATT2", self.pat2Add, matV3),
-#                        ("PATT3", self.pat3Add, matV3),
-#
-#                        ("OFF", self.offAdd, matV4),
-#                        ("PATT1", self.pat1Add, matV4),
-#                        ("PATT2", self.pat2Add, matV4),
-#                        ("PATT3", self.pat3Add, matV4),
-#
-#                        ("OFF", self.offAdd, matV5),
-#                        ("PATT1", self.pat1Add, matV5),
-#                        ("PATT2", self.pat2Add, matV5),
-#                        ("PATT3", self.pat3Add, matV5)]
 
             buttonsFrame = tk.Frame(master=tempFrame, bd=3)
             buttonsFrame.grid(row=0, column=1)
@@ -130,26 +107,10 @@ class Matrix:
                 vars[k].set("OFF")
                 protButt1.grid(row=1, column=k, sticky="NW")
 
-#            row1 = 0
-#            column1 = 1
-#            for label, address, var in matMods:
-#                protButt1 = tk.Radiobutton(master=buttonsFrame, text=label,
-#                                             command=matProtCB, indicatoron=0,
-#                                             value=address,
-#                                             variable=var, width=5)
-#                protButt1.grid(row=row1, column=column1, sticky="NW")
-#                if row1 == 3:
-#                    row1 = 0
-#                    column1 = column1 + 1
-#                else:
-#                    row1 = row1 + 1
-
 ####################callbacks######################
-
     def MatButton(self, parent="none", fill="y",
                   side="top", buttText="button",
                   color="black", func="none"):
-
         button = tk.Button(parent, text=buttText, fg=color, command=func)
         button.pack(side=side, fill=fill)
 

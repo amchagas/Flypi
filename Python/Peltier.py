@@ -17,12 +17,12 @@ class Peltier:
         peltTempVar = tk.IntVar()
         self.logTemp = tk.IntVar()
         self.basePath = basePath
+        self.peltFlag1 = 0
 
         def peltSetTemp(self):
             tempVal = peltTempVar.get()
-            tempVal = tempVal + int(tempAdd)
-            tempVal = str(tempVal) + "*"
-            ser.write(tempVal.encode("utf-8"))
+            temp = str(int(tempAdd) + tempVal) + "*"
+            ser.write(temp.encode("utf-8"))
 
         frame1 = tk.Frame(master=self.peltParent)
         frame1.grid(row=0, column=0, sticky="NW")
@@ -53,10 +53,10 @@ class Peltier:
 
         self.peltTemp = tk.Scale(master=frame2,
                                     from_=37, to=15, resolution=1,
-                                    orient="vertical", repeatinterval=700,
+                                    orient="vertical", repeatinterval=200,
                                     variable=peltTempVar,
                                     command=peltSetTemp)
-        self.peltTemp.set(str(25.0))
+        self.peltTemp.set(str(30.0))
         self.peltTemp.pack(side="top")
         self.peltLog = tk.Checkbutton(master=frame2,
                                    text="Log temp?",
@@ -81,11 +81,19 @@ class Peltier:
         getTemp = str(99) + "*"
         self.ser.write(getTemp.encode("utf-8"))
         test = self.ser.inWaiting()
+        #print(test)
+        #make a loop that waits untill data
+        #from the arduino is available
+        #while test == 0:
+            #test = self.ser.inWaiting()
+
         if test > 0:
             dummie = self.ser.readline()
             self.peltTempArd.set(dummie)
+
         if self.logTemp.get() == 1:
-            #create a folder path to store temperature logs
+            self.peltFlag1 = 1
+            #create a folderpath name to store temperature logs
             logPath = self.basePath + '/log_temp/'
             #check if folder exists
             if not os.path.exists(logPath):
@@ -94,7 +102,7 @@ class Peltier:
                 os.chown(logPath, 1000, 1000)
             fileName = "temp_log_" + time.strftime('%Y-%m-%d') + ".txt"
             #check if the file already exists
-#            os.chdir(basePath)
+#           os.chdir(basePath)
             if os.path.isfile(logPath + fileName) == False:
                 #if it does not exist, create it
                 #print("opening file")
@@ -104,5 +112,5 @@ class Peltier:
                 self.fh = open(logPath + fileName, "a")
 
             #print("writing to file")
-            self.fh.write(time.strftime('%Y-%m-%d-%H-%M-%S') + "\n")
+            self.fh.write(time.strftime('%Y-%m-%d-%H-%M-%S') + (','))
             self.fh.write(dummie.decode("utf-8"))
