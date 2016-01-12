@@ -29,6 +29,9 @@
   int ringRedHue = 0;
   int ringGreenHue = 0;
   int ringBlueHue = 0;
+  int oldRed = 0;
+  int oldGreen = 0;
+  int oldBlue = 0;
   int ringBright = 0;
   int matBright = 0;
   //peltier
@@ -37,7 +40,7 @@
   int analogOut = 0;
   float tempSensVolt = 0;
   float temperature = 0;
-  float newTemp = 0;
+  float newTemp = 30.0;
   unsigned long time1 = 0;
   unsigned long time2 = 0;
   //string incomingData1='';
@@ -49,11 +52,9 @@
   //float coldTemp = 19.0;//temperature in celsius
   //float hotTemp = 29.0; //temperature in celsius
   float TempTol = 0.5; // tolerance 
-  float highLimit = 40;
-  float lowLimit = 13;
+  float highLimit = 40.0; //in Celsius
+  float lowLimit = 13.0; //in Celsius
 
-  float coldTempEmergency = 16.0;//temperature in celsius
-  float hotTempEmergency = 40.0; //temperature in celsius
   //********************************//
 
 //create function to control LED ring
@@ -85,9 +86,8 @@ matrixPattern2[] =
 void setup()
 { //start serial port
   Serial.begin(115200);
-  //Serial.print("flushing");
-  Serial.flush();
-  //Serial.println("...done.");
+  //Serial.flush();
+  //Serial.println("start.");
   //set digital pin modes
   pinMode(LED1Pin, OUTPUT); 
   pinMode(LED2Pin, OUTPUT); 
@@ -100,18 +100,7 @@ void setup()
   pinMode(peltierCoolPin1,OUTPUT);
   //pinMode(peltierCoolPin2,OUTPUT);
   
-  //set the analog output scale depending 
-  //on the temperature range used
-  //tempToAnalog = 255/((hotTemp-coldTemp)+20);
-
-  //  initialize NeoPixel library (LED Ring).
   pixels.begin();
-//  //set all pixels to 0
-//  for(int i=0;i<ring_nPixels;i++){
-//       Serial.println("turning pixels off");
-//       pixels.setPixelColor(i, pixels.Color(0,0,0));
-//       //update ring hardware
-//  pixels.show();}//end for
  
   // pass in the address for LED Matrix
   matrix.begin(0x70);
@@ -121,21 +110,7 @@ void setup()
   
 }//end void setup
   
-  
-
-
 void loop(){ 
-//  if (startFlag==0){
-//    while(incomingData != 99){
-//      if(Serial.available() > 0) {
-//        //store data into a variable
-//        incomingData = Serial.parseInt();
-//        Serial.println(incomingData);
-//        //Serial.println(incomingData);
-//  }//end if serial available
-//    }//end while
-//    Serial.println("starting flypi");
-//   startFlag=1; }//end if startflag=0
 
   if(Serial.available() > 0) {
     //store data into a variable
@@ -149,16 +124,16 @@ void loop(){
         temperature=checkTemp(tempSensorPin);
         Serial.println(temperature);
         if (peltOn==1){
-          HoldTemp(newTemp,temperature,peltierCoolPin1,peltierHeatPin1);}
+          HoldTemp(newTemp,tempSensorPin,peltierCoolPin1,peltierHeatPin1);}
         if (temperature>=highLimit || temperature<=lowLimit){
           digitalWrite (peltierEnablePin,LOW);
           digitalWrite(peltierHeatPin1,LOW);
           digitalWrite(peltierCoolPin1,LOW);
-          digitalWrite(RedGBPin,LOW);
-          digitalWrite(RGreenBPin,LOW);
-          digitalWrite(RGBluePin,LOW);
+          digitalWrite(RedGBPin,HIGH);
+          digitalWrite(RGreenBPin,HIGH);
+          digitalWrite(RGBluePin,HIGH);
           peltOn=0; 
-          newTemp=temperature; 
+          //newTemp = (highLimit+lowLimit)/2; 
       }//end if temperature >=...
     }//end if incomingData==99
       //LED1
@@ -166,9 +141,7 @@ void loop(){
       if(incomingData==32){digitalWrite(LED1Pin,LOW);}
       //LED2
       if(incomingData==35){digitalWrite(LED2Pin,HIGH);}
-      if(incomingData==36){digitalWrite(LED2Pin,LOW);}
-
-      
+      if(incomingData==36){digitalWrite(LED2Pin,LOW);} 
 
       //MATRIX
       if (incomingData==40){//matrix off
@@ -232,8 +205,7 @@ void loop(){
         digitalWrite(RGreenBPin,LOW);
         digitalWrite(RGBluePin,LOW);
         peltOn = 0;}      
-                          
-                        
+                   
       }//end if incoming data<100
     else{//if incoming data >1000
       //if the incoming data is bigger than 1000
@@ -243,8 +215,6 @@ void loop(){
 
       //get the biggest two digits in the number
       address=incomingData*0.001;
-      //print it to make sure it works
-      //Serial.println(address);
       
       //get the three remaining digits in the number
       //our actual graded value
@@ -252,14 +222,14 @@ void loop(){
       //set the incoming data to zero
       incomingData=0;
       
-      //MATRIX
-      if (address==43){//matrix brightness slider
-        //set brightness of the matrix
-        //if (correction==0){
-         //matrix.clear();
-         //matrix.writeDisplay();}
-        //else{
-        matrix.setBrightness(correction);}//}
+//      //MATRIX
+//      if (address==43){//matrix brightness slider
+//        //set brightness of the matrix
+//        //if (correction==0){
+//         //matrix.clear();
+//         //matrix.writeDisplay();}
+//        //else{
+//        matrix.setBrightness(correction);}//}
 //      if (address==34){Serial.println("led1zap: ");}
 //      if (address==38){Serial.println("led2zap: ");}
      
@@ -267,6 +237,7 @@ void loop(){
       //RING
 
       if(address==49){//ring red
+        oldRed= ringRedHue;
         //set the brightness of the red channel
         ringRedHue=correction;
         updateRing(ringRedHue,ringGreenHue,ringBlueHue);
@@ -277,13 +248,15 @@ void loop(){
 
 
       if (address==50){//ring green
-        //set the brightness of the green channel          
+        //set the brightness of the green channel
+        oldGreen= ringGreenHue;       
         ringGreenHue=correction;
         updateRing(ringRedHue,ringGreenHue,ringBlueHue);
         if(ringOn==1){
           pixels.show();}}
           
       if (address==46){//ring blue
+        oldBlue= ringBlueHue;
         ringBlueHue=correction;
           updateRing(ringRedHue,ringGreenHue,ringBlueHue);
         if(ringOn==1){      
@@ -296,16 +269,20 @@ void loop(){
         if(ringOn==1){pixels.show();}}
         
       if (address==52){//ring zap
+          if(ringOn==1){
           updateRing(ringRedHue,ringGreenHue,ringBlueHue);
           pixels.show();
+          delay(correction);
+          //Serial.println(oldRed);
           //measure time without blocking the arduino board
-          time1=millis();
-          time2=time1;
-          while(time2-time1<correction){time2=millis();}
+          //time1=millis();
+          //time2=time1;
+          //while(time2-time1<correction){time2=millis();}
+          //Serial.println("done");
           //loop through all pixels in ring to update their colours
-          updateRing(0,0,0);
+          updateRing(oldRed,oldGreen,oldBlue);
           //update ring hardware
-          pixels.show();
+          pixels.show();}//end if ring on
         }
      
       if (address==47){
@@ -356,10 +333,11 @@ void loop(){
 
       if(address==55){
         newTemp=correction;}
-        //temperature=checkTemp(tempSensorPin);
-        //HoldTemp(newTemp,temperature,peltierCoolPin1,peltierHeatPin1);       
-      
+       
+       
 //
+address = 0;
+correction = 0;
 }//end else incomingData>1000
     }//end void loop
                
@@ -369,19 +347,24 @@ void loop(){
 // function to get the temperature in °C by reading the AD22100 output
 //to the analog in
 float checkTemp(int pinToRead){
-  float temps;
+  float temps = 0;
   float volts;
-  int baseLine;  
-  baseLine = analogRead(pinToRead);
-  //temps = ((baseLine*(5.0 / 1023.0)) - 1.375) / 0.0225;
-  //convert the value into volts
-  volts = (baseLine/1024.0) * 5;
-  //convert the volt value into temperature (celsius)
-  // the AD22100 has 200°C span (-50 to 150) for 4.5 V
-  //therefore we need to subtract -1.375 to compensate 
-  //for this -50° offset
-  temps = (volts - 1.375) / 0.0225;
-  //return the result of the function
+  float baseLine;  
+  for (int i=0; i<6; i++){
+    baseLine = analogRead(pinToRead);
+    //temps = ((baseLine*(5.0 / 1023.0)) - 1.375) / 0.0225;
+    //convert the value into volts
+    volts = baseLine * (4750.0/1024);
+    //convert the volt value into temperature (celsius)
+    // the AD22100 has 200°C span (-50 to 150) for 4.5 V
+    //therefore we need to subtract -1.375 to compensate 
+    //for this -50° offset
+    temps = temps + ((volts - 1375) / 22.5);
+    //delay(15);
+  }//end for loop
+    
+  temps = temps/5.0;
+    //return the result of the function
   return temps; 
 }
 
@@ -391,12 +374,12 @@ float checkTemp(int pinToRead){
 float HoldTemp(float finalTemp,int tempSensorPin,
                int peltierCoolPin1,int peltierHeatPin1){
    float temperature, temps;
+   temperature = checkTemp(tempSensorPin);
+   //Serial.print("temp: ");
+   //Serial.println(temperature);   
+   //Serial.println(temperature);
    
-   temperature = checkTemp(tempSensorPin); 
-       
-      
-
-     if (temperature<finalTemp-TempTol){ 
+     if (temperature<(finalTemp-TempTol)){ 
        //digitalWrite(peltierEnablePin,HIGH);
        digitalWrite(peltierHeatPin1,HIGH);
        digitalWrite(peltierCoolPin1,LOW);
@@ -404,7 +387,7 @@ float HoldTemp(float finalTemp,int tempSensorPin,
        analogWrite(RGreenBPin,0);
        analogWrite(RGBluePin,0);
      }//end if temperature<finalTemp
-     if (temperature>finalTemp+TempTol){
+     if (temperature>(finalTemp+TempTol)){
        //digitalWrite(peltierEnablePin,HIGH);
        digitalWrite(peltierHeatPin1,LOW);
        digitalWrite(peltierCoolPin1,HIGH);
@@ -412,7 +395,7 @@ float HoldTemp(float finalTemp,int tempSensorPin,
        analogWrite(RGreenBPin,0);
        analogWrite(RGBluePin,255);
      }//end if temperature > finaTemp
-     if (temperature<finalTemp+TempTol && temperature>finalTemp-TempTol  ){
+     if ((temperature<=(finalTemp+TempTol)) && (temperature>=(finalTemp-TempTol))){
        //digitalWrite(peltierEnablePin,LOW);
        //Serial.println("temp reached!");
        digitalWrite(peltierHeatPin1,LOW);
@@ -432,3 +415,4 @@ void updateRing(int hue1,int hue2,int hue3){
   for(int i=0;i<ring_nPixels;i++){
   pixels.setPixelColor(i, pixels.Color(hue1,hue2,hue3));} 
 }
+
