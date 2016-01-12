@@ -19,7 +19,7 @@ temps = list()
 for line in fh.readlines():
     #print(line + "\n")
     indx1 = line.index(",")
-    indx2 = line.index("\r\n")
+    indx2 = line.index("\n")
     times.append(line[0:indx1])
     #print(line[0:indx1] + "\n")
     temps.append(line[indx1 + 1:indx2])
