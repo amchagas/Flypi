@@ -8,7 +8,7 @@
 import os
 import matplotlib.pyplot as pyplot
 
-dataLocation = "/home/pi/Desktop/flypi_output/log_temp/"
+dataLocation = "/home/pi/Desktop/temp/"
 dataFile = "temp_log_2015-12-13.txt"
 
 fh = open(dataLocation + dataFile, "r")

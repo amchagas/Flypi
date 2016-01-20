@@ -27,10 +27,10 @@ class flypiApp:
 
     #use these flags to make whole pieces of the GUI disappear
     cameraFlag = 0
-    ringFlag = 0
+    ringFlag = 1
     led1Flag = 0
     led2Flag = 0
-    matrixFlag = 0
+    matrixFlag = 1
     peltierFlag = 1
     protocolFlag = 0
     quitFlag = 1

@@ -6,7 +6,7 @@ class Matrix:
 
     def __init__(self, parent="none", label="none",
                  pat3Add="39", offAdd="40", pat1Add="41",
-                 pat2Add="42", brightAdd="143", prot=False,
+                 pat2Add="42", brightAdd="43000", prot=False,
                  protFrame="", ser=""):
 
         self.label = label
@@ -21,11 +21,12 @@ class Matrix:
         matBrightVar = tk.IntVar()
 
         def matrixUpdate(self, ser=self.ser, brightAdd=self.brightAdd):
-            address = brightAdd + "*"
+            #address = brightAdd + "*"
             output = matBrightVar.get()
+            print("mat bright " + str(output))
+            output = int(brightAdd) + output
             output = str(output) + "*"
-            print("mat bright " + output)
-            ser.write(address.encode("utf-8"))
+            #ser.write(address.encode("utf-8"))
             ser.write(output.encode("utf-8"))
 
         frame1 = tk.Frame(master=self.matParent, width=10)
