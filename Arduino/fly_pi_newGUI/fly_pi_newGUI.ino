@@ -222,14 +222,16 @@ void loop(){
       //set the incoming data to zero
       incomingData=0;
       
-//      //MATRIX
-//      if (address==43){//matrix brightness slider
-//        //set brightness of the matrix
-//        //if (correction==0){
-//         //matrix.clear();
-//         //matrix.writeDisplay();}
-//        //else{
-//        matrix.setBrightness(correction);}//}
+      //MATRIX
+      if (address==43){//matrix brightness slider
+        //Serial.println(correction);
+        //set brightness of the matrix
+        if (correction==0){
+         matrix.clear();
+         matrix.writeDisplay();}
+        else{
+        matrix.setBrightness(correction);
+        matrix.writeDisplay();}}
 //      if (address==34){Serial.println("led1zap: ");}
 //      if (address==38){Serial.println("led2zap: ");}
      
