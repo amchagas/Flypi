@@ -158,7 +158,7 @@ class Camera:
                                    colSpan=1, from__=180, to__=2000,
                                    res=20, set_=240)
 
-        self.camZoon = self.camSlider(parent=frame2, label_="Digi Zoom",
+        self.camZoom = self.camSlider(parent=frame2, label_="Digi Zoom",
                                    var=self.zoomVar, len=90,
                                    rowIndx=0, colIndx=1, sticky="",
                                    orient_="horizontal",
@@ -352,6 +352,8 @@ class Camera:
                 self.cam.framerate = (15)
                 self.FPSVar.set(15)
                 self.binVar.set(0)
+                #self.cam.zoom(0)
+                self.zoomVar.set(1)
             if self.resVal == "1920x1080":
                 self.cam.resolution = (1920, 1080)
                 self.cam.framerate = (30)
@@ -444,14 +446,23 @@ class Camera:
             #if not, create it:
             os.makedirs(videoPath)
             os.chown(videoPath, 1000, 1000)
-
+        #it seems that the raspi-cam doesn't like shooting videos at full res.
+        #so the softw. will automatically use a lower resolution for videos
+        if self.resVal == "2592x1944":
+            self.cam.resolution = (1920, 1080)
+            
         print("recording for: " + dur + " secs")
-        self.cam.start_recording(videoPath +
+        self.cam.start_recording(output = videoPath +
                                 'video_' +
-                                time.strftime('%Y-%m-%d-%H-%M-%S') + '.h264')
+                                time.strftime('%Y-%m-%d-%H-%M-%S') + '.h264',
+                                format = "h264",)
+                                #resize = (1920,1080))
         self.cam.wait_recording(int(dur))
         self.cam.stop_recording()
         print("done.")
+        #here we restore the preview resolution if it was the maximal one.
+        if self.resVal == "2592x1944":
+            self.cam.resolution = (2592, 1944)
 
     def camTL(self):
         dur = self.TLdur.get()
@@ -494,7 +505,8 @@ class Camera:
 
         #get the present time, down to seconds
         #print (time.strftime("%Y-%m-%d-%H-%M-%S"))
+        
         # Camera warm-up time
-        time.sleep(2)
+        time.sleep(1)
         self.cam.capture(photoPath + 'snap_' +
                         time.strftime("%Y-%m-%d-%H-%M-%S") + '.jpg')
