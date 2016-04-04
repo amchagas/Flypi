@@ -26,10 +26,10 @@ class flypiApp:
     basePath = '/home/pi/Desktop/flypi_output/'
 
     #use these flags to make whole pieces of the GUI disappear
-    cameraFlag = 0
+    cameraFlag = 1
     ringFlag = 1
-    led1Flag = 0
-    led2Flag = 0
+    led1Flag = 1
+    led2Flag = 1
     matrixFlag = 1
     peltierFlag = 1
     protocolFlag = 0
