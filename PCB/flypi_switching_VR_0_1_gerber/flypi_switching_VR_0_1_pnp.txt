@@ -4,7 +4,7 @@
 *eMail=
 *
 *Project=flypi_switching_VR_0_1
-*Date=16:16:05
+*Date=22:18:09
 *CreatedBy=Fritzing 0.9.2b.11.19.8d2d5970658f0bed09c661c9ea9a515b5f40f44c
 *
 *
@@ -13,67 +13,67 @@
 *Rotation in degree (0-360, math. pos.)
 *
 *No;Value;Package;X;Y;Rotation;Side;Name
-1;270;THT;69.1066;-12.8916;180;Bottom;HP2-270R
-2;;THT;4.6896;-66.7396;-90;Bottom;HP1-+
-3;100nF;100 mil [THT, electrolytic];18.3066;-21.7816;-90;Bottom;pelt100nf
-4;;300 mil [THT];28.4666;-62.447;90;Bottom;PW1-diode
-5;;THT;9.0636;-3.34017;90;Bottom;P+P-
+1;680µF;200 mil [THT, electrolytic];39.8966;-45.9116;0;Bottom;PW2-680µf
+2;;TO92 [THT];25.7361;-12.8027;90;Bottom;servo
+3;;;19.8119;-27.5325;0;Bottom;Via22
+4;;;70.567;-60.8658;90;Bottom;Power plug1
+5;;300 mil [THT];6.8512;-48.4516;0;Bottom;PW2-diode
 6;;;14.9351;-1.31973;0;Bottom;Via19
-7;;THT;42.7897;-66.7396;-90;Bottom;pi-+
-8;270;THT;23.3866;-40.8316;-90;Bottom;HP1-270R
-9;;;70.567;-60.8658;90;Bottom;Power plug1
-10;;;28.4665;-66.2316;0;Bottom;Via7
-11;;;33.8327;-16.5597;0;Bottom;Via8
-12;;THT;19.3937;-3.33996;90;Bottom;servo-+s
-13;270;THT;31.0066;-50.9916;-90;Bottom;fan-270R
-14;;;34.4423;-29.9709;0;Bottom;Via20
-15;;400 mil [THT];18.3066;-40.8316;-90;Bottom;PW2-inductor
-16;220;THT;31.0066;-25.5916;-90;Bottom;rgb220R1
-17;100nF;100 mil [THT, multilayer];34.8166;-12.8916;0;Bottom;therm 100nf
-18;;;39.3191;-42.163;0;Bottom;Via17
-19;;;10.6865;-48.4516;0;Bottom;Via5
-20;;TO92 [THT];25.7361;-12.8027;90;Bottom;servo
-21;;;28.4665;-58.6116;0;Bottom;Via4
-22;;multiwatt15;6.12589;-40.7915;-90;Bottom;PW2-Vreg
-23;;multiwatt15;53.8265;-63.1723;0;Bottom;pi-Vreg
-24;;;56.3879;-49.4782;0;Bottom;Via13
-25;;;73.4567;-34.8477;0;Bottom;Via10
-26;680µF;200 mil [THT, electrolytic];55.1366;-45.9116;0;Bottom;PW1-680µf
-27;;;32.6135;-25.7037;0;Bottom;Via9
-28;220;THT;28.4666;-25.5916;-90;Bottom;rgb220R2
-29;;TO92 [THT];13.3155;-55.8811;-90;Bottom;HP1
-30;0.22mF;100 mil [THT, electrolytic];13.2266;-64.9616;-90;Bottom;PW1-220µf
-31;;THT;72.5635;-3.59897;90;Bottom;HP2-+
-32;1k;THT;46.2466;-12.8916;180;Bottom;ther1KR
-33;1 Ohm;THT;37.6274;-36.7507;-135;Bottom;pelt-1R
-34;;400 mil [THT];23.3866;-53.5316;0;Bottom;PW1-inductor
-35;;;61.4865;-58.6116;0;Bottom;Via3
-36;680µF;200 mil [THT, electrolytic];70.3766;-45.9116;0;Bottom;pi-680µf
-37;;;27.1271;-26.3133;0;Bottom;Via21
-38;0.22mF;100 mil [THT, electrolytic];43.7066;-57.3416;-90;Bottom;pi-220µf
-39;;;53.8581;-30.6716;90;Bottom;Arduino nano
-40;;THT;47.3337;-3.4695;90;Bottom;therm +s-
-41;;multiwatt15;6.1458;-16.7065;-90;Bottom;pelt H-bridge
-42;;THT;60.8236;-3.34003;90;Bottom;M-+ss
-43;;;3.06661;-48.4516;0;Bottom;Via6
-44;;;19.8119;-27.5325;0;Bottom;Via22
-45;;;36.2711;-26.3133;0;Bottom;Via14
-46;;multiwatt15;20.8065;-63.1723;0;Bottom;PW1-Vreg
-47;680µF;200 mil [THT, electrolytic];39.8966;-45.9116;0;Bottom;PW2-680µf
-48;;THT;32.8836;-3.34003;90;Bottom;rgb s-ss
-49;;;47.8535;-58.6222;0;Bottom;Via12
-50;;TO92 [THT];36.2771;-58.7005;180;Bottom;fan
-51;0.22mF;100 mil [THT, electrolytic];9.4166;-30.6716;180;Bottom;PW2-220µf
-52;;300 mil [THT];6.8512;-48.4516;0;Bottom;PW2-diode
-53;220;THT;25.9266;-25.5916;-90;Bottom;rgb220R3
-54;;;61.4865;-66.2316;0;Bottom;Via1
-55;;TO92 [THT];56.2161;-12.8027;90;Bottom;HP2
-56;;THT;5.0986;-56.9046;180;Bottom;R-+s
-57;;400 mil [THT];56.4066;-53.5316;0;Bottom;pi-inductor
-58;;;71.6279;-19.6077;0;Bottom;Via11
-59;100nF;100 mil [THT, multilayer];17.0366;-30.6716;0;Bottom;Pelt100nf
-60;;;29.5655;-48.259;0;Bottom;Via18
-61;;;25.9079;-39.7245;0;Bottom;Via16
-62;;;74.0663;-42.163;0;Bottom;Via15
-63;;THT;35.1697;-66.7396;-90;Bottom;fan-+
-64;;300 mil [THT];61.4866;-62.447;90;Bottom;pi-diode
+7;;THT;19.3937;-3.33996;90;Bottom;servo-+s
+8;;;61.4865;-58.6116;0;Bottom;Via3
+9;;300 mil [THT];61.4866;-62.447;90;Bottom;pi-diode
+10;;300 mil [THT];28.4666;-62.447;90;Bottom;PW1-diode
+11;0.22mF;100 mil [THT, electrolytic];43.7066;-57.3416;-90;Bottom;pi-220µf
+12;270;THT;69.1066;-12.8916;180;Bottom;HP2-270R
+13;100nF;100 mil [THT, multilayer];17.0366;-30.6716;0;Bottom;Pelt100nf
+14;;400 mil [THT];56.4066;-53.5316;0;Bottom;pi-inductor
+15;;TO92 [THT];36.2771;-58.7005;180;Bottom;fan
+16;;;32.6135;-25.7037;0;Bottom;Via9
+17;1 Ohm;THT;37.6274;-36.7507;-135;Bottom;pelt-1R
+18;;TO92 [THT];56.2161;-12.8027;90;Bottom;HP2
+19;;;29.5655;-48.259;0;Bottom;Via18
+20;270;THT;23.3866;-40.8316;-90;Bottom;HP1-270R
+21;;400 mil [THT];18.3066;-40.8316;-90;Bottom;PW2-inductor
+22;680µF;200 mil [THT, electrolytic];55.1366;-45.9116;0;Bottom;PW1-680µf
+23;;;10.6865;-48.4516;0;Bottom;Via5
+24;;THT;4.6896;-66.7396;-90;Bottom;HP1-+
+25;220;THT;31.0066;-25.5916;-90;Bottom;rgb220R1
+26;270;THT;31.0066;-50.9916;-90;Bottom;fan-270R
+27;;;34.4423;-29.9709;0;Bottom;Via20
+28;;TO92 [THT];13.3155;-55.8811;-90;Bottom;HP1
+29;;;28.4665;-66.2316;0;Bottom;Via7
+30;;;74.0663;-42.163;0;Bottom;Via15
+31;;;53.8581;-30.6716;90;Bottom;Arduino nano
+32;;multiwatt15;20.8065;-63.1723;0;Bottom;PW1-Vreg
+33;;;36.2711;-26.3133;0;Bottom;Via14
+34;220;THT;28.4666;-25.5916;-90;Bottom;rgb220R2
+35;;THT;47.3337;-3.4695;90;Bottom;therm +s-
+36;;THT;72.5635;-3.59897;90;Bottom;HP2-+
+37;680µF;200 mil [THT, electrolytic];70.3766;-45.9116;0;Bottom;pi-680µf
+38;0.22mF;100 mil [THT, electrolytic];9.4166;-30.6716;180;Bottom;PW2-220µf
+39;;;73.4567;-34.8477;0;Bottom;Via10
+40;;;71.6279;-19.6077;0;Bottom;Via11
+41;;;56.3879;-49.4782;0;Bottom;Via13
+42;;;33.8327;-16.5597;0;Bottom;Via8
+43;;;47.8535;-58.6222;0;Bottom;Via12
+44;;multiwatt15;6.12589;-40.7915;-90;Bottom;PW2-Vreg
+45;100nF;100 mil [THT, multilayer];34.8166;-12.8916;0;Bottom;therm 100nf
+46;;THT;5.0986;-56.9046;180;Bottom;R-+s
+47;;;39.3191;-42.163;0;Bottom;Via17
+48;220;THT;25.9266;-25.5916;-90;Bottom;rgb220R3
+49;0.22mF;100 mil [THT, electrolytic];13.2266;-64.9616;-90;Bottom;PW1-220µf
+50;;;28.4665;-58.6116;0;Bottom;Via4
+51;;THT;32.8836;-3.34003;90;Bottom;rgb s-ss
+52;1k;THT;46.2466;-12.8916;180;Bottom;ther1KR
+53;;;27.1271;-26.3133;0;Bottom;Via21
+54;;400 mil [THT];23.3866;-53.5316;0;Bottom;PW1-inductor
+55;;;61.4865;-66.2316;0;Bottom;Via1
+56;;multiwatt15;53.8265;-63.1723;0;Bottom;pi-Vreg
+57;;;3.06661;-48.4516;0;Bottom;Via6
+58;;;25.9079;-39.7245;0;Bottom;Via16
+59;;THT;9.0636;-3.34017;90;Bottom;P+P-
+60;100nF;100 mil [THT, electrolytic];18.3066;-21.7816;-90;Bottom;pelt100nf
+61;;THT;60.8236;-3.34003;90;Bottom;M-+ss
+62;;THT;42.7897;-66.7396;-90;Bottom;pi-+
+63;;multiwatt15;6.1458;-16.7065;-90;Bottom;pelt H-bridge
+64;;THT;35.1697;-66.7396;-90;Bottom;fan-+
