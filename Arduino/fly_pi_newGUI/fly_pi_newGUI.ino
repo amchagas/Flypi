@@ -3,8 +3,12 @@
 #include <Wire.h> // LED Matrix
 #include <Adafruit_LEDBackpack.h> // LED Matrix
 #include <Adafruit_GFX.h> // LED Matrix
+#include <Servo.h> //servom motor controlling the autofocus
 
+//create servo object ****************//
+Servo focusServo;
 
+//************************************//
 // Define Pin allocations on Arduino
   //*********************************//
   unsigned int incomingData=0;
@@ -17,11 +21,13 @@
   int RGreenBPin = 4;
   int RGBluePin = 5;
   int RingPin = 7;
+  int servoPin = 9;
   int peltierEnablePin = 13;
   int peltierHeatPin1 = 3;//12
   int peltierCoolPin1 = 2;//8
   int tempSensorPin = A7;//A5
   int startFlag = 0;
+  
   //variables needed for peripherical functions
   //ring
   int ring_nPixels = 12;
@@ -56,6 +62,8 @@
   float lowLimit = 13.0; //in Celsius
 
   //********************************//
+
+
 
 //create function to control LED ring
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(ring_nPixels, RingPin, NEO_GRB + NEO_KHZ800);
@@ -99,7 +107,7 @@ void setup()
   //pinMode(peltierHeatPin2,OUTPUT);
   pinMode(peltierCoolPin1,OUTPUT);
   //pinMode(peltierCoolPin2,OUTPUT);
-  
+  focusServo.attach(servoPin);
   pixels.begin();
  
   // pass in the address for LED Matrix
@@ -118,7 +126,7 @@ void loop(){
     //Serial.println(incomingData);
   }
   
-    if (incomingData<1000){
+    //if (incomingData<1000){
       //check temp sensor
       if(incomingData==99){
         temperature=checkTemp(tempSensorPin);
@@ -206,8 +214,8 @@ void loop(){
         digitalWrite(RGBluePin,LOW);
         peltOn = 0;}      
                    
-      }//end if incoming data<100
-    else{//if incoming data >1000
+      //}//end if incoming data<100
+//    else{//if incoming data >1000
       //if the incoming data is bigger than 1000
       // we will have "graded values", such as brightness,
       //temperature, velocities and etc.
@@ -340,7 +348,7 @@ void loop(){
 //
 address = 0;
 correction = 0;
-}//end else incomingData>1000
+//}//end else incomingData>1000
     }//end void loop
                
 
