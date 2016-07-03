@@ -5,16 +5,7 @@ import os
 try:
     import serial
     serialAvail = True
-    ## setup serial - create "ser" object that will be used to communicate with
-    ## the Arduino. Here the user can uncomment/comment lines according to the
-    ## operational system running.
-
-    # for PC
-    #ser = serial.Serial("COM5", 9600)
-    # for Arduino Uno from RPi
-    #ser = serial.Serial('/dev/ttyACM0', 115200)
-    # for Arduino Nano from RPi
-    #ser = serial.Serial('/dev/ttyUSB0', 9600, timeout = 0.2)
+ 
 except ImportError:
     serialAvail = False
     print ("serial module not available!")
@@ -32,42 +23,46 @@ class flypiApp:
     led2Flag = 1
     matrixFlag = 1
     peltierFlag = 1
+    autofocusFlag = 1
     protocolFlag = 0
     quitFlag = 1
 
     #############adresses for all arduino components:
     ##LED1##
-    led1OnAdd = "31"
-    led1OffAdd = "32"
-    led1ZapDurAdd = "34000"
+    led1OnAdd = "1"
+    led1OffAdd = "2"
+    led1ZapDurAdd = "3"
 
     ##LED2##
-    led2OnAdd = "35"
-    led2OffAdd = "36"
-    led2ZapDurAdd = "38000"
+    led2OnAdd = "4"
+    led2OffAdd = "5"
+    led2ZapDurAdd = "6"
 
     ##MATRIX##
     #matOnAdd = "39"
-    matOffAdd = "40"
-    matPat1Add = "41"
-    matPat2Add = "42"
-    matPat3Add = "39"
-    matBrightAdd = "43000"
+    matOffAdd = "7"
+    matPat1Add = "8"
+    matPat2Add = "9"
+    matPat3Add = "10"
+    matBrightAdd = "11"
 
     ##RING##
-    ringOnAdd = "44"
-    ringOffAdd = "45"
-    ringZapAdd = "52000"
-    ringRedAdd = "49000"
-    ringGreenAdd = "50000"
-    ringBlueAdd = "46000"
-    ringAllAdd = "51000"
-    ringRotAdd = "47500"
+    ringOnAdd = "12"
+    ringOffAdd = "13"
+    ringRedAdd = "14"
+    ringGreenAdd = "15"
+    ringBlueAdd = "16"
+    ringAllAdd = "17"
+    ringZapAdd = "18"
+    ringRotAdd = "19"
 
     ##PELTIER##
-    peltOnAdd = "53"
-    peltOffAdd = "54"
-    peltTempAdd = "55000"
+    peltOnAdd = "20"
+    peltOffAdd = "21"
+    peltTempAdd = "22"
+
+    ##autofocus##
+    autoFocusAdd = "23"
 
     #row4Frame = tk.Frame()
     def __init__(self, master, ser=""):
@@ -81,16 +76,17 @@ class flypiApp:
         ##create the mainframe
         frame = tk.Frame()
         frame.grid(row=0, column=0, rowspan=1, columnspan=1)
-        row4Frame = tk.Frame(master=frame, bd=2, relief="ridge")
+        
         row1Frame = tk.Frame(master=frame, bd=2, relief="ridge")
         row2Frame = tk.Frame(master=frame, bd=2, relief="ridge")
         row3Frame = tk.Frame(master=frame, bd=2, relief="ridge")
-
+        row4Frame = tk.Frame(master=frame, bd=2, relief="ridge")
+        
         if serialAvail == True:
             # for Arduino Uno from RPi
             #self.ser = serial.Serial('/dev/ttyACM0', 115200)
             # for Arduino Nano from RPi
-            self.ser = serial.Serial('/dev/ttyUSB0', 115200)
+            self.ser = serial.Serial('/dev/ttyUSB0', 9600)
 
         ##show the pieces of the GUI
         ##depending on which flags are on (see above):
@@ -117,7 +113,8 @@ class flypiApp:
                           #prot=self.prot,
                           #protFrame=self.frameProt,
                           )
-            self.ser.write(self.led1OffAdd.encode('utf-8'))
+            led1Off = self.led1OffAdd+"*"
+            self.ser.write(led1Off.encode('utf-8'))
 
         ###LED2###
         if self.led2Flag == 1:
@@ -129,25 +126,10 @@ class flypiApp:
                           zapDurAdd=self.led2ZapDurAdd, ser=self.ser,
                           #prot=self.prot, protFrame=self.frameProt,
                           )
-            self.ser.write(self.led2OffAdd.encode('utf-8'))
+            led2Off = self.led2OffAdd+"*"
+            self.ser.write(led2Off.encode('utf-8'))
 
-        ###RING###
-        if self.ringFlag == 1:
-            import Ring
-            self.frameRing = tk.Frame(row1Frame, bd=3)
-            self.frameRing.grid(row=1, column=0, sticky="NW",
-                                columnspan=3, rowspan=1)
-            self.Ring = Ring.Ring(self.frameRing, label="RING",
-                             #protFrame=self.frameProt,
-                             ringOnAdd=self.ringOnAdd,
-                             ringOffAdd=self.ringOffAdd,
-                             ringZapAdd=self.ringZapAdd,
-                             redAdd=self.ringRedAdd,
-                             greenAdd=self.ringGreenAdd,
-                             blueAdd=self.ringBlueAdd,
-                             allAdd=self.ringAllAdd,
-                             rotAdd=self.ringRotAdd, ser=self.ser)
-            self.ser.write(self.ringOffAdd.encode('utf-8'))
+
 
         ###MATRIX###
         if self.matrixFlag == 1:
@@ -160,7 +142,29 @@ class flypiApp:
                                brightAdd=self.matBrightAdd,
                                # prot=self.prot, protFrame=self.frameProt,
                                ser=self.ser)
-            self.ser.write(self.matOffAdd.encode('utf-8'))
+            matOff = self.matOffAdd+"*"
+            self.ser.write(matOff.encode('utf-8'))
+
+        ###RING###
+        if self.ringFlag == 1:
+            import Ring
+            self.frameRing = tk.Frame(row1Frame, bd=3)
+            self.frameRing.grid(row=1, column=0, sticky="NW",
+                                columnspan=3, rowspan=1)
+
+            self.Ring = Ring.Ring(parent=self.frameRing, label="RING",
+                             ringOnAdd=self.ringOnAdd,
+                             ringOffAdd=self.ringOffAdd,
+                             ringZapAdd=self.ringZapAdd,
+                             redAdd=self.ringRedAdd,
+                             greenAdd=self.ringGreenAdd,
+                             blueAdd=self.ringBlueAdd,
+                             allAdd=self.ringAllAdd,
+                             rotAdd=self.ringRotAdd,
+                             ser=self.ser)
+            
+            #ringOff=self.ringOffAdd+"*"
+            #self.ser.write(ringOff.encode('utf-8'))
 
         ###PELTIER###
         if self.peltierFlag == 1:
@@ -174,7 +178,21 @@ class flypiApp:
                                            tempAdd=self.peltTempAdd,
                                            basePath=self.basePath,
                                            ser=self.ser)
-            self.ser.write(self.peltOffAdd.encode('utf-8'))
+            peltOff = self.peltOffAdd+"*"
+            self.ser.write(peltOff.encode('utf-8'))
+
+
+        ###Auto Focus###
+        if self.autofocusFlag == 1:
+            import AutoFocus
+            self.frameAuto = tk.Frame(row3Frame, bd=3)
+            self.frameAuto.pack(side="top")
+            self.AutoFocus = AutoFocus.AutoFocus(parent=self.frameAuto,
+                                           label="Focus",
+                                           velAdd=self.autoFocusAdd,
+                                           ser=self.ser)
+            servoOff=str(self.autoFocusAdd)+"*"+ str(0)+"*"
+            self.ser.write(servoOff.encode('utf-8'))
 
         ###Protocol###
         if self.protocolFlag == 1:

@@ -2,9 +2,9 @@
 import tkinter as tk
 
 
-class Ring:
+class Ring1:
 
-    def __init__(self, parent="none", label="none", ser="", #protFrame="",
+    def __init__(self, parent="none", label="none", ser="", protFrame="",
                  ringOnAdd="", ringOffAdd="", ringZapAdd="",
                  greenAdd="", redAdd="", blueAdd="",
                  allAdd="", rotAdd=""):
@@ -21,51 +21,55 @@ class Ring:
         self.allAdd = allAdd
         self.rotAdd = rotAdd
 
-        ###########variables for ring sliders
+#        ###########variables for ring sliders
         ringGreenVar = tk.IntVar()
-        self.rgv=ringGreenVar
-        
         ringRedVar = tk.IntVar()
-        self.rrv=ringRedVar
-        
         ringBlueVar = tk.IntVar()
-        self.rbv=ringBlueVar
-        
         ringAllVar = tk.IntVar()
-        self.rav=ringAllVar
-        
         ringRotVar = tk.IntVar()
-        self.rrotv=ringRotVar
-        
+
         ###########variables for ring z
         zapGreenVar = tk.IntVar()
         zapRedVar = tk.IntVar()
         zapBlueVar = tk.IntVar()
 
-        ############callbacks for ring sliders
-        def greenUpdate(self, ser=self.ser, address1=self.greenAdd,greenvar=self.rgv):
-            output = str(address1) + "*" + str(ringGreenVar.get()) + "*"
+#    ############callbacks for ring sliders
+        def greenUpdate(self, ser=self.ser, address1=self.greenAdd):
+            address = int(address1)
+            output = address + ringGreenVar.get()
+            output = str(output) + "*"
+            #print("green hue: "+ output[2:-1])
             ser.write(output.encode("utf-8"))
 
-        def redUpdate(self, ser=self.ser, address1=self.redAdd,redvar=self.rgv):
-            output = str(address1) + "*" + str(ringRedVar.get()) + "*"         
+        def redUpdate(self, ser=self.ser, address1=self.redAdd):
+            output = str(address1) + "*" + str(ringRedVar.get()) + "*"
+            #print("red hue: " +output[2:-1])
+            
+            #ser.write(output.encode("utf-8"))
+
+        def blueUpdate(self, ser=self.ser, address1=self.blueAdd):
+            address = int(address1)
+            output = address + ringBlueVar.get()
+            output = str(output) + "*"
+            #print("blue hue: " +output[2:-1])
             ser.write(output.encode("utf-8"))
 
-        def blueUpdate(self, ser=self.ser, address1=self.blueAdd,bluevar=self.rgv):
-            output = str(address1) + "*" + str(ringBlueVar.get()) + "*"
+        def allUpdate(self, ser=self.ser, address1=self.allAdd):
+            address = int(address1)
+            output = ringAllVar.get()
+            ringBlueVar.set(output)
+            ringGreenVar.set(output)
+            ringRedVar.set(output)
+            output = address + ringAllVar.get()
+            output = str(output) + "*"
+            #print("ring all: "+ output[2:-1])
             ser.write(output.encode("utf-8"))
 
-        def allUpdate(self, ser=self.ser, address1=self.allAdd,
-                      rav=self.rav,rrv= self.rrv,rgv=self.rgv,rbv=self.rbv):
-            value = rav.get()
-            rbv.set(value)
-            rgv.set(value)
-            rrv.set(value)
-            output = address1 + "*" + str(value) + "*"
-            ser.write(output.encode("utf-8"))
-
-        def rotUpdate(self, ser=self.ser, address1=self.rotAdd, rrotv=self.rrotv):
-            output = str(address1) +"*"+ str(rrotv.get())+"*"
+        def rotUpdate(self, ser=self.ser, address=self.rotAdd):
+            address = int(address)
+            output = address + ringRotVar.get()
+            output = str(output) + "*"
+            #print("rotation: " + output[2:-1])
             ser.write(output.encode("utf-8"))
 
         frame1 = tk.Frame(master=parent)
@@ -118,39 +122,40 @@ class Ring:
 
         self.ringGreen = self.ringSlider(parent=frame2, text_="Green",
                                         func=greenUpdate,
-                                        fill_="x", 
+                                        fill_="x", side="top",
                                         orient_="vertical",
-                                        var=self.rgv,
-                                        rowIndx=0, colIndx=0,
+                                        var=ringGreenVar,
+                                        rowIndx=0, colIndx=0, sticky="WE",
                                         from__=255, to__=0, res=1, set_=10)
 
         self.ringRed = self.ringSlider(parent=frame2, text_="Red",
                                        func=redUpdate,
-                                       fill_="x", 
-                                       var=self.rrv, orient_="vertical",
-                                       rowIndx=0, colIndx=1,
+                                       fill_="x", side="top",
+                                       var=ringRedVar, orient_="vertical",
+                                       rowIndx=0, colIndx=1, sticky="WE",
                                        from__=255, to__=0, res=1, set_=10)
 
         self.ringBlue = self.ringSlider(parent=frame2, text_="Blue",
                                        func=blueUpdate, orient_="vertical",
-                                       var=self.rbv,
-                                       fill_="x", 
-                                       rowIndx=0, colIndx=2,
+                                       var=ringBlueVar,
+                                       fill_="x", side="top",
+                                       rowIndx=0, colIndx=2, sticky="WE",
                                        from__=255, to__=0, res=1, set_=10)
 
         self.ringAll = self.ringSlider(parent=frame2, text_="All",
                                        func=allUpdate,
-                                       fill_="x", 
-                                       var=self.rav, orient_="vertical",
-                                       colSpan=1,delay=300,
-                                       rowIndx=0, colIndx=3,
+                                       fill_="x", side="top",
+                                       var=ringAllVar, orient_="vertical",
+                                       colSpan=1,
+                                       rowIndx=0, colIndx=3, sticky="WE",
                                        from__=255, to__=0, res=1, set_=10)
 
-#        self.ringRot = self.ringSlider(parent=frame2, text_="Rotate", side="top",
-#                                       func=rotUpdate,var=self.rrotv,fill_="x", 
-#                                       rowIndx=0,  colIndx=4,orient_="vertical",
-#                                       colSpan=2, delay=300,color="black",
-#                                       from__=100, to__=-100, res=10, set_=0)
+        self.ringRot = self.ringSlider(parent=frame2, text_="Rotate",
+                                       func=rotUpdate, colSpan=2, delay=1000,
+                                       var=ringRotVar, orient_="vertical",
+                                       rowIndx=0, colIndx=4,
+                                       fill_="x", side="top",
+                                       from__=100, to__=-100, res=5, set_=0)
 
     def ringButton(self, parent="none", side="top", fill="x",
                    buttText="button", color="black", func="none"):
@@ -159,20 +164,22 @@ class Ring:
         button.pack(side=side, fill=fill)
 
     def ringSlider(self, parent="none", text_="empty", side="right",
-                   func="", var="",  fill_="x",color="black",
-                   rowIndx=1, colIndx=0, orient_="vertical",delay=100,
-                   colSpan=1, from__=100, to__=0, res=1, set_=45):
+                   func="", var="", color="black", fill_="x",
+                   rowIndx=1, colIndx=0, sticky="", orient_="vertical",
+                   colSpan=1, delay=300,
+                   from__=100, to__=0, res=1, set_=0):
 
         frame_loc = tk.Frame(master=parent)
         Label = tk.Label(master=frame_loc, text=text_, fg=color)
         Label.pack(fill=fill_, side=side)
+        #Label.grid(row=rowLabel,column=colIndx,columnspan=colSpan)
         Slider = tk.Scale(master=frame_loc, repeatdelay=delay,
                           from_=from__, to=to__, resolution=res,
                           command=func, variable=var, orient=orient_)
         Slider.set(set_)
         Slider.pack()
         frame_loc.grid(row=rowIndx, column=colIndx)
-
+        #Slider.grid(row=rowIndx,column=colIndx,columnspan=colSpan)
 
     def ringOn(self):
         output = str(self.ringOnAdd) + "*"
@@ -184,9 +191,8 @@ class Ring:
         print("ringOff" + output)
         self.ser.write(output.encode("utf-8"))
 
-        
     def ringZap(self):
-
+        #print ("works")
         green = self.ringGZap.get()
         if int(green) > 255:
             green = str(255)
@@ -208,21 +214,33 @@ class Ring:
             blue = str(0)
         blue = int(blue)
 
-        greenOut = self.greenAdd+"*"+ str(green) + "*"
-        self.ser.write(greenOut.encode("utf-8"))
-
-        redOut = self.redAdd+"*"+ str(red) + "*"
-        self.ser.write(redOut.encode("utf-8"))
-
-        blueOut = self.blueAdd+"*"+ str(blue) + "*"
-        self.ser.write(blueOut.encode("utf-8"))
-
+#        prevGreen = self.ringGreenVar.get()
+#        prevGreen = str(int(self.greenAdd) + int(prevGreen)) + "*"
+#        prevRed = ringRedVar.get()
+#        prevRed = str(int(self.redAdd) + int(prevRed)) + "*"
+#        prevBlue = ringBlueVar.get()
+#        prevBlue = str(int(self.blueAdd) + int(prevBlue)) + "*"
+#
         time = self.ringZapTime.get()
         if time == "zap in ms":
             time = 500
-        time = str(time)
-        zapAdd = self.ringZapAdd + "*" + time +"*"
-        self.ser.write(zapAdd.encode("utf-8"))
-        time=0
+        time = str(time) + "*"
 
+        greenAdd = str(int(self.greenAdd) + green) + "*"
+        self.ser.write(greenAdd.encode("utf-8"))
+        #self.ser.write(green.encode("utf-8"))
+
+        redAdd = str(int(self.redAdd) + red) + "*"
+        self.ser.write(redAdd.encode("utf-8"))
+        #self.ser.write(red.encode("utf-8"))
+
+        blueAdd = str(int(self.blueAdd) + blue) + "*"
+        self.ser.write(blueAdd.encode("utf-8"))
+        #self.ser.write(blue.encode("utf-8"))
+
+        zapAdd = self.ringZapAdd + "*"
+        self.ser.write(zapAdd.encode("utf-8"))
+        self.ser.write(time.encode("utf-8"))
+#        greenUpdate(self, ser=self.ser, address1=self.greenAdd)
+        #greenUpdate
         print("ringZAP for " + time)

@@ -21,7 +21,7 @@ class Peltier:
 
         def peltSetTemp(self):
             tempVal = peltTempVar.get()
-            temp = str(int(tempAdd) + tempVal) + "*"
+            temp = tempAdd +"*"+str(tempVal) + "*"
             ser.write(temp.encode("utf-8"))
 
         frame1 = tk.Frame(master=self.peltParent)
@@ -80,17 +80,17 @@ class Peltier:
         self.peltParent.after(100, self.peltGetTempArd)
         getTemp = str(99) + "*"
         self.ser.write(getTemp.encode("utf-8"))
-        test = self.ser.inWaiting()
+        test=self.ser.inWaiting()
         #print(test)
         #make a loop that waits untill data
         #from the arduino is available
         #while test == 0:
             #test = self.ser.inWaiting()
-
+        #dummie = 0
         if test > 0:
             dummie = self.ser.readline()
             self.peltTempArd.set(dummie)
-
+            #dummie = str(dummie)
         if self.logTemp.get() == 1:
             self.peltFlag1 = 1
             #create a folderpath name to store temperature logs
