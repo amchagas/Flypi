@@ -14,10 +14,13 @@ class Peltier:
         self.peltParent = parent
         self.ser = ser
         self.peltTempArd = tk.StringVar()
+        
         peltTempVar = tk.IntVar()
+        self.tempVar=peltTempVar
         self.logTemp = tk.IntVar()
         self.basePath = basePath
         self.peltFlag1 = 0
+
 
         def peltSetTemp(self):
             tempVal = peltTempVar.get()
@@ -89,8 +92,9 @@ class Peltier:
         #dummie = 0
         if test > 0:
             dummie = self.ser.readline()
+            #if dummie != "waitDone":
             self.peltTempArd.set(dummie)
-            #dummie = str(dummie)
+                #dummie = str(dummie)
         if self.logTemp.get() == 1:
             self.peltFlag1 = 1
             #create a folderpath name to store temperature logs

@@ -93,7 +93,7 @@ class flypiApp:
             # for Arduino Uno from RPi
             #self.ser = serial.Serial('/dev/ttyACM0', 115200)
             # for Arduino Nano from RPi
-            self.ser = serial.Serial('/dev/ttyUSB0', 9600)
+            self.ser = serial.Serial('/dev/ttyUSB2', 115200)
 
         ##show the pieces of the GUI
         ##depending on which flags are on (see above):
@@ -102,7 +102,7 @@ class flypiApp:
 
         ###CAMERA###
         if self.cameraFlag == 1:
-            usedClasses["camera"] = 1
+            
             
             import Camera
             self.frameCam = tk.Frame(master=row2Frame, bd=3)
@@ -110,6 +110,8 @@ class flypiApp:
             self.Camera = Camera.Camera(parent=self.frameCam,
                                         label="CAMERA",
                                         basePath=self.basePath)
+
+            usedClasses["camera"] = self.Camera
         else:
             usedClasses["camera"] = 0
         ###LED1###
@@ -205,6 +207,7 @@ class flypiApp:
             peltOff = self.peltOffAdd+"*"
             self.ser.write(peltOff.encode('utf-8'))
             usedClasses["peltier"] = self.Peltier
+            
         else:   
             usedClasses["peltier"] = 0
 
@@ -231,7 +234,7 @@ class flypiApp:
             self.frameProt.pack(side="top")
             self.Protocol = Protocol.Protocol(parent = self.frameProt,
                                               usedClasses=usedClasses,
-                                              
+                                              basePath = self.basePath+"/protocol/",
                                               label="Protocols",ser=self.ser)
             #self.prot = True
             #self.protocol = Protocol(parent=self.frameProt, ser=self.ser)

@@ -88,7 +88,7 @@ matrixPattern2[] =
 
 void setup()
 { //start serial port
-  Serial.begin(9600);
+  Serial.begin(115200);
   //Serial.flush();
   //Serial.println("start.");
   //set digital pin modes
@@ -117,7 +117,19 @@ void setup()
 void loop(){ 
   
   if(Serial.available() > 0) {incomingData = Serial.parseInt();}
- 
+      //make arduino wait. This is needed for the protocols
+      if (incomingData==70){
+        incomingData=0;
+	correction = Serial.parseInt();
+	time1=millis();
+	time2=time1;
+	while((time2-time1)<correction){
+           Serial.println("waiting");
+	   time2=millis();
+	}
+        Serial.println("waitDone");
+        correction=0;
+      }//end if
       //check temp sensor
       if(incomingData==99){
         incomingData=0;
