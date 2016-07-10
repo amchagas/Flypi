@@ -15,8 +15,10 @@ except ImportError:
 class flypiApp:
     #filepath for output:
     basePath = '/home/pi/Desktop/flypi_output/'
+    
 
     #use these flags to make whole pieces of the GUI disappear
+
     cameraFlag = 1
     ringFlag = 1
     led1Flag = 1
@@ -24,7 +26,9 @@ class flypiApp:
     matrixFlag = 1
     peltierFlag = 1
     autofocusFlag = 1
-    protocolFlag = 0
+    
+    
+    protocolFlag = 1
     quitFlag = 1
 
     #############adresses for all arduino components:
@@ -73,6 +77,9 @@ class flypiApp:
             os.mkdir(self.basePath)
             os.chown(self.basePath, 1000, 1000)
 
+        #create dictionary to store all classes that will be used
+        usedClasses = dict() 
+
         ##create the mainframe
         frame = tk.Frame()
         frame.grid(row=0, column=0, rowspan=1, columnspan=1)
@@ -95,15 +102,20 @@ class flypiApp:
 
         ###CAMERA###
         if self.cameraFlag == 1:
+            usedClasses["camera"] = 1
+            
             import Camera
             self.frameCam = tk.Frame(master=row2Frame, bd=3)
             self.frameCam.pack(side="top")
             self.Camera = Camera.Camera(parent=self.frameCam,
                                         label="CAMERA",
                                         basePath=self.basePath)
+        else:
+            usedClasses["camera"] = 0
         ###LED1###
         if self.led1Flag == 1:
             import LED
+            
             self.frameLed1 = tk.Frame(row1Frame, bd=3)
             self.frameLed1.grid(row=0, column=0, sticky="NW")
 
@@ -116,6 +128,10 @@ class flypiApp:
             led1Off = self.led1OffAdd+"*"
             self.ser.write(led1Off.encode('utf-8'))
 
+            usedClasses["led1"] = self.LED1
+            #print (self.LED1)
+        else:
+            usedClasses["led1"] = 0
         ###LED2###
         if self.led2Flag == 1:
             import LED
@@ -128,7 +144,9 @@ class flypiApp:
                           )
             led2Off = self.led2OffAdd+"*"
             self.ser.write(led2Off.encode('utf-8'))
-
+            usedClasses["led2"] = self.LED2
+        else:   
+            usedClasses["led2"] = 0
 
 
         ###MATRIX###
@@ -144,6 +162,9 @@ class flypiApp:
                                ser=self.ser)
             matOff = self.matOffAdd+"*"
             self.ser.write(matOff.encode('utf-8'))
+            usedClasses["matrix"] = self.Matrix
+        else:   
+            usedClasses["matrix"] = 0
 
         ###RING###
         if self.ringFlag == 1:
@@ -162,15 +183,18 @@ class flypiApp:
                              allAdd=self.ringAllAdd,
                              rotAdd=self.ringRotAdd,
                              ser=self.ser)
-            
-            #ringOff=self.ringOffAdd+"*"
-            #self.ser.write(ringOff.encode('utf-8'))
 
+            ringOff=self.ringOffAdd+"*"
+            self.ser.write(ringOff.encode('utf-8'))
+            usedClasses["ring"] = self.Ring
+        else:   
+            usedClasses["ring"] = 0
+            
         ###PELTIER###
         if self.peltierFlag == 1:
             import Peltier
-            self.framePelt = tk.Frame(row3Frame, bd=3)
-            self.framePelt.pack(side="top")
+            self.framePelt = tk.Frame(row4Frame, bd=3)
+            self.framePelt.pack(side="left")
             self.Peltier = Peltier.Peltier(parent=self.framePelt,
                                            label="PELTIER",
                                            onAdd=self.peltOnAdd,
@@ -180,13 +204,16 @@ class flypiApp:
                                            ser=self.ser)
             peltOff = self.peltOffAdd+"*"
             self.ser.write(peltOff.encode('utf-8'))
+            usedClasses["peltier"] = self.Peltier
+        else:   
+            usedClasses["peltier"] = 0
 
 
         ###Auto Focus###
         if self.autofocusFlag == 1:
             import AutoFocus
-            self.frameAuto = tk.Frame(row3Frame, bd=3)
-            self.frameAuto.pack(side="top")
+            self.frameAuto = tk.Frame(row4Frame, bd=3)
+            self.frameAuto.pack(side="left")
             self.AutoFocus = AutoFocus.AutoFocus(parent=self.frameAuto,
                                            label="Focus",
                                            velAdd=self.autoFocusAdd,
@@ -196,11 +223,17 @@ class flypiApp:
 
         ###Protocol###
         if self.protocolFlag == 1:
-            self.frameProt = tk.Frame(master=row4Frame,
+            import Protocol
+            
+            self.frameProt = tk.Frame(master=row3Frame,
                                       bd=3,
                                       relief="ridge")
             self.frameProt.pack(side="top")
-            self.prot = True
+            self.Protocol = Protocol.Protocol(parent = self.frameProt,
+                                              usedClasses=usedClasses,
+                                              
+                                              label="Protocols",ser=self.ser)
+            #self.prot = True
             #self.protocol = Protocol(parent=self.frameProt, ser=self.ser)
 
         else:
@@ -209,14 +242,15 @@ class flypiApp:
 
         ###QUIT###
         if self.quitFlag == 1:
-            self.frameQuit = tk.Frame(master=frame)
-            self.frameQuit.grid(row=5, column=2, sticky="NW")
+            self.frameQuit = tk.Frame(master=row4Frame)
+            self.frameQuit.pack(side="right")
+            #self.frameQuit.grid(row=5, column=2, sticky="NW")
             self.quitAPP(parent=self.frameQuit)
 
         #draw all frames on screen
         row4Frame.grid(row=5, column=0, sticky="NWE", columnspan=1)
         row1Frame.grid(row=1, column=0, sticky="NWE", columnspan=1)
-        row3Frame.grid(row=0, column=2, sticky="NWE")
+        row3Frame.grid(row=1, column=2, sticky="NWE")
         row2Frame.grid(row=0, column=0, sticky="NWE", columnspan=1)
 
     ######################################## QUIT
@@ -232,7 +266,8 @@ class flypiApp:
                 self.ser.close()
 
             self.quit.quit()
-
-        self.quit = tk.Button(parent, text="QUIT",
+        self.qLabel=tk.Label(master=parent,text="exit program")
+        self.qLabel.pack()
+        self.quit = tk.Button(master=parent, text="QUIT",
                               fg="red", command=quitNcloseSerial)
         self.quit.pack(fill="x")
