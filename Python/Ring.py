@@ -77,7 +77,7 @@ class Ring:
 
         self.ringLabel = tk.Label(master=frame1, text=label)
         self.ringLabel.pack()
-        #self.ringLabel.grid(row = 0, column = 0,sticky="W")
+ 
 
         self.ringOnButt = self.ringButton(parent=frame1,
                                           fill="x",
@@ -146,10 +146,10 @@ class Ring:
                                        rowIndx=0, colIndx=3,
                                        from__=255, to__=0, res=1, set_=10)
 
-#        self.ringRot = self.ringSlider(parent=frame2, text_="Rotate", side="top",
+#        self.ringRot = self.ringSlider(parent=frame2, text_="Rotate", 
 #                                       func=rotUpdate,var=self.rrotv,fill_="x", 
 #                                       rowIndx=0,  colIndx=4,orient_="vertical",
-#                                       colSpan=2, delay=300,color="black",
+#                                       colSpan=1, delay=300,color="black",
 #                                       from__=100, to__=-100, res=10, set_=0)
 
     def ringButton(self, parent="none", side="top", fill="x",
