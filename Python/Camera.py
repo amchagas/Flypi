@@ -420,6 +420,7 @@ class Camera:
 
     ##################callbacks for buttons
     def camOn(self):
+        
         print ("cam on")
         res = self.resVar.get()
         size = self.sizeVar.get()
@@ -433,8 +434,11 @@ class Camera:
                        self.zoomVar.get(),
                        self.zoomVar.get())
         self.cam.start_preview()
+        
         self.cam.preview.fullscreen = False
-
+        #wait a second so the camera adjusts
+        time.sleep(1)
+        
     def camOff(self):
         print ("cam Off")
         self.cam.stop_preview()
@@ -457,7 +461,7 @@ class Camera:
                                 time.strftime('%Y-%m-%d-%H-%M-%S') + '.h264',
                                 format = "h264",)
                                 #resize = (1920,1080))
-        self.cam.wait_recording(int(dur))
+        self.cam.wait_recording(float(dur))
         self.cam.stop_recording()
         print("done.")
         #here we restore the preview resolution if it was the maximal one.

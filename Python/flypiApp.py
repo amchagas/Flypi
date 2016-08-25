@@ -21,8 +21,8 @@ class flypiApp:
 
     cameraFlag = 1
     ringFlag = 1
-    led1Flag = 1
-    led2Flag = 1
+    led1Flag = 0
+    led2Flag = 0
     matrixFlag = 1
     peltierFlag = 1
     autofocusFlag = 1
@@ -33,40 +33,40 @@ class flypiApp:
 
     #############adresses for all arduino components:
     ##LED1##
-    led1OnAdd = "1"
-    led1OffAdd = "2"
-    led1ZapDurAdd = "3"
+    led1OnAdd = "LD1<1>>"
+    led1OffAdd = "LD1<0>>"
+    led1ZapDurAdd = "LD1"
 
     ##LED2##
-    led2OnAdd = "4"
-    led2OffAdd = "5"
-    led2ZapDurAdd = "6"
+    led2OnAdd = "LD2<1>>"
+    led2OffAdd = "LD2<0>>"
+    led2ZapDurAdd = "LD2"
 
     ##MATRIX##
     #matOnAdd = "39"
-    matOffAdd = "7"
-    matPat1Add = "8"
-    matPat2Add = "9"
-    matPat3Add = "10"
-    matBrightAdd = "11"
+    matOffAdd = "MAT<0>>"
+    matPat1Add = "MAT<1>>"
+    matPat2Add = "MAT<2>>"
+    matPat3Add = "MAT<3>>"
+    matBrightAdd = "MAB"
 
     ##RING##
-    ringOnAdd = "12"
-    ringOffAdd = "13"
-    ringRedAdd = "14"
-    ringGreenAdd = "15"
-    ringBlueAdd = "16"
-    ringAllAdd = "17"
-    ringZapAdd = "18"
-    ringRotAdd = "19"
+    ringOnAdd = "RIN<1>>"
+    ringOffAdd = "RIN<0>>"
+    ringRedAdd = "RRE"
+    ringGreenAdd = "RGR"
+    ringBlueAdd = "RBL"
+    ringAllAdd = "RAL"
+    ringZapAdd = "RZA"
+    ringRotAdd = "RRT"
 
     ##PELTIER##
-    peltOnAdd = "20"
-    peltOffAdd = "21"
-    peltTempAdd = "22"
+    peltOnAdd = "PEL<1>>"
+    peltOffAdd = "PEL<0>>"
+    peltTempAdd = "TEM<>>"
 
     ##autofocus##
-    autoFocusAdd = "23"
+    autoFocusAdd = "SER"
 
     #row4Frame = tk.Frame()
     def __init__(self, master, ser=""):
@@ -93,13 +93,13 @@ class flypiApp:
             # for Arduino Uno from RPi
             #self.ser = serial.Serial('/dev/ttyACM0', 115200)
             # for Arduino Nano from RPi
-            self.ser = serial.Serial('/dev/ttyUSB2', 115200)
+            self.ser = serial.Serial('/dev/ttyUSB0', 115200)
 
         ##show the pieces of the GUI
         ##depending on which flags are on (see above):
+        
 
-
-
+        
         ###CAMERA###
         if self.cameraFlag == 1:
             

@@ -6,6 +6,234 @@ import re
 
 class Protocol:
 
+
+    def lockwait():
+        print("herre")
+        leave=0
+        while(leave==0):
+            test=self.ser.inWaiting()
+            if test>0:
+                dummie=self.ser.readline()
+                #print(dummie[0:7].decode("utf-8"))
+                if dummie[0:7].decode("utf-8") == "waiting":
+                    print("done waiting") 
+                    leave=1
+        
+        return
+
+
+
+##############################################################################
+    def run_protocol(self):
+  
+        
+        #print("here")
+        coff=0        
+        l1off=0
+        l2off=0
+        moff=0
+        poff=0
+        roff=0
+        #get the number of repetitions of the 5 choice block
+        numReps="self.timeR1.get()"
+        numReps = eval(numReps)
+        numReps=int(numReps)
+        trialDur=0
+        print (numReps)
+        
+
+        #loop through the repetitions
+        for j in range(numReps):
+            #loop 5 times (since it is 5 choice block)
+            for i in range(5):
+                #and get all the names in the varNames list
+                for name in self.varNames:
+                    print(name)
+                    com="self."+name+str(i+1)+".get()"
+                    #print(eval(com))
+                    #get the duration in every block in the 5 choice block                        
+                    for k in range(5):
+                        timeTemp = int(eval("self.timeV"+str(k+1)+".get()"))
+                        if isinstance(timeTemp,int):
+                            trialDur = trialDur+timeTemp
+                        else:
+                            trialDur = trialDur + 0
+                    ####camera
+                    if name =="camV" and i==0:
+                        
+                        if eval(com) =="OFF":
+                            self.usedClasses["camera"].camOff()
+                            coff=0
+                        else:#if the camera is set to ON
+                            recTime = 0.0
+                            #use the duration of the 5 choice block as recording time (plus a buffer)
+                            recTime = float(trialDur) + 1000.0
+                            print (recTime)
+                            #convert it to secs
+                            recTime=float(recTime)/1000.
+                            print(recTime)
+                            #change the TL dur variable in the camera GUI
+                            self.usedClasses["camera"].TLdur.insert(0,str(recTime))
+                            #turn it on and start preview using the callback from camera class
+                            self.usedClasses["camera"].camOn()
+                            #start recording using the callback from camera class
+                            self.usedClasses["camera"].camRec()
+                            coff=1
+                            
+                    ####led1
+                    if name == "led1V":
+                        if eval(com) == "OFF":
+                            self.usedClasses["led1"].ledOff()
+                            l1off=0
+                        else:
+                            self.usedClasses["led1"].ledOn()
+                            l1off=1
+                            
+                    ####led2
+                    if name == "led2V":
+                        if eval(com) == "OFF":
+                            self.usedClasses["led2"].ledOff()
+                            l2off=0
+                        else:
+                            self.usedClasses["led2"].ledOn()
+                            l2off=1
+                    ####matrix
+                    if name == "matV":
+                        if eval(com) == "OFF":
+                            self.usedClasses["matrix"].matrixOff()
+                            moff=0
+                        elif eval(com) == "Patt1":
+                            self.usedClasses["matrix"].matrixPattern1()
+                            moff=1
+                        elif eval(com) == "Patt2":
+                            self.usedClasses["matrix"].matrixPattern2()
+                            moff=1
+                        elif eval(com) == "Patt3":
+                            self.usedClasses["matrix"].matrixPattern3()
+                            moff=1
+                    ####ring
+                    if name == "ringV":
+                        if eval(com) == "OFF":
+                            self.usedClasses["ring"].ringOff()
+                            roff=0
+                        elif eval(com) == "ON":
+                            red=eval ( "self.ringR"+str(i+1)+".get()")
+                            if red >"255":
+                                print ("setting red value to 255")
+                                red=255
+                            else:
+                                red=int(red)
+                            green=eval ( "self.ringG"+str(i+1)+".get()")
+                            if green >"255":
+                                print ("setting green value to 255")
+                                green=255
+                            else:
+                                green=int(green)
+
+                            blue=eval ( "self.ringB"+str(i+1)+".get()")
+                            if blue =="255":
+                                print ("setting blue value to 255")
+                                blue=255
+                            else:
+                                blue=int(blue)
+                            
+                            self.usedClasses["ring"].rrv.set(str(red))
+                            self.usedClasses["ring"].rgv.set(str(green))
+                            self.usedClasses["ring"].rbv.set(str(blue))
+                            
+                            self.usedClasses["ring"].redUpdate(self)
+                            self.usedClasses["ring"].greenUpdate(self)
+                            self.usedClasses["ring"].blueUpdate(self)
+                            self.usedClasses["ring"].ringOn()
+                            roff=1
+                            
+                    if name == "peltV":
+                        if eval(com) =="OFF":
+                            self.usedClasses["peltier"].peltOff()
+                            poff = 0
+                        else:
+                            temp = eval ( "self.peltT"+str(i+1)+".get()")
+                            temp = int(temp)
+                            self.usedClasses["peltier"].tempVar.set(temp)
+                            self.usedClasses["peltier"].logTemp.set(1)
+                            #self.usedClasses["peltier"].peltSetTemp()
+                            self.usedClasses["peltier"].peltOn()
+                            poff=1
+                            #get the duration of one repetition of the 5 choice block
+                    
+                    if name == "timeV":
+                        timeTemp = int(eval("self.timeV"+str(i+1)+".get()"))
+                        if isinstance(timeTemp,int):
+                            timeTemp = "TIM<"+str(timeTemp)+">>"
+            
+                        else:
+                            timeTemp="TIM<0>>"
+                            
+                        self.ser.write(timeTemp.encode("utf-8"))
+#                        leave=0
+#                        while(leave==0):
+#                            test=self.ser.inWaiting()
+#                            if test>0:
+#                                dummie=self.ser.readline()
+#                                #print(dummie[0:7].decode("utf-8"))
+#                                if dummie[0:7].decode("utf-8") == "waiting":
+#                                    print("done waiting") 
+#                                    leave=1
+
+                        print("end of period " + str(i+1) +" of trial " + str(j+1))
+                
+                    #if one reached the end of the trial, turn everything off
+                    if i==4 and name =="timeI":
+                        #print(i)
+                        #print("here")
+                        #if coff==1:
+                        if self.usedClasses["camera"]:
+                            self.usedClasses["camera"].camOff()
+                        #if l1off==1:
+                        if self.usedClasses["led1"]:
+                            self.usedClasses["led1"].ledOff()
+                        #if l2off==1:
+                        if self.usedClasses["led2"]:
+                            self.usedClasses["led2"].ledOff()
+                        #if moff==1:
+                        if self.usedClasses["matrix"]:
+                            self.usedClasses["matrix"].matrixOff()
+                        #if roff==1:
+                       #print("ringOff!!!!!!!!!!!")
+                        if self.usedClasses["ring"]:
+                            self.usedClasses["ring"].rrv.set("0")
+                            self.usedClasses["ring"].rgv.set("0")
+                            self.usedClasses["ring"].rbv.set("0")
+                            
+                            self.usedClasses["ring"].redUpdate(self)
+                            self.usedClasses["ring"].greenUpdate(self)
+                            self.usedClasses["ring"].blueUpdate(self)
+                            self.usedClasses["ring"].ringOff()
+                        
+                        #if poff==1:
+                        if self.usedClasses["peltier"]:
+                            self.usedClasses["peltier"].peltOff#()
+
+                        time = eval("self."+name+str(1)+".get()")
+                        
+                        if time.isdigit():
+                            
+                            time="TIM<"+time+">>"
+                            self.ser.write(time.encode("utf-8"))
+                            #lockwait
+#                            leave=0
+#                            while(leave==0):
+#                                test=self.ser.inWaiting()
+#                                if test>0:
+#                                    dummie=self.ser.readline()
+#                                    #print(dummie[0:7].decode("utf-8"))
+#                                    if dummie[0:7].decode("utf-8") == "waiting":
+#                                        print("done waiting") 
+#                                        leave=1
+
+                    
+############################################################################
+                                
     def __init__(self, parent="none",ser="",
                  usedClasses = dict(),
                  led1C="",
@@ -24,7 +252,7 @@ class Protocol:
         self.varNames = list()
         #buttonsFrame = tk.Frame(master=frame1, bd=3)
         #buttonsFrame.grid(row=1, column=1)
-
+#        self.lockwait=lockwait
         
 
         rows=0
@@ -32,25 +260,7 @@ class Protocol:
         protLabel.grid(row=rows, column=0)
         rows=rows+1
 
-        if usedClasses["camera"] != 0:
-            camLabel = tk.Label(master=frame1, text="Camera")
-            camLabel.grid(row=rows, column=0)
-            self.varNames.append("camV")
-            self.camV1 = tk.StringVar(master=frame1)
-            self.camV2 = tk.StringVar(master=frame1)
-            self.camV3 = tk.StringVar(master=frame1)
-            self.camV4 = tk.StringVar(master=frame1)
-            self.camV5 = tk.StringVar(master=frame1)
-
-            temp = [self.camV1, self.camV2, self.camV3, self.camV4, self.camV5]
-            
-            for k in range(len(temp)):
-                protButt10 = tk.OptionMenu(frame1, temp[k], "ON", "OFF")
-                temp[k].set("OFF")
- 
-                protButt10.grid(row=rows, column=k+1, sticky="NW")
-            rows = rows+1
-
+        
         ######### LED1 #################
         
         if usedClasses["led1"] != 0:
@@ -195,15 +405,15 @@ class Protocol:
                 
                 protButt3.grid(row=rows, column=x, sticky="NW")
                 protEntry2 = tk.Entry(master = frame1, width=7,textvariable=temp[k+1])
-                protEntry2.insert(0,"0-255")
+                protEntry2.insert(0,"0")
                 protEntry2.grid(row=rows+1,column=x,sticky=("NW"))
 
                 protEntry2 = tk.Entry(master = frame1, width=7,textvariable=temp[k+2])
-                protEntry2.insert(0,"0-255")
+                protEntry2.insert(0,"0")
                 protEntry2.grid(row=rows+2,column=x,sticky=("NW"))
 
                 protEntry2 = tk.Entry(master = frame1, width=7,textvariable=temp[k+3])
-                protEntry2.insert(0,"0-255")
+                protEntry2.insert(0,"0")
                 protEntry2.grid(row=rows+3,column=x,sticky=("NW"))
                 
 
@@ -294,11 +504,12 @@ class Protocol:
         timeLabel = tk.Label(master=frame1, text="IRI(ms)")
         timeLabel.grid(row=rows, column=0)
         
-        timeI1 = tk.StringVar(master=frame1)
+        self.timeI1 = tk.StringVar(master=frame1)
+        self.varNames.append("timeI")
         
-        timeEntry2 = tk.Entry(master = frame1, width=7,textvariable=timeI1)
-        timeEntry2.insert(0,"0")
-        timeEntry2.grid(row=rows,column=1,sticky=("NW"))
+        timeEntry3 = tk.Entry(master = frame1, width=7,textvariable=self.timeI1)
+        timeEntry3.insert(0,"0")
+        timeEntry3.grid(row=rows,column=1,sticky=("NW"))
         rows = rows+1
 
         ###start protocols
@@ -306,143 +517,32 @@ class Protocol:
         #runLabel.grid(row=rows,column=0)
         #runV1 = tk.StringVar(master=frame1)
         
+
+        
+        
+        #######CAMERA##############
+        if usedClasses["camera"] != 0:
+            camLabel = tk.Label(master=frame1, text="Camera")
+            camLabel.grid(row=rows, column=0)
+            #insert camera in the first position of the list,
+            #since it has to be on when the other devices start
+            self.varNames.insert(0,"camV")
+            self.camV1 = tk.StringVar(master=frame1)
+            #self.camV2 = tk.StringVar(master=frame1)
+            #self.camV3 = tk.StringVar(master=frame1)
+            #self.camV4 = tk.StringVar(master=frame1)
+            #self.camV5 = tk.StringVar(master=frame1)
+
+            temp = [self.camV1,] #self.camV2, self.camV3, self.camV4, self.camV5]
+            
+            #for k in range(len(temp)):
+            protButt10 = tk.OptionMenu(frame1, temp[0], "ON", "OFF")
+            temp[0].set("OFF") 
+            protButt10.grid(row=rows, column=0+1, sticky="NW")
+            
+            rows = rows+1
+            
         runButt = tk.Button(master=frame1,text="RUN!",fg="green",command=self.run_protocol)
         runButt.grid(row=rows-1,column=3)
 
-
-    def run_protocol(self,):
-        numReps="self.timeR1.get()"
-        numReps = eval(numReps)
-        numReps=int(numReps)
-        print (numReps)
-        trialDur = eval("self.timeV1.get()")
-        if trialDur.isdigit():
-            trialDur="70*"+trialDur+"*"
-
-        
-        for j in range(numReps):
-            for i in range(5):
-                for name in self.varNames:
-                    com="self."+name+str(i+1)+".get()"
-                    ####camera
-                    if name =="camV":
-                        if eval(com) =="OFF":
-                            self.usedClasses["camera"].camOff()
-                        else:
-                            self.usedClasses["camera"].camOn()
-                            recTime = eval("self.timeV1.get()")
-                            recTime=float(recTime)/1000
-                            self.usedClasses["camera"].TLdur.insert(0,str(recTime))
-                            self.usedClasses["camera"].camRec()
-                    ####led1
-                    if name == "led1V":
-                        if eval(com) == "OFF":
-                            self.usedClasses["led1"].ledOff()
-                        else:
-                            self.usedClasses["led1"].ledOn()
-                    ####led2
-                    if name == "led2V":
-                        if eval(com) == "OFF":
-                            self.usedClasses["led2"].ledOff()
-                        else:
-                            self.usedClasses["led2"].ledOn()
-                    ####matrix
-                    if name == "matV":
-                        if eval(com) == "OFF":
-                            self.usedClasses["matrix"].matrixOff()
-                        elif eval(com) == "Patt1":
-                            self.usedClasses["matrix"].matrixPattern1()
-                        elif eval(com) == "Patt2":
-                            self.usedClasses["matrix"].matrixPattern2()
-                        elif eval(com) == "Patt3":
-                            self.usedClasses["matrix"].matrixPattern3()
-                    ####ring
-                    if name == "ringV":
-                        if eval(com) == "OFF":
-                            self.usedClasses["ring"].ringOff()
-                        elif eval(com) == "ON":
-                            red=eval ( "self.ringR"+str(i+1)+".get()")
-                            if red =="0-255":
-                                print ("setting red value to 10")
-                                red=10
-                            else:
-                                red=int(red)
-                            green=eval ( "self.ringG"+str(i+1)+".get()")
-                            if green =="0-255":
-                                print ("setting green value to 10")
-                                green=10
-                            else:
-                                green=int(green)
-
-                            blue=eval ( "self.ringB"+str(i+1)+".get()")
-                            if blue =="0-255":
-                                print ("setting blue value to 10")
-                                blue=10
-                            else:
-                                blue=int(blue)
-                            self.usedClasses["ring"].rrv.set(red)
-                            self.usedClasses["ring"].rgv.set(green)
-                            self.usedClasses["ring"].rgv.set(blue)
-                            self.usedClasses["ring"].ringOn()
-                    if name == "peltV":
-                        if eval(com) =="OFF":
-                            self.usedClasses["peltier"].peltOff()
-                        else:
-                            temp=eval ( "self.peltT"+str(i+1)+".get()")
-                            temp=int(temp)
-                            self.usedClasses["peltier"].tempVar.set(temp)
-                            self.usedClasses["peltier"].peltSetTemp()
-                            self.usedClasses["peltier"].peltOn()
-
-                #wait the necessary period time
-                self.ser.write(trialDur.encode("utf-8"))
-                print("end of period " + str(i+1) +" of trial " + str(j+1))
-                if i==4 and name =="timeI":
-                    time = eval("self."+name+str(1)+".get()")
-                    if time.isdigit():
-                        time="70*"+time+"*"
-                        self.ser.write(time.encode("utf-8"))
-                        test=self.ser.inWaiting()
-                        if test>0:
-                            dummie=self.ser.readline()
-                            if dummie=="waitDone":
-                                print("done waiting")
-                        
-
-                   
-                    
-                                    
-                        
-                    
-            #if self.usedClasses["led1"]!=0:
-            #    var="led1V"
-            #    com="self."+var+str(i+1)+".get()"
-            #    if eval(com) == "OFF":
-            #        print("led1 off")
-            #    else:
-            #        print ("led1 on")
-
-            #if self.usedClasses["led2"]!=0:
-            #    var="led2V"
-            #    com="self."+var+str(i+1)+".get()"
-            #    if eval(com) == "OFF":
-            #        print("led2 off")
-            #    else:
-            #        print ("led2 on")
-
-            #if self.usedClasses["matrix"]!=0:
-            #    var="matV"
-            #    com="self."+var+str(i+1)+".get()"
-            #    if eval(com) == "OFF":
-            #        print("mat off")
-            #    else:
-            #       print ("mat on")
-            
-            
-            
-            
-        
-        
-        
-        
-        
+ 

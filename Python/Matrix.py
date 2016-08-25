@@ -22,8 +22,8 @@ class Matrix:
 
         def matrixUpdate(self, ser=self.ser, brightAdd=self.brightAdd):
             #address = brightAdd + "*"
-            output = str(brightAdd)+ "*"
-            output1 = str(matBrightVar.get())+"*"
+            output = str(brightAdd)+ "<"
+            output1 = str(matBrightVar.get())+">>"
             #print("mat bright " + str(output))
             #output = int(brightAdd) + output
             #output = str(output) + "*"
@@ -74,21 +74,21 @@ class Matrix:
         button.pack(side=side, fill=fill)
 
     def matrixOff(self):
-        output = str(self.offAdd) + "*"
+        output = str(self.offAdd)
         print("matrix off " + output)
         self.ser.write(output.encode("utf-8"))
 
     def matrixPattern1(self):
-        output = str(self.pat1Add) + "*"
+        output = str(self.pat1Add)
         print("matrix pattern1 " + output)
         self.ser.write(output.encode("utf-8"))
 
     def matrixPattern2(self):
-        output = str(self.pat2Add) + "*"
+        output = str(self.pat2Add)
         print("matrix pattern2 " + output)
         self.ser.write(output.encode("utf-8"))
 
     def matrixPattern3(self):
-        output = str(self.pat3Add) + "*"
+        output = str(self.pat3Add)
         print ("matrix pattern3 " + output)
         self.ser.write(output.encode("utf-8"))

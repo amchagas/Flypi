@@ -23,7 +23,7 @@ class AutoFocus:
             #convert the values to a range
             #between 0 and 180
             velVal = (velVal+10)*9 
-            vel = velAdd +"*"+ str(velVal) + "*"
+            vel = velAdd +"<"+ str(velVal) + ">>"
             #print(vel)
             ser.write(vel.encode("utf-8"))
             
@@ -45,6 +45,6 @@ class AutoFocus:
         
     def autoOff(self):
         print("motor off")
-        output = str(self.velAdd) + "*90*"
+        output = str(self.velAdd) + "<90>>"
         self.ser.write(output.encode("utf-8"))
         self.vel1.set(str(0))
