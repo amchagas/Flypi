@@ -22,8 +22,8 @@ class Matrix:
 
         def matrixUpdate(self, ser=self.ser, brightAdd=self.brightAdd):
             #address = brightAdd + "*"
-            output = str(brightAdd)+ "*"
-            output1 = str(matBrightVar.get())+"*"
+            output = str(brightAdd)+ "<"
+            output1 = str(matBrightVar.get())+">>"
             #print("mat bright " + str(output))
             #output = int(brightAdd) + output
             #output = str(output) + "*"
@@ -64,51 +64,7 @@ class Matrix:
         self.matrixBright.pack(after=self.matrixBrightLabel, side="left")
         frame4.pack(after=self.matrixLabel, side="right")
 
-####################protocol##########################
 
-#        if prot == True:
-#            tempFrame = tk.Frame(master=protFrame)
-#            tempFrame.pack()
-#            matV1 = tk.StringVar(master=tempFrame)
-##            matV1.set(self.offAdd)
-
-#            matV2 = tk.StringVar(master=tempFrame)
-##            matV2.set(self.offAdd)
-#
-#            matV3 = tk.StringVar(master=tempFrame)
-##            matV3.set(self.offAdd)
-
-#            matV4 = tk.StringVar(master=tempFrame)
-##            matV4.set(self.offAdd)
-
-#            matV5 = tk.StringVar(master=tempFrame)
-##            matV5.set(self.offAdd)
-
-#            def matProtCB():
-#                dummie = list()
-#                dummie.append(matV1.get())
-#                dummie.append(matV2.get())
-#                dummie.append(matV3.get())
-#                dummie.append(matV4.get())
-#                dummie.append(matV5.get())
-#                return dummie
-
-#            protMatLabel = tk.Label(master=tempFrame, text="MATRIX:")
-#            protMatLabel.grid(row=0, column=0)
-
-#            buttonsFrame = tk.Frame(master=tempFrame, bd=3)
-#            buttonsFrame.grid(row=0, column=1)
-
-#            vars = [matV1, matV2, matV3, matV4, matV5]
-#            for k in range(0, 5):
-#                protButt1 = tk.OptionMenu(buttonsFrame,
-#                                          vars[k],
-#                                          "OFF",
-#                                          "Patt1",
-#                                          "Patt2",
-#                                          "Patt3")
-#                vars[k].set("OFF")
-#                protButt1.grid(row=1, column=k, sticky="NW")
 
 ####################callbacks######################
     def MatButton(self, parent="none", fill="y",
@@ -118,21 +74,21 @@ class Matrix:
         button.pack(side=side, fill=fill)
 
     def matrixOff(self):
-        output = str(self.offAdd) + "*"
+        output = str(self.offAdd)
         print("matrix off " + output)
         self.ser.write(output.encode("utf-8"))
 
     def matrixPattern1(self):
-        output = str(self.pat1Add) + "*"
+        output = str(self.pat1Add)
         print("matrix pattern1 " + output)
         self.ser.write(output.encode("utf-8"))
 
     def matrixPattern2(self):
-        output = str(self.pat2Add) + "*"
+        output = str(self.pat2Add)
         print("matrix pattern2 " + output)
         self.ser.write(output.encode("utf-8"))
 
     def matrixPattern3(self):
-        output = str(self.pat3Add) + "*"
+        output = str(self.pat3Add)
         print ("matrix pattern3 " + output)
         self.ser.write(output.encode("utf-8"))

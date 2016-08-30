@@ -11,17 +11,21 @@ class Peltier:
 
         self.onAdd = onAdd
         self.offAdd = offAdd
+        self.tempAdd = tempAdd
         self.peltParent = parent
         self.ser = ser
         self.peltTempArd = tk.StringVar()
+        
         peltTempVar = tk.IntVar()
+        self.tempVar=peltTempVar
         self.logTemp = tk.IntVar()
         self.basePath = basePath
         self.peltFlag1 = 0
 
+
         def peltSetTemp(self):
             tempVal = peltTempVar.get()
-            temp = tempAdd +"*"+str(tempVal) + "*"
+            temp = tempAdd +"<"+str(tempVal) + ">>"
             ser.write(temp.encode("utf-8"))
 
         frame1 = tk.Frame(master=self.peltParent)
@@ -67,18 +71,18 @@ class Peltier:
 
     def peltOn(self):
         print("peltier on")
-        output = str(self.onAdd) + "*"
+        output = str(self.onAdd)
         self.sendFlag = 1
         self.ser.write(output.encode("utf-8"))
 
     def peltOff(self):
         print("peltier off")
-        output = str(self.offAdd) + "*"
+        output = str(self.offAdd)
         self.ser.write(output.encode("utf-8"))
 
     def peltGetTempArd(self):
         self.peltParent.after(100, self.peltGetTempArd)
-        getTemp = str(99) + "*"
+        getTemp = self.tempAdd
         self.ser.write(getTemp.encode("utf-8"))
         test=self.ser.inWaiting()
         #print(test)
@@ -89,8 +93,9 @@ class Peltier:
         #dummie = 0
         if test > 0:
             dummie = self.ser.readline()
+            #if dummie != "waitDone":
             self.peltTempArd.set(dummie)
-            #dummie = str(dummie)
+                #dummie = str(dummie)
         if self.logTemp.get() == 1:
             self.peltFlag1 = 1
             #create a folderpath name to store temperature logs
