@@ -141,6 +141,7 @@ void loop() {
   //check temp sensor
   if (term1 == "TEM") 
     {  temperature = checkTemp(tempSensorPin);
+        newTemp=term2;
        Serial.println(temperature);
        if (peltOn == 1) {
           HoldTemp(newTemp, tempSensorPin, peltierCoolPin1, peltierHeatPin1);
