@@ -82,7 +82,7 @@ class Peltier:
 
     def peltGetTempArd(self):
         self.peltParent.after(100, self.peltGetTempArd)
-        getTemp = self.tempAdd
+        getTemp = self.tempAdd+"<99>>"
         self.ser.write(getTemp.encode("utf-8"))
         test=self.ser.inWaiting()
         #print(test)

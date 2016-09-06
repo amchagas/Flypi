@@ -28,7 +28,7 @@ class flypiApp:
     autofocusFlag = 1
     
     
-    protocolFlag = 1
+    protocolFlag = 0
     quitFlag = 1
 
     #############adresses for all arduino components:
@@ -63,7 +63,7 @@ class flypiApp:
     ##PELTIER##
     peltOnAdd = "PEL<1>>"
     peltOffAdd = "PEL<0>>"
-    peltTempAdd = "TEM<>>"
+    peltTempAdd = "TEM"
 
     ##autofocus##
     autoFocusAdd = "SER"
