@@ -28,7 +28,7 @@ class flypiApp:
     autofocusFlag = 1
     
     
-    protocolFlag = 0
+    protocolFlag = 1
     quitFlag = 1
 
     #############adresses for all arduino components:
