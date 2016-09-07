@@ -24,7 +24,7 @@ class flypiApp:
     led1Flag = 0
     led2Flag = 0
     matrixFlag = 1
-    peltierFlag = 1
+    peltierFlag = 0
     autofocusFlag = 1
     
     
@@ -239,7 +239,8 @@ class flypiApp:
             self.Protocol = Protocol.Protocol(parent = self.frameProt,
                                               usedClasses=usedClasses,
                                               basePath = self.basePath+"/protocol/",
-                                              label="Protocols",ser=self.ser)
+                                              label="Protocols",ser=self.ser,
+                                              timingAdd=self.timeAdd)
             #self.prot = True
             #self.protocol = Protocol(parent=self.frameProt, ser=self.ser)
 

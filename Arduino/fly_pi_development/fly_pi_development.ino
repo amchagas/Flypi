@@ -134,8 +134,9 @@ void loop() {
     
   //timing
   if (term1 == "TIM") {
+    Serial.println(term2);
     waiting(term2.toInt());
-    Serial.println("waiting");
+    //Serial.println("waited");
     }
 
   //check temp sensor
@@ -482,5 +483,5 @@ void waiting(int millistowait) {
   }
 
   //done waiting
-  //Serial.println("waiting");
+  Serial.println("waited");
 }
