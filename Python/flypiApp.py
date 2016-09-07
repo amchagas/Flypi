@@ -32,15 +32,18 @@ class flypiApp:
     quitFlag = 1
 
     #############adresses for all arduino components:
+    #timing address    
+    timeAdd = "TIM"    
+
     ##LED1##
     led1OnAdd = "LD1<1>>"
     led1OffAdd = "LD1<0>>"
-    led1ZapDurAdd = "LD1"
+    led1ZapDurAdd = timeAdd
 
     ##LED2##
     led2OnAdd = "LD2<1>>"
     led2OffAdd = "LD2<0>>"
-    led2ZapDurAdd = "LD2"
+    led2ZapDurAdd = timeAdd
 
     ##MATRIX##
     #matOnAdd = "39"
@@ -67,6 +70,7 @@ class flypiApp:
 
     ##autofocus##
     autoFocusAdd = "SER"
+    
 
     #row4Frame = tk.Frame()
     def __init__(self, master, ser=""):

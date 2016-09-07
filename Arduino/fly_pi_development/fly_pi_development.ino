@@ -132,7 +132,7 @@ void loop() {
     //Serial.println(term2);
   }
     
-
+  //timing
   if (term1 == "TIM") {
     waiting(term2.toInt());
     Serial.println("waiting");
