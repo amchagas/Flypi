@@ -41,7 +41,9 @@ class Protocol:
         trialDur=0
         print (numReps)
         
-
+        #list to store all commands and run them at once in the end
+        chain=list()
+        
         #loop through the repetitions
         for j in range(numReps):
             #loop 5 times (since it is 5 choice block)
@@ -68,7 +70,7 @@ class Protocol:
                             recTime = 0.0
                             #use the duration of the 5 choice block as recording time (plus a buffer)
                             recTime = float(trialDur) + 1000.0
-                            print (recTime)
+                            #print (recTime)
                             #convert it to secs
                             recTime=float(recTime)/1000.
                             print(recTime)
@@ -86,6 +88,7 @@ class Protocol:
                             self.usedClasses["led1"].ledOff()
                             l1off=0
                         else:
+                            #chain.append()
                             self.usedClasses["led1"].ledOn()
                             l1off=1
                             
@@ -99,6 +102,8 @@ class Protocol:
                             l2off=1
                     ####matrix
                     if name == "matV":
+                        print("Here: ")
+                        print (eval(com)=="OFF")
                         if eval(com) == "OFF":
                             self.usedClasses["matrix"].matrixOff()
                             moff=0
@@ -141,10 +146,11 @@ class Protocol:
                             self.usedClasses["ring"].rgv.set(str(green))
                             self.usedClasses["ring"].rbv.set(str(blue))
                             
+                            self.usedClasses["ring"].ringOn()
                             self.usedClasses["ring"].redUpdate(self)
                             self.usedClasses["ring"].greenUpdate(self)
                             self.usedClasses["ring"].blueUpdate(self)
-                            self.usedClasses["ring"].ringOn()
+                            
                             roff=1
                             
                     if name == "peltV":
@@ -163,6 +169,7 @@ class Protocol:
                     
                     if name == "timeV":
                         timeTemp = int(eval("self.timeV"+str(i+1)+".get()"))
+                        #print(timeTemp)
                         if isinstance(timeTemp,int):
                             timeTemp = "TIM<"+str(timeTemp)+">>"
             
@@ -186,21 +193,21 @@ class Protocol:
                     if i==4 and name =="timeI":
                         #print(i)
                         #print("here")
-                        #if coff==1:
-                        if self.usedClasses["camera"]:
+                        if self.usedClasses["camera"] != 0:
+                        #if self.usedClasses["camera"]:
                             self.usedClasses["camera"].camOff()
-                        #if l1off==1:
-                        if self.usedClasses["led1"]:
+                        if self.usedClasses["led1"] != 0:
+                        #if self.usedClasses["led1"]:
                             self.usedClasses["led1"].ledOff()
-                        #if l2off==1:
-                        if self.usedClasses["led2"]:
+                        if self.usedClasses["led2"] != 0:
+                        #if self.usedClasses["led2"]:
                             self.usedClasses["led2"].ledOff()
-                        #if moff==1:
-                        if self.usedClasses["matrix"]:
+                        if self.usedClasses["matrix"] != 0:
+                        #if self.usedClasses["matrix"]:
                             self.usedClasses["matrix"].matrixOff()
-                        #if roff==1:
+                        if self.usedClasses["ring"] != 0:
                        #print("ringOff!!!!!!!!!!!")
-                        if self.usedClasses["ring"]:
+                        #if self.usedClasses["ring"]:
                             self.usedClasses["ring"].rrv.set("0")
                             self.usedClasses["ring"].rgv.set("0")
                             self.usedClasses["ring"].rbv.set("0")
@@ -210,8 +217,8 @@ class Protocol:
                             self.usedClasses["ring"].blueUpdate(self)
                             self.usedClasses["ring"].ringOff()
                         
-                        #if poff==1:
-                        if self.usedClasses["peltier"]:
+                        if self.usedClasses["peltier"] != 0:
+                        #if self.usedClasses["peltier"]:
                             self.usedClasses["peltier"].peltOff#()
 
                         time = eval("self."+name+str(1)+".get()")
@@ -345,7 +352,7 @@ class Protocol:
                 ##### ring ###########
 
                 
-        if usedClasses["ring"] != 0:
+        if self.usedClasses["ring"] != 0:
  
             ringLabel = tk.Label(master=frame1, text="Ring")
             ringLabel.grid(row=rows, column=0)
