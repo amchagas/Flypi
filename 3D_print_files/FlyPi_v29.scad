@@ -6,10 +6,10 @@
 /// tombaden.wordpress.com ///
 /////////////////////////////////////////////////////////////////////////////////
 //// SWITCHES //////////
-PartA = 	0; // Base
+PartA = 	1; // Base
 PartA1=	0; // Base clamps
 PartA2 = 	0; // Feet
-PartB= 	0; // Wall
+PartB= 	1; // Wall
 PartB3=	1; // Fritzing mount
 PartC= 	0; // Cam Mount
 PartC1= 	0; // Cam Mount Servo
@@ -18,6 +18,7 @@ PartD= 	0; // High Power LED mount
 PartE= 	0; // angled mounting stick
 PartF1= 	0; // straight mounting stick, long
 PartF2= 	0; // straight mounting stick, short
+PartF3= 	0; // straight mounting stick, long 90°
 PartG= 	0; // thumbscrew & manipulator links
 PartH= 	0; // AdaFruit 8x8 LED Matrix mount
 PartI= 	      0; // Adafruit 12 LED Ring mount
@@ -35,7 +36,7 @@ PartO= 	0; // Fluorescence Emission mount and wheel
 /////////////////////////////////////////////////////////////////////////////////
 sep = 30; // How far apart do pieces "float" in the model
 Walls = 5; // Global thickness of all walls
-Tol = 0.07; // Global gap between all parts that need to slide
+Tol = 0.11; // Global gap between all parts that need to slide
 
 // Base and mainwall details
 T_cableZ = 4; // Module A, height of thermistor cable slid
@@ -402,6 +403,31 @@ module F2_sub(){
 }
 if (PartF2==1){difference(){F2();F2_sub();}}
 
+
+/////////////////////////////////////////////////////////////////////////////////
+///// MODULE F1 - extra pillar stick 1 //////////////////
+/////////////////////////////////////////////////////////////////////////////////
+
+
+module F3(){
+	translate([0,-A_Base_Y/2-A_Wall_X/2-sep,A_extramount_Z/2.5+-A_Base_Z]){
+        cube([A_Wall_Y_long,A_Wall_X,A_extramount_Z/2], center = true );} // low_mount
+    
+    translate([0,A_Base_Y/2-A_Wall_X*17,A_extramount_Z/2.5+13-A_Base_Z/2]){
+        rotate([90,0,0]){
+        cube([A_Wall_Y_long,A_Wall_X,A_extramount_Z/4], center = true );}} // 90°
+	translate([0,-A_Base_Y/2-A_Wall_X/2-sep,-A_Base_Z/2]){cube([A_Wall_Y_long*4,A_Wall_X,A_Base_Z], center = true );} // low_mount
+	translate([Airhole_spacing,-A_Base_Y/2-A_Wall_X/2-sep+F_Plug_X/2,-A_Base_Z/2]){rotate ([90,90,0]) {cylinder(r = Airhole_R-Tol, h = F_Plug_X, center = true );}} // Plug hole1
+	translate([0,-A_Base_Y/2-A_Wall_X/2-sep+F_Plug_X/2,-A_Base_Z/2]){rotate ([90,90,0]) {cylinder(r = Airhole_R-Tol, h = F_Plug_X, center = true );}} // Plug hole2
+	translate([-Airhole_spacing,-A_Base_Y/2-A_Wall_X/2-sep+F_Plug_X/2,-A_Base_Z/2]){rotate ([90,90,0]) {cylinder(r = Airhole_R-Tol, h = F_Plug_X, center = true );}} // Plug hole3
+}
+module F3_sub(){
+	translate([Airhole_spacing,-A_Base_Y/2-A_Wall_X/2-sep+F_Plug_X/2,-A_Base_Z/2]){rotate ([90,90,0]) {cylinder(r = Airhole_R-Tube_wall, h = F_Plug_X*2, center = true );}} // Air holes
+	translate([0,-A_Base_Y/2-A_Wall_X/2-sep+F_Plug_X/2,-A_Base_Z/2]){rotate ([90,90,0]) {cylinder(r = Airhole_R-Tube_wall, h = F_Plug_X*2, center = true );}} // Air holes
+	translate([-Airhole_spacing,-A_Base_Y/2-A_Wall_X/2-sep+F_Plug_X/2,-A_Base_Z/2]){rotate ([90,90,0]) {cylinder(r = Airhole_R-Tube_wall, h = F_Plug_X*2, center = true );}} // Air holes
+}
+if (PartF3==1){difference(){F3();F3_sub();}}
+
 /////////////////////////////////////////////////////////////////////////////////
 ///// MODULE G - links and thumbscrews //////////
 /////////////////////////////////////////////////////////////////////////////////
@@ -462,7 +488,7 @@ if (PartH==1){difference(){H();H_sub();}}
 ///// MODULE I - Adafruit 16LED ring mount //////
 /////////////////////////////////////////////////////////////////////////////////
 
-R_LEDring = 36.7/2;
+R_LEDring = 40/2;
 
 module I(){
 	translate([sep+Cam_X_offset,0,Cam_Zfloat-sep]){cube([Cam_X+Walls*2,Cam_Y+Walls*2,Walls], center = true );} // Main
