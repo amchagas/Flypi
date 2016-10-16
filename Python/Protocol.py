@@ -9,18 +9,23 @@ import flypiApp as fp
 class Protocol:
 
 
-    def lockwait():
-        #print("herre")
-        leave=0
-        while(leave==0):
+    def lockwait(self,waitString="waited"):
+        flag = True
+        endFlag="END<>>"
+        while flag== True:
+            #if there is something to read on the serial port
             test=self.ser.inWaiting()
-            if test>0:
+            
+#            print("test: "+str(test))
+            if test>0:                
+                #read line
                 dummie=self.ser.readline()
-                #print(dummie[0:7].decode("utf-8"))
-                if dummie[0:7].decode("utf-8") == "waiting":
-                    print("done waiting") 
-                    leave=1
-        
+                print (dummie[0:-2])
+                #if the line is "waited" get out of the waiting while loop
+                if dummie[0:-2].decode("utf-8")==waitString:
+#                    self.ser.write(endFlag.encode("utf-8"))                    
+                    flag = False 
+
         return
 
 
@@ -42,246 +47,107 @@ class Protocol:
         numReps=int(numReps)
         trialDur=0
         print (numReps)
-        print (self.varNames)
-        #list to store all commands and run them at once in the end
-        chain=list()
-        #get the number of repetitions
-        reps = self.timeR1.get()
-        reps = int(reps)
-        print (reps)
-        #loop the number of repetitions
-        for i in range(reps):
-            #get all matrix steps
-            if "matV" in self.varNames:
-                output = self.timingAdd+"<501>>"
-                self.usedClasses["matrix"].matrixOff()
-                self.usedClasses["matrix"].matrixPattern1()
-                self.ser.write(output.encode("utf-8"))
-                self.usedClasses["matrix"].matrixOff()
-            
-            #execute inter timing interval
-            if "timeI" in self.varNames:
-                
-                ITI = self.timeI.get()
-                print(ITI)
-                output = self.timingAdd+"<"+ITI+">>"
-    
-            #by the end of each protocol trial, make sure the arduino is done 
-            #executing things.
-            flag = True
-            while flag== True:
-                #if there is something to read on the serial port
-                test=self.ser.inWaiting()
-                if test>0:                
-                    #read line
-                    dummie=self.ser.readline()
-                    print(dummie.decode("utf-8"))
-                    #if the line is "waited" get out of the waiting while loop
-                    if dummie[0:-2].decode("utf-8")=="waited":
-                        print("trial done.")
-                        flag = False
-                    
-    
+        #print (self.varNames)
+
+
         
+        #loop the number of repetitions
+        for i in range(1,numReps+1):
+            
+            #get all matrix steps
+            for k in range(1,6):#hard coded because there are only 5 periods 
+                                #per trial.
                 
-#        #loop through the repetitions
-#        for j in range(numReps):
-#            #loop 5 times (since it is 5 choice block)
-#            for i in range(5):
-#                #and get all the names in the varNames list
-#                for name in self.varNames:
-#                    print(name)
-#                    com="self."+name+str(i+1)+".get()"
-#                    #print(eval(com))
-#                    #get the duration in every block in the 5 choice block                        
-#                    for k in range(5):
-#                        timeTemp = int(eval("self.timeV"+str(k+1)+".get()"))
-#                        if isinstance(timeTemp,int):
-#                            trialDur = trialDur+timeTemp
-#                        else:
-#                            trialDur = trialDur + 0
-#                    ####camera
-#                    if name =="camV" and i==0:
-#                        
-#                        if eval(com) =="OFF":
-#                            self.usedClasses["camera"].camOff()
-#                            coff=0
-#                        else:#if the camera is set to ON
-#                            recTime = 0.0
-#                            #use the duration of the 5 choice block as recording time (plus a buffer)
-#                            recTime = float(trialDur) + 1000.0
-#                            #print (recTime)
-#                            #convert it to secs
-#                            recTime=float(recTime)/1000.
-#                            print(recTime)
-#                            #change the TL dur variable in the camera GUI
-#                            self.usedClasses["camera"].TLdur.insert(0,str(recTime))
-#                            #turn it on and start preview using the callback from camera class
-#                            self.usedClasses["camera"].camOn()
-#                            #start recording using the callback from camera class
-#                            self.usedClasses["camera"].camRec()
-#                            coff=1
-#                            
-#                    ####led1
-#                    if name == "led1V":
-#                        if eval(com) == "OFF":
-#                            self.usedClasses["led1"].ledOff()
-#                            l1off=0
-#                        else:
-#                            #chain.append()
-#                            self.usedClasses["led1"].ledOn()
-#                            l1off=1
-#                            
-#                    ####led2
-#                    if name == "led2V":
-#                        if eval(com) == "OFF":
-#                            self.usedClasses["led2"].ledOff()
-#                            l2off=0
-#                        else:
-#                            self.usedClasses["led2"].ledOn()
-#                            l2off=1
-#                    ####matrix
-#                    if name == "matV":
-#                        #print("Here: ")
-#                        #print (eval(com)=="OFF")
-#                        if eval(com) == "OFF":
-#                            #self.usedClasses["matrix"].matrixOff()
-#                            self.ser.write(fp.flypiApp.matOffAdd.encode("utf-8"))
-#                            moff=0
-#                        elif eval(com) == "Patt1":
-#                            #self.usedClasses["matrix"].matrixPattern1()
-#                            self.ser.write(fp.flypiApp.matPat1Add.encode("utf-8"))
-#                            moff=1
-#                        elif eval(com) == "Patt2":
-#                            self.usedClasses["matrix"].matrixPattern2()
-#                            moff=1
-#                        elif eval(com) == "Patt3":
-#                            self.usedClasses["matrix"].matrixPattern3()
-#                            moff=1
-#                    ####ring
-#                    if name == "ringV":
-#                        if eval(com) == "OFF":
-#                            self.usedClasses["ring"].ringOff()
-#                            roff=0
-#                        elif eval(com) == "ON":
-#                            red=eval ( "self.ringR"+str(i+1)+".get()")
-#                            if red >"255":
-#                                print ("setting red value to 255")
-#                                red=255
-#                            else:
-#                                red=int(red)
-#                            green=eval ( "self.ringG"+str(i+1)+".get()")
-#                            if green >"255":
-#                                print ("setting green value to 255")
-#                                green=255
-#                            else:
-#                                green=int(green)
-#
-#                            blue=eval ( "self.ringB"+str(i+1)+".get()")
-#                            if blue =="255":
-#                                print ("setting blue value to 255")
-#                                blue=255
-#                            else:
-#                                blue=int(blue)
-#                            
-#                            self.usedClasses["ring"].rrv.set(str(red))
-#                            self.usedClasses["ring"].rgv.set(str(green))
-#                            self.usedClasses["ring"].rbv.set(str(blue))
-#                            
-#                            self.usedClasses["ring"].ringOn()
-#                            self.usedClasses["ring"].redUpdate(self)
-#                            self.usedClasses["ring"].greenUpdate(self)
-#                            self.usedClasses["ring"].blueUpdate(self)
-#                            
-#                            roff=1
-#                            
-#                    if name == "peltV":
-#                        if eval(com) =="OFF":
-#                            self.usedClasses["peltier"].peltOff()
-#                            poff = 0
-#                        else:
-#                            temp = eval ( "self.peltT"+str(i+1)+".get()")
-#                            temp = int(temp)
-#                            self.usedClasses["peltier"].tempVar.set(temp)
-#                            self.usedClasses["peltier"].logTemp.set(1)
-#                            #self.usedClasses["peltier"].peltSetTemp()
-#                            self.usedClasses["peltier"].peltOn()
-#                            poff=1
-#                            #get the duration of one repetition of the 5 choice block
-#                    
-#                    if name == "timeV":
-#                        timeTemp = int(eval("self.timeV"+str(i+1)+".get()"))
-#                        #print(timeTemp)
-#                        if isinstance(timeTemp,int):
-#                            timeTemp = "TIM<"+str(timeTemp)+">>"
-#            
-#                        else:
-#                            timeTemp="TIM<0>>"
-#                            
-#                        self.ser.write(timeTemp.encode("utf-8"))
-##                        leave=0
-##                        while(leave==0):
-##                            test=self.ser.inWaiting()
-##                            if test>0:
-##                                dummie=self.ser.readline()
-##                                #print(dummie[0:7].decode("utf-8"))
-##                                if dummie[0:7].decode("utf-8") == "waiting":
-##                                    print("done waiting") 
-##                                    leave=1
-#
-#                        print("end of period " + str(i+1) +" of trial " + str(j+1))
-#                
-#                    #if one reached the end of the trial, turn everything off
-#                    if i==4 and name =="timeI":
-#                        #print(i)
-#                        #print("here")
-#                        if self.usedClasses["camera"] != 0:
-#                        #if self.usedClasses["camera"]:
-#                            self.usedClasses["camera"].camOff()
-#                        if self.usedClasses["led1"] != 0:
-#                        #if self.usedClasses["led1"]:
-#                            fp.serial.Serial.write(fp.flypiApp.led1OffAdd)
-#                            #self.usedClasses["led1"].ledOff()
-#                        if self.usedClasses["led2"] != 0:
-#                        #if self.usedClasses["led2"]:
-#                            fp.serial.Serial.write(fp.flypiApp.led2OffAdd)
-#                            #self.usedClasses["led2"].ledOff()
-#                        if self.usedClasses["matrix"] != 0:
-#                        #if self.usedClasses["matrix"]:
-#                            fp.flypiApp.led1OffAdd
-#                            self.usedClasses["matrix"].matrixOff()
-#                        if self.usedClasses["ring"] != 0:
-#                       #print("ringOff!!!!!!!!!!!")
-#                        #if self.usedClasses["ring"]:
-#                            self.usedClasses["ring"].rrv.set("0")
-#                            self.usedClasses["ring"].rgv.set("0")
-#                            self.usedClasses["ring"].rbv.set("0")
-#                            
-#                            self.usedClasses["ring"].redUpdate(self)
-#                            self.usedClasses["ring"].greenUpdate(self)
-#                            self.usedClasses["ring"].blueUpdate(self)
-#                            self.usedClasses["ring"].ringOff()
-#                        
-#                        if self.usedClasses["peltier"] != 0:
-#                        #if self.usedClasses["peltier"]:
-#                            self.usedClasses["peltier"].peltOff#()
-#
-#                        time = eval("self."+name+str(1)+".get()")
-#                        
-#                        if time.isdigit():
-#                            
-#                            time="TIM<"+time+">>"
-#                            self.ser.write(time.encode("utf-8"))
-#                            #lockwait
-##                            leave=0
-##                            while(leave==0):
-##                                test=self.ser.inWaiting()
-##                                if test>0:
-##                                    dummie=self.ser.readline()
-##                                    #print(dummie[0:7].decode("utf-8"))
-##                                    if dummie[0:7].decode("utf-8") == "waiting":
-##                                        print("done waiting") 
-##                                        leave=1
+                
+                
+                
+                #peltier
+                
+                #matrix 
+                if "matV" in self.varNames:
+                    com = eval("self.matV"+str(k)+".get()")
+                    if com == "OFF":
+                        self.usedClasses["matrix"].matrixOff()    
+                    elif com == "Patt1":
+                        self.usedClasses["matrix"].matrixPattern1()
+                    elif com == "Patt2":
+                        self.usedClasses["matrix"].matrixPattern2()       
+                    elif com == "Patt3":
+                        self.usedClasses["matrix"].matrixPattern3()
+
+                #ring
+                if "ringV" in self.varNames:
+                    
+                    comR = eval("self.ringV"+str(k)+".get()")
+                    if comR=="ON":
+                        output = self.usedClasses["ring"].ringOnAdd
+                        print (output)
+                        self.ser.write(output.encode("utf-8"))
+#                        self.usedClasses["ring"].ringOn()                       
+                        red = eval("self.ringR"+str(k)+".get()")
+                        print("red " +red)
+#                        if int(red) > 255:
+#                            red = "255"
+#                        red=str(red)
+                        #self.usedClasses["ring"].rgv.set(red)
+                        green = eval("self.ringG"+str(k)+".get()")
+
+#                        print("green " +green)
+#                        if int(green) > 255:
+#                            green = "255"
+#                        green = str(green)
+                        blue = eval("self.ringB"+str(k)+".get()")
+                        #print("blue " +blue)
+#                        if int(blue) > 255:
+#                            blue = 255
+#                        blue = str(blue)
+                        
+                        
+                        green = self.usedClasses["ring"].greenAdd+"<"+green+">>"
+                        #print("green " +green)
+                        red = self.usedClasses["ring"].redAdd+"<"+red+">>"
+                        #print("red " +red)
+                        blue = self.usedClasses["ring"].blueAdd+"<"+blue+">>"
+                        #print("blue " +blue)
+                        
+                        self.ser.write(red.encode("utf-8"))
+                        self.ser.write(green.encode("utf-8"))                        
+                        self.ser.write(blue.encode("utf-8"))
+                        #output = self.usedClasses["ring"].ringOnAdd
+                        #self.ser.write(output.encode("utf-8"))
+                        
+#                        output = self.timingAdd+"<"+"50"+">>"
+#                        self.ser.write(output.encode("utf-8"))
+#                        self.lockwait()
+                        
+                    if comR=="OFF":
+#                        self.usedClasses["ring"].ringOff()                        
+                        output = self.usedClasses["ring"].ringOffAdd
+                        self.ser.write(output.encode("utf-8"))
+                            
+                        #elf.ser.write()
+               
+                #execute the time of the trial
+                if "timeV"  in self.varNames:
+                    
+                    comT = eval("self.timeV"+str(k)+".get()")
+                    print("comT: " + comT)
+                    output = self.timingAdd+"<"+str(comT)+">>"
+                    self.ser.write(output.encode("utf-8"))
+                    self.lockwait()
+                    print ("period end")
+            
+                #execute inter timing interval
+                if "timeI" in self.varNames and k==5:
+                    ITI = self.timeI.get()
+                    #print(ITI)
+                    output = self.timingAdd+"<"+ITI+">>"
+                    self.ser.write(output.encode("utf-8"))
+                    self.lockwait()
+                    print("trial end")
+            
+            
+
 
                     
 ############################################################################
@@ -449,7 +315,7 @@ class Protocol:
 
             x=1
             for k in range(0,len(temp),4):
-                 
+#                print(k) 
                 protButt3 = tk.OptionMenu(frame1,
                                           temp[k],
                                           "OFF",

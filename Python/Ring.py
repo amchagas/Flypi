@@ -8,7 +8,7 @@ class Ring:
 
     def __init__(self, parent="none", label="none", ser="", #protFrame="",
                  ringOnAdd="", ringOffAdd="", ringZapAdd="",
-                 greenAdd="", redAdd="", blueAdd="",
+                 greenAdd="RGR", redAdd="RRE", blueAdd="RBL",
                  allAdd="", rotAdd=""):
 
         self.ser = ser
@@ -44,7 +44,7 @@ class Ring:
 
         ############callbacks for ring sliders
         def greenUpdate(self, ser=self.ser, address1=self.greenAdd,rgv=self.rgv):
-            
+#            print ("here11")
             value = rgv.get()           
             output = str(greenAdd) + "<" + str(value) + ">>"
             ser.write(output.encode("utf-8"))

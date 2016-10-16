@@ -46,6 +46,7 @@ int zapGreen = 0;
 int zapBlue = 0;
 int ringBright = 0;
 int matBright = 0;
+int waitmils = 0;
 //peltier
 int peltOn = 0;
 int tempToAnalog = 0;
@@ -134,8 +135,9 @@ void loop() {
     
   //timing
   if (term1 == "TIM") {
-    Serial.println(term2);
-    waiting(term2.toInt());
+    //Serial.println(term2);
+    waitmils = term2.toInt();
+    waiting(waitmils);
     //Serial.println("waited");
     }
 
@@ -270,7 +272,7 @@ void loop() {
       //if the ring is on
       //show the update
       pixels.show();}//end if ringOn==1
-  }//end if incomingData==49
+  }//end if term1=="RRE"
 
 
   if (term1 == "RGR") { //ring green
@@ -471,17 +473,28 @@ void updateRing(int hue1, int hue2, int hue3) {
 }
 
 void waiting(int millistowait) {
-  long int time3;
-  long int time4;
+  long int time3=0;
+  long int time4=0;
+  int flag = 1;
+  int index;
+  String token1;
   time3 = millis();
   time4 = time3;
+  //wait amount of time
   while ((time4 - time3) < millistowait) {
+    //Serial.flush();
     //Serial.println("waiting");
     //Serial.println(millistowait);
     time4 = millis();
     //Serial.println(time4);
-  }
-
-  //done waiting
-  Serial.println("waited");
+  } //done waiting
+  
+  //handshake
+//  while(flag==1){
+//    Serial.println("waited");
+//    token1=Serial.readStringUntil('>');
+//    index = token.indexOf('<');
+//    if (token.substring(0,index)=="END"){flag=0;}
+//  }
+  //Serial.flush();
 }
