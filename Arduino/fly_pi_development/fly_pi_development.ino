@@ -96,7 +96,7 @@ matrixPattern2[] =
 
 void setup()
 { //start serial port
-  Serial.begin(115200);
+  Serial.begin(9600);
   //Serial.flush();
   //Serial.println("start.");
   //set digital pin modes
@@ -125,7 +125,9 @@ void setup()
 void loop() {
 
   if (Serial.available() > 0) {
+    
     token = Serial.readStringUntil('>');
+    //delay(5);
     index = token.indexOf('<');
     term1 = token.substring(0,index);
     //Serial.println(term1);
@@ -138,7 +140,7 @@ void loop() {
     //Serial.println(term2);
     waitmils = term2.toInt();
     waiting(waitmils);
-    //Serial.println("waited");
+    Serial.println("waited");
     }
 
   //check temp sensor
@@ -264,6 +266,20 @@ void loop() {
       pixels.show();}
   }//end if "RIN"
 
+
+  if (term1=="G"){
+    //oldRed = ringRedHue;
+    ringGreenHue=term2.toInt();
+    updateRing(ringRedHue, ringGreenHue, ringBlueHue);
+    pixels.show();
+  }//end if term1=="G"
+   if (term1=="B"){
+    //oldRed = ringRedHue;
+    ringBlueHue=term2.toInt();
+    updateRing(ringRedHue, ringGreenHue, ringBlueHue);
+    pixels.show();
+  }//end if term1=="G"
+  
   if (term1=="RRE"){
     //oldRed = ringRedHue;
     ringRedHue=term2.toInt();
@@ -272,7 +288,7 @@ void loop() {
       //if the ring is on
       //show the update
       pixels.show();}//end if ringOn==1
-  }//end if term1=="RRE"
+  Serial.println("waited");}//end if term1=="RRE"
 
 
   if (term1 == "RGR") { //ring green
@@ -282,7 +298,7 @@ void loop() {
     updateRing(ringRedHue, ringGreenHue, ringBlueHue);
     if (ringOn == 1) {
       pixels.show();}
-  }//end if term1== "RGR"
+  Serial.println("waited");}//end if term1== "RGR"
 
   if (term1 == "RBL") { //ring blue
     //oldBlue = ringBlueHue;
@@ -290,7 +306,7 @@ void loop() {
     updateRing(ringRedHue, ringGreenHue, ringBlueHue);
     if (ringOn == 1) {pixels.show();}
 
-  }//end if RBL
+  Serial.println("waited");}//end if RBL
 
   if (term1 == "RAL") { //ring all together
     ringBlueHue = term2.toInt();
@@ -300,11 +316,11 @@ void loop() {
     if (ringOn == 1) {
       pixels.show();
     }
-  }
+  Serial.println("waited");}
 
-  if (term1=="RZAR") {zapRed = term2.toInt();}
-  if (term1=="RZAG") {zapGreen = term2.toInt();}
-  if (term1=="RZAB") {zapBlue = term2.toInt();}
+  if (term1=="RZAR") {zapRed = term2.toInt();Serial.println("waited");}
+  if (term1=="RZAG") {zapGreen = term2.toInt();Serial.println("waited");}
+  if (term1=="RZAB") {zapBlue = term2.toInt();Serial.println("waited");}
   if (term1=="RZAT") {    
     if (ringOn == 1) {
       updateRing(zapRed, zapGreen, zapBlue);
@@ -313,7 +329,7 @@ void loop() {
       updateRing(ringRedHue, ringGreenHue, ringBlueHue);
       pixels.show();      
     }//end if ring on
-  }
+  Serial.println("waited");}
       //zapRed = pow(2,zapRed);
 //      zapGreen = term2.substring(4,7);
 //      zapBlue = term2.substring(2,3);

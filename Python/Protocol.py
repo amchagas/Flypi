@@ -3,6 +3,7 @@
 import tkinter as tk
 import os
 import re
+import time
 
 os.chdir ("/home/pi/Desktop/flypi/Flypi/Python/")
 import flypiApp as fp
@@ -11,7 +12,8 @@ class Protocol:
 
     def lockwait(self,waitString="waited"):
         flag = True
-        endFlag="END<>>"
+        endFlag="END<>"
+        self.ser.flush()
         while flag== True:
             #if there is something to read on the serial port
             test=self.ser.inWaiting()
@@ -20,7 +22,7 @@ class Protocol:
             if test>0:                
                 #read line
                 dummie=self.ser.readline()
-                print (dummie[0:-2])
+                #print (dummie[0:-2])
                 #if the line is "waited" get out of the waiting while loop
                 if dummie[0:-2].decode("utf-8")==waitString:
 #                    self.ser.write(endFlag.encode("utf-8"))                    
@@ -49,11 +51,11 @@ class Protocol:
         print (numReps)
         #print (self.varNames)
 
-
+        
         
         #loop the number of repetitions
         for i in range(1,numReps+1):
-            
+            commList=[]
             #get all matrix steps
             for k in range(1,6):#hard coded because there are only 5 periods 
                                 #per trial.
@@ -67,25 +69,29 @@ class Protocol:
                 if "matV" in self.varNames:
                     com = eval("self.matV"+str(k)+".get()")
                     if com == "OFF":
-                        self.usedClasses["matrix"].matrixOff()    
+                        pass#self.usedClasses["matrix"].matrixOff()    
+                        #self.ser.flush()
+                        #commList=[self.usedClasses["matrix"].matrixOff()]
                     elif com == "Patt1":
-                        self.usedClasses["matrix"].matrixPattern1()
+                        pass# self.usedClasses["matrix"].matrixPattern1()
+                        #self.ser.flush()                        
                     elif com == "Patt2":
-                        self.usedClasses["matrix"].matrixPattern2()       
+                        pass#self.usedClasses["matrix"].matrixPattern2()       
+                        #self.ser.flush()
                     elif com == "Patt3":
-                        self.usedClasses["matrix"].matrixPattern3()
+                        pass#self.usedClasses["matrix"].matrixPattern3()
+                        #self.ser.flush()
 
                 #ring
                 if "ringV" in self.varNames:
                     
                     comR = eval("self.ringV"+str(k)+".get()")
                     if comR=="ON":
-                        output = self.usedClasses["ring"].ringOnAdd
-                        print (output)
-                        self.ser.write(output.encode("utf-8"))
+                        
 #                        self.usedClasses["ring"].ringOn()                       
                         red = eval("self.ringR"+str(k)+".get()")
-                        print("red " +red)
+                        
+                        #print("red " +red)
 #                        if int(red) > 255:
 #                            red = "255"
 #                        red=str(red)
@@ -102,49 +108,84 @@ class Protocol:
 #                            blue = 255
 #                        blue = str(blue)
                         
-                        
-                        green = self.usedClasses["ring"].greenAdd+"<"+green+">>"
+                        #ringOnAdd = "RIN<1>"
+    
+    
+    
+    
+                        green = "RGR<"+green+">>" 
+                        commList.append(green)
+                        #green = self.usedClasses["ring"].greenAdd+"<"+green+">"
                         #print("green " +green)
-                        red = self.usedClasses["ring"].redAdd+"<"+red+">>"
+                                                
+                        #red = self.usedClasses["ring"].redAdd+"<"+red+">"
+                        red = "RRE<"+red+">>" 
+                        commList.append(red)
                         #print("red " +red)
-                        blue = self.usedClasses["ring"].blueAdd+"<"+blue+">>"
+                        
+                        #blue = self.usedClasses["ring"].blueAdd+"<"+blue+">"
+                        blue = "RBL<"+blue+">>"                        
+                        commList.append(blue)
                         #print("blue " +blue)
                         
-                        self.ser.write(red.encode("utf-8"))
-                        self.ser.write(green.encode("utf-8"))                        
-                        self.ser.write(blue.encode("utf-8"))
+                        
+
+                        #self.ser.write(red.encode("utf-8"))
+                        #self.ser.flush()
+                        #self.ser.write(green.encode("utf-8"))                        
+                        #self.ser.flush()
+                        #self.ser.write(blue.encode("utf-8"))
+                        #self.ser.flush()
+                        output = "RIN<1>>"
+                        commList.append(output)
+                        #self.ser.write(output.encode("utf-8"))
+                        #self.ser.flush()
+                        #time.sleep(.1)
                         #output = self.usedClasses["ring"].ringOnAdd
                         #self.ser.write(output.encode("utf-8"))
                         
-#                        output = self.timingAdd+"<"+"50"+">>"
+#                        output = self.timingAdd+"<"+"50"+">"
 #                        self.ser.write(output.encode("utf-8"))
 #                        self.lockwait()
                         
                     if comR=="OFF":
 #                        self.usedClasses["ring"].ringOff()                        
-                        output = self.usedClasses["ring"].ringOffAdd
-                        self.ser.write(output.encode("utf-8"))
-                            
+                        output = "RIN<0>>"                    
+                        commList.append(output)
+                        #self.ser.write(output.encode("utf-8"))
+                        #self.ser.flush() 
                         #elf.ser.write()
                
                 #execute the time of the trial
                 if "timeV"  in self.varNames:
-                    
+
+                    #self.ser.flush()
                     comT = eval("self.timeV"+str(k)+".get()")
-                    print("comT: " + comT)
-                    output = self.timingAdd+"<"+str(comT)+">>"
-                    self.ser.write(output.encode("utf-8"))
+                    #print("comT: " + comT)
+                    output = self.timingAdd+"<"+str(comT)+">"
+                    commList.append(output)
                     self.lockwait()
-                    print ("period end")
-            
+                    #self.ser.write(output.encode("utf-8"))
+                    #self.ser.flush()
+                    #self.lockwait()
+                    #output = self.usedClasses["ring"].ringOffAdd
+                    #self.ser.write(output.encode("utf-8"))
+                    #print ("period end")
+                    #print(self.ser.serial.out_waiting())
+            for item in commList:
+                self.ser.write(item.encode("utf-8"))
+                self.lockwait()                
+#                time.sleep(0.02)
                 #execute inter timing interval
-                if "timeI" in self.varNames and k==5:
-                    ITI = self.timeI.get()
-                    #print(ITI)
-                    output = self.timingAdd+"<"+ITI+">>"
-                    self.ser.write(output.encode("utf-8"))
-                    self.lockwait()
-                    print("trial end")
+            #    if "timeI" in self.varNames and k==5:
+            #        #self.ser.flush()
+            #        ITI = self.timeI.get()
+            #        #print(ITI)
+            #        output = self.timingAdd+"<"+ITI+">"
+            #        self.ser.write(output.encode("utf-8"))
+            #        #self.lockwait()
+            #        #self.ser.flush()
+            #        print("trial end")
             
             
 
@@ -403,7 +444,7 @@ class Protocol:
         temp = [self.timeV1, self.timeV2, self.timeV3, self.timeV4, self.timeV5]
         for k in range(len(temp)):
             timeEntry1 = tk.Entry(master = frame1, width=7,textvariable=temp[k])
-            timeEntry1.insert(0,"0")
+            timeEntry1.insert(0,"250")
             timeEntry1.grid(row=rows,column=k+1,sticky=("NW"))
             
         rows=rows+1
@@ -461,7 +502,8 @@ class Protocol:
             
             rows = rows+1
             
-        runButt = tk.Button(master=frame1,text="RUN!",fg="green",command=self.run_protocol)
+        runButt = tk.Button(master=frame1,text="RUN!",fg="green",
+                            command=self.run_protocol,repeatdelay=10000)
         runButt.grid(row=rows-1,column=3)
 
  

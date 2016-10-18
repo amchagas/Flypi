@@ -81,7 +81,7 @@ class Peltier:
         self.ser.write(output.encode("utf-8"))
 
     def peltGetTempArd(self):
-        self.peltParent.after(100, self.peltGetTempArd)
+        #self.peltParent.after(100, self.peltGetTempArd)
         getTemp = self.tempAdd+"<99>>"
         self.ser.write(getTemp.encode("utf-8"))
         test=self.ser.inWaiting()
@@ -93,6 +93,7 @@ class Peltier:
         #dummie = 0
         if test > 0:
             dummie = self.ser.readline()
+            #dummie = self.ser.read(4)
             #if dummie != "waitDone":
             self.peltTempArd.set(dummie)
                 #dummie = str(dummie)

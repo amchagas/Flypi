@@ -97,7 +97,7 @@ class flypiApp:
             # for Arduino Uno from RPi
             #self.ser = serial.Serial('/dev/ttyACM0', 115200)
             # for Arduino Nano from RPi
-            self.ser = serial.Serial('/dev/ttyUSB0', 115200)
+            self.ser = serial.Serial('/dev/ttyUSB0', 9600)
 
         ##show the pieces of the GUI
         ##depending on which flags are on (see above):
@@ -115,7 +115,7 @@ class flypiApp:
                                         label="CAMERA",
                                         basePath=self.basePath)
 
-            usedClasses["camera"] = self.Camera
+            usedClasses["camera"] = 1#self.Camera
         else:
             usedClasses["camera"] = 0
         ###LED1###
@@ -134,7 +134,8 @@ class flypiApp:
             led1Off = self.led1OffAdd+"*"
             self.ser.write(led1Off.encode('utf-8'))
 
-            usedClasses["led1"] = self.LED1
+#            usedClasses["led1"] = self.LED1
+            usedClasses["led1"] = 1
             #print (self.LED1)
         else:
             usedClasses["led1"] = 0
@@ -150,7 +151,8 @@ class flypiApp:
                           )
             led2Off = self.led2OffAdd+"*"
             self.ser.write(led2Off.encode('utf-8'))
-            usedClasses["led2"] = self.LED2
+#            usedClasses["led2"] = self.LED2
+            usedClasses["led2"] = 1
         else:   
             usedClasses["led2"] = 0
 
@@ -168,7 +170,7 @@ class flypiApp:
                                ser=self.ser)
             matOff = self.matOffAdd+"*"
             self.ser.write(matOff.encode('utf-8'))
-            usedClasses["matrix"] = self.Matrix
+            usedClasses["matrix"] = 1#self.Matrix
         else:   
             usedClasses["matrix"] = 0
 
@@ -192,7 +194,7 @@ class flypiApp:
 
             ringOff=self.ringOffAdd+"*"
             self.ser.write(ringOff.encode('utf-8'))
-            usedClasses["ring"] = self.Ring
+            usedClasses["ring"] = 1#self.Ring
         else:   
             usedClasses["ring"] = 0
             
@@ -210,7 +212,7 @@ class flypiApp:
                                            ser=self.ser)
             peltOff = self.peltOffAdd+"*"
             self.ser.write(peltOff.encode('utf-8'))
-            usedClasses["peltier"] = self.Peltier
+            usedClasses["peltier"] = 1#self.Peltier
             
         else:   
             usedClasses["peltier"] = 0
@@ -280,3 +282,10 @@ class flypiApp:
         self.quit = tk.Button(master=parent, text="QUIT",
                               fg="red", command=quitNcloseSerial)
         self.quit.pack(fill="x")
+        return   
+    #def test(self,parent = None):
+    #    self.after(500, self.test)
+    #    #if self.peltierFlag == 1:
+    #    #    self.Peltier.peltGetTempArd()
+    #    print("herre")        
+    #    return            
