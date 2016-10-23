@@ -96,7 +96,7 @@ matrixPattern2[] =
 
 void setup()
 { //start serial port
-  Serial.begin(9600);
+  Serial.begin(19200);
   //Serial.flush();
   //Serial.println("start.");
   //set digital pin modes
@@ -120,6 +120,7 @@ void setup()
   matrix.setBrightness(0);
   matrix.writeDisplay();
   digitalWrite(servoOnPin, LOW);
+  //Serial.println("waited");
 }//end void setup
 
 void loop() {
@@ -161,12 +162,14 @@ void loop() {
       digitalWrite(RGBluePin, HIGH);
       peltOn = 0;
     }//end if temperature >=...
+    Serial.println("waited");
   }//end if incomingData==99
 
   //***************SERVO******************////
   if (term1 == "SER") {
     if (term2.toInt() == 90) {
       digitalWrite(servoOnPin, LOW);
+      
     }
     else {
       digitalWrite(servoOnPin, HIGH);
@@ -175,20 +178,20 @@ void loop() {
       delay(15);
       //correction = 0;
     }//else
-  }//end servo
+  Serial.println("waited");}//end servo
 
   //////////////////////////////////////////////////
   //LED1
   if (term1 == "LD1") {
     if (term2.toInt()==1){digitalWrite(LED1Pin, HIGH);}
     if (term2.toInt() == 0) {digitalWrite(LED1Pin, LOW);}
-  }
+  Serial.println("waited");}
 
   //LED2
   if (term1 == "LD2") {
     if (term2.toInt()==1){digitalWrite(LED2Pin, HIGH);}
     if (term2.toInt() == 0) {digitalWrite(LED2Pin, LOW);}
-  } 
+  Serial.println("waited");} 
  
   //MATRIX
   if (term1 == "MAT"){
@@ -239,8 +242,8 @@ void loop() {
           while (time2 - time1 < 100) {time2 = millis();}//end while
         }//end for i
       }//end for j
-    }//end if incomingData==10
-  }//end if term1 == MAT
+    }//end if incomingData==3
+  Serial.println("waited");}//end if term1 == MAT
   
   if (term1=="MAB") {
     //set brightness of the matrix
@@ -250,7 +253,7 @@ void loop() {
     else {
       matrix.setBrightness(term2.toInt());
       matrix.writeDisplay();}
-    }
+    Serial.println("waited");}
 
 
   //RING
@@ -264,21 +267,21 @@ void loop() {
       ringOn = 0;
       updateRing(0, 0, 0);
       pixels.show();}
-  }//end if "RIN"
+  Serial.println("waited");}//end if "RIN"
 
 
-  if (term1=="G"){
-    //oldRed = ringRedHue;
-    ringGreenHue=term2.toInt();
-    updateRing(ringRedHue, ringGreenHue, ringBlueHue);
-    pixels.show();
-  }//end if term1=="G"
-   if (term1=="B"){
-    //oldRed = ringRedHue;
-    ringBlueHue=term2.toInt();
-    updateRing(ringRedHue, ringGreenHue, ringBlueHue);
-    pixels.show();
-  }//end if term1=="G"
+//  if (term1=="G"){
+//    //oldRed = ringRedHue;
+//    ringGreenHue=term2.toInt();
+//    updateRing(ringRedHue, ringGreenHue, ringBlueHue);
+//    pixels.show();
+//  }//end if term1=="G"
+//   if (term1=="B"){
+//    //oldRed = ringRedHue;
+//    ringBlueHue=term2.toInt();
+//    updateRing(ringRedHue, ringGreenHue, ringBlueHue);
+//    pixels.show();
+//  }//end if term1=="G"
   
   if (term1=="RRE"){
     //oldRed = ringRedHue;
@@ -388,7 +391,8 @@ void loop() {
     }//end while
 
 
-  }//end if address==19
+  Serial.println("waited");
+  }//end if address==RRT
 
   //PELTIER
   if (term1 == "PEL") { //Peltier on
@@ -408,8 +412,10 @@ void loop() {
     digitalWrite(RGBluePin, LOW);
     peltOn = 0;
   }
-  }
-  if (term1 == "PET") {newTemp = term2.toInt();}
+  Serial.println("waited");}
+  
+  if (term1 == "PET") {newTemp = term2.toInt();
+  Serial.println("waited");}
 
 }//end void loop
 
