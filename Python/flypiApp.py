@@ -22,14 +22,14 @@ class flypiApp:
 
     cameraFlag = 1
     ringFlag = 1
-    led1Flag = 1
-    led2Flag = 1
-    matrixFlag = 1
-    peltierFlag = 1
-    autofocusFlag = 1
+    led1Flag = 0
+    led2Flag = 0
+    matrixFlag = 0
+    peltierFlag = 0
+    autofocusFlag = 0
     
     
-    protocolFlag = 1
+    protocolFlag = 0
     quitFlag = 1
 
     #############adresses for all arduino components:
@@ -99,7 +99,7 @@ class flypiApp:
             # for Arduino Uno from RPi
             #self.ser = serial.Serial('/dev/ttyACM0', 115200)
             # for Arduino Nano from RPi
-            self.ser = serial.Serial('/dev/ttyUSB0', 19200)
+            self.ser = serial.Serial('/dev/ttyUSB0', 9600)
 #            ser = serial.Serial('/dev/ttyUSB0', 4800,timeout=0.05)
         ##show the pieces of the GUI
         ##depending on which flags are on (see above):
