@@ -9,10 +9,159 @@ import time
 #import flypiApp as fp
 class Protocol:
 
-
-                    
 ############################################################################
-                                
+    ##############################################################################
+    def run_protocol(self):
+        def lockwait(waitString="waited"):
+            flag = True
+
+            while flag== True:
+                #if there is something to read on the serial port
+                test=self.ser.inWaiting()
+                
+                if test>0:                
+                    #read line
+                    dummie=self.ser.readline()
+                    #print("d"+str(dummie))
+                    #if the line is "waited" get out of the waiting while loop
+                    if dummie[0:-2].decode("utf-8")==waitString:                    
+                        flag = False 
+                        #print("done")
+
+            return
+        #self.ser.flushOutput()
+        #self.ser.flushInput()
+        #get the number of repetitions of the 5 choice block
+        numReps=self.timeR1.get()
+        numReps=int(numReps)
+        #print (numReps)
+        commList = 300*[None]
+        x=0
+        nullList = []
+        #loop the number of repetitions
+        for i in range(0,numReps):
+#            if i ==0:
+#                commList = ["LD1<0>>","LD2<0>>","MAT<0>>",
+#                    "RGR<100>>","RRE<100>>","RBL<100>>","RIN<0>>",
+#                    "TIM<10>>"]
+            
+            #commList.append("<>>")
+            #commList.append("<>>")
+            #get all matrix steps
+            for k in range(1,6):#hard coded because there are only 5 periods 
+                                #per trial.
+                
+
+                #LED1
+                if "led1V" in self.varNames:
+                    com = eval("self.led1V"+str(k)+".get()")
+                    nullList.append("LD1<0>>")
+                    if com == "OFF":
+#                        commList.append("LD1<0>>")
+                        commList[x] = "LD1<0>>"
+                    else:
+#                        commList.append("LD1<1>>")
+                        commList[x] = "LD1<1>>"
+                    x=x+1  
+                #LED2
+                if "led2V" in self.varNames:
+                    com = eval("self.led2V"+str(k)+".get()")
+#                    nullList.append("LD2<0>>")
+                    if com == "OFF":
+#                        commList.append("LD2<0>>")
+                        commList[x] = "LD2<0>>"                       
+                    else:
+#                        commList.append("LD2<1>>")
+                        commList[x] = "LD2<1>>"
+                    x=x+1
+                
+                #peltier
+
+
+                #matrix 
+                if "matV" in self.varNames:
+                    com = eval("self.matV"+str(k)+".get()")
+#                    print(x)
+#                    nullList.append("MAT<0>>")
+                    if com == "OFF":
+#                        commList.append(self.usedClasses["matrix"].matrixOff()) 
+#                        commList.append("MAT<0>>")
+                        #commList=[self.usedClasses["matrix"].matrixOff()]
+                        commList[x] = "MAT<0>>"
+                    elif com == "Patt1":
+#                        commList.append(self.usedClasses["matrix"].matrixPattern1())
+#                        commList.append("MAT<1>>")                        
+                        commList[x] = "MAT<1>>"
+                    elif com == "Patt2":
+#                        commList.append(self.usedClasses["matrix"].matrixPattern2())
+#                        commList.append("MAT<2>>")
+                        commList[x] = "MAT<2>>"
+                    elif com == "Patt3":
+#                        commList.append(self.usedClasses["matrix"].matrixPattern3())
+#                        commList.append("MAT<3>>")
+                        commList[x] = "MAT<3>>"
+                    x=x+1
+                #ring
+                if "ringV" in self.varNames:
+                    nullList.append("RIN<0>>")
+                    
+                    blue = "RBL<"+eval("self.ringB"+str(k)+".get()")+">>"
+                    red = "RRE<"+eval("self.ringR"+str(k)+".get()")+">>"
+                    green ="RGR<"+ eval("self.ringG"+str(k)+".get()")+">>"
+
+#                    commList.append(blue)
+#                    commList.append(red)                   
+#                    commList.append(green)                    
+                    commList[x] = blue
+                    x=x+1
+                    commList[x] = red
+                    x=x+1
+                    commList[x] = green
+                    x=x+1
+                        
+
+                    comR = eval("self.ringV"+str(k)+".get()")
+                    if comR=="ON":
+#                        commList.append("RIN<1>>")
+                        commList[x] = "RIN<1>>"
+
+                    else:                    
+#                        commList.append("RIN<0>>")
+                        commList[x] = "RIN<0>>"
+                    x=x+1
+                        
+               
+                #execute the time of the trial
+                if "timeV"  in self.varNames:
+#                    nullList.append("TIM<10>>")
+                    #self.ser.flush()
+                    comT = eval("self.timeV"+str(k)+".get()")
+                    
+                    #print("comT: " + comT)
+#                    output = self.timingAdd+"<"+str(comT)+">>"
+                    output = "TIM<"+str(comT)+">>"
+
+#                    commList.append(output)
+                    commList[x] = output
+                    x=x+1
+                    
+                if "timeI" in self.varNames and k==5:     
+                    ITI = "TIM<"+self.timeI.get()+">>"
+#                    commList.append(ITI)
+                    commList[x] = ITI
+                    x=x+1
+                    
+#        for item in nullList:
+#            self.ser.write(item.encode("utf-8"))      
+        print(commList)
+        for item in commList:
+            if item is not None:
+#            print (self.ser.out_waiting())
+                self.ser.write(item.encode("utf-8"))
+                lockwait()           
+        return                           
+
+        
     def __init__(self, parent="none",ser="",
                  usedClasses = dict(),
                  timingAdd="",
@@ -52,11 +201,11 @@ class Protocol:
             
             temp = [self.led1V1, self.led1V2, self.led1V3, self.led1V4, self.led1V5]
 
-            for k in range(len(temp)):
-                protButt1 = tk.OptionMenu(frame1,temp[k], "ON", "OFF")
+            for z in range(len(temp)):
+                protButt1 = tk.OptionMenu(frame1,temp[z], "ON", "OFF")
 
-                temp[k].set("OFF")
-                protButt1.grid(row=rows, column=k+1, sticky="NW")
+                temp[z].set("OFF")
+                protButt1.grid(row=rows, column=z+1, sticky="NW")
             rows = rows+1
 
         ############ LED2 ###################
@@ -75,13 +224,13 @@ class Protocol:
             
             temp = [self.led2V1, self.led2V2, self.led2V3, self.led2V4, self.led2V5]
             tempName = ["led2V1", "led2V2", "led2V3", "led2V4", "led2V5"]
-            for k in range(len(temp)):
-                protButt2 = tk.OptionMenu(frame1, temp[k], "ON", "OFF")
+            for z in range(len(temp)):
+                protButt2 = tk.OptionMenu(frame1, temp[z], "ON", "OFF")
 
-                temp[k].set("OFF")
+                temp[z].set("OFF")
 
                 
-                protButt2.grid(row=rows, column=k+1, sticky="NW")
+                protButt2.grid(row=rows, column=z+1, sticky="NW")
             rows = rows+1
 
 
@@ -105,16 +254,16 @@ class Protocol:
             temp = [self.matV1, self.matV2, self.matV3, self.matV4, self.matV5]
 
             
-            for k in range(len(temp)):
+            for z in range(len(temp)):
                 protButt3 = tk.OptionMenu(frame1,
-                                          temp[k],
+                                          temp[z],
                                           "OFF",
                                           "Patt1",
                                           "Patt2",
                                           "Patt3")
 
-                temp[k].set("OFF")
-                protButt3.grid(row=rows, column=k+1, sticky="NW")
+                temp[z].set("OFF")
+                protButt3.grid(row=rows, column=z+1, sticky="NW")
 
             rows = rows+1
                 ##### ring ###########
@@ -170,24 +319,24 @@ class Protocol:
 
 
             x=1
-            for k in range(0,len(temp),4):
+            for z in range(0,len(temp),4):
 #                print(k) 
                 protButt6 = tk.OptionMenu(frame1,
-                                          temp[k],
+                                          temp[z],
                                           "OFF",
                                           "ON")
-                temp[k].set("OFF")
+                temp[z].set("OFF")
                 
                 protButt6.grid(row=rows, column=x, sticky="NW")
-                protEntry2 = tk.Entry(master = frame1, width=7,textvariable=temp[k+1])
+                protEntry2 = tk.Entry(master = frame1, width=7,textvariable=temp[z+1])
                 protEntry2.insert(0,"0")
                 protEntry2.grid(row=rows+1,column=x,sticky=("NW"))
 
-                protEntry2 = tk.Entry(master = frame1, width=7,textvariable=temp[k+2])
+                protEntry2 = tk.Entry(master = frame1, width=7,textvariable=temp[z+2])
                 protEntry2.insert(0,"0")
                 protEntry2.grid(row=rows+2,column=x,sticky=("NW"))
 
-                protEntry2 = tk.Entry(master = frame1, width=7,textvariable=temp[k+3])
+                protEntry2 = tk.Entry(master = frame1, width=7,textvariable=temp[z+3])
                 protEntry2.insert(0,"0")
                 protEntry2.grid(row=rows+3,column=x,sticky=("NW"))
                 
@@ -229,15 +378,15 @@ class Protocol:
                     self.peltV5,self.peltT5]
 
             x=1
-            for k in range(0,len(temp),2):
+            for z in range(0,len(temp),2):
                 protButt4 = tk.OptionMenu(frame1,
-                                        temp[k],
+                                        temp[z],
                                           "OFF",
                                           "ON")
-                temp[k].set("OFF")
+                temp[z].set("OFF")
                 protButt4.grid(row=rows, column=x, sticky="NW")
                 
-                protEntry1 = tk.Entry(master = frame1, width=7,textvariable=temp[k+1])
+                protEntry1 = tk.Entry(master = frame1, width=7,textvariable=temp[z+1])
                 protEntry1.insert(0,"25")
                 protEntry1.grid(row=rows+1,column=x,sticky=("NW"))
                 x=x+1
@@ -261,13 +410,13 @@ class Protocol:
                 self.timeV3, 
                 self.timeV4, 
                 self.timeV5]
-        k=1
+        z=1
         for item in temp:
             #print(item)
             timeEntry1 = tk.Entry(master = frame1, width=7,textvariable=item)
             timeEntry1.insert(0,"250")
-            timeEntry1.grid(row=rows,column=k,sticky=("NW"))
-            k=k+1
+            timeEntry1.grid(row=rows,column=z,sticky=("NW"))
+            z=z+1
         rows=rows+1
         
         ##### number of repetitions
@@ -319,7 +468,7 @@ class Protocol:
             protButt10.grid(row=rows, column=0+1, sticky="NW")
             
             rows = rows+1
-        self.run_protocol()    
+        #self.run_protocol()    
         runButt = tk.Button(master=frame1,text="RUN!",fg="green",
                             command=self.run_protocol,repeatdelay=10000)
         runButt.grid(row=rows+1,column=0)
@@ -327,134 +476,138 @@ class Protocol:
  
     
 
-##############################################################################
-    def run_protocol(self):
-        def lockwait(waitString="waited"):
-            flag = True
-
-            while flag== True:
-                #if there is something to read on the serial port
-                test=self.ser.inWaiting()
-
-                if test>0:                
-                    #read line
-                    dummie=self.ser.readline()
-                    #if the line is "waited" get out of the waiting while loop
-                    if dummie[0:-2].decode("utf-8")==waitString:                    
-                        flag = False 
-                        #print("done")
-
-            return
-            
-        #get the number of repetitions of the 5 choice block
-        numReps=self.timeR1.get()
-        numReps=int(numReps)
-        #print (numReps)
-        commList = list()
-        nullList = list()
-        #loop the number of repetitions
-        for i in range(1,numReps+1):
-            commList.append("<>>")
-            commList.append("<>>")
-            #get all matrix steps
-            for k in range(1,6):#hard coded because there are only 5 periods 
-                                #per trial.
-                
-
-                #LED1
-                if "led1V" in self.varNames:
-                    com = eval("self.led1V"+str(k)+".get()")
-                    nullList.append("LD1<0>>")
-                    if com == "OFF":
-                        commList.append("LD1<0>>")
-                    else:
-                        commList.append("LD1<1>>")
-                        
-                #LED2
-                if "led2V" in self.varNames:
-                    com = eval("self.led2V"+str(k)+".get()")
-                    nullList.append("LD2<0>>")
-                    if com == "OFF":
-                        commList.append("LD2<0>>")
-                    else:
-                        commList.append("LD2<1>>")
-                
-                #peltier
-
-
-                #matrix 
-                if "matV" in self.varNames:
-                    com = eval("self.matV"+str(k)+".get()")
-                    nullList.append("MAT<0>>")
-                    if com == "OFF":
-#                        commList.append(self.usedClasses["matrix"].matrixOff()) 
-                        commList.append("MAT<0>>")
-                        #commList=[self.usedClasses["matrix"].matrixOff()]
-                    elif com == "Patt1":
-#                        commList.append(self.usedClasses["matrix"].matrixPattern1())
-                        commList.append("MAT<1>>")                        
-                    elif com == "Patt2":
-#                        commList.append(self.usedClasses["matrix"].matrixPattern2())
-                        commList.append("MAT<2>>")
-                    elif com == "Patt3":
-#                        commList.append(self.usedClasses["matrix"].matrixPattern3())
-                        commList.append("MAT<3>>")
-
-                #ring
-                if "ringV" in self.varNames:
-                    nullList.append("RIN<0>>")
-                    
-                    blue = "RBL<"+eval("self.ringB"+str(k)+".get()")+">>"
-                    red = "RRE<"+eval("self.ringR"+str(k)+".get()")+">>"
-                    green ="RGR<"+ eval("self.ringG"+str(k)+".get()")+">>"
-
-                    commList.append(blue)
-                    commList.append(red)                   
-                    commList.append(green)                    
-                        
-                        
-
-                    comR = eval("self.ringV"+str(k)+".get()")
-                    if comR=="ON":
-                        commList.append("RIN<1>>")
-
-                    else:                    
-                        commList.append("RIN<0>>")
-                        
-               
-                #execute the time of the trial
-                if "timeV"  in self.varNames:
-                    nullList.append("TIM<100>>")
-                    #self.ser.flush()
-                    comT = eval("self.timeV"+str(k)+".get()")
-                    
-                    #print("comT: " + comT)
-#                    output = self.timingAdd+"<"+str(comT)+">>"
-                    output = "TIM<"+str(comT)+">>"
-
-                    commList.append(output)
-
-                if "timeI" in self.varNames and k==5:     
-                    ITI = "TIM<"+self.timeI.get()+">>"
-                    commList.append(ITI)
-                    
-#        for item in nullList:
-#            self.ser.write(item.encode("utf-8"))      
-        for item in commList:
-            self.ser.write(item.encode("utf-8"))
-            lockwait()                
-#                time.sleep(0.02)
-                #execute inter timing interval
-            
-            #        #self.ser.flush()
-            #        
-            #        #print(ITI)
-            #        output = self.timingAdd+"<"+ITI+">"
-            #        self.ser.write(output.encode("utf-8"))
-            #        #self.lockwait()
-            #        #self.ser.flush()
-            #        print("trial end")
-            
-            
-
-        return
+###############################################################################
+#    def run_protocol(self):
+#        def lockwait(waitString="waited"):
+#            flag = True
+#
+#            while flag== True:
+#                #if there is something to read on the serial port
+#                test=self.ser.inWaiting()
+#                
+#                if test>0:                
+#                    #read line
+#                    dummie=self.ser.readline()
+#                    #print("d"+str(dummie))
+#                    #if the line is "waited" get out of the waiting while loop
+#                    if dummie[0:-2].decode("utf-8")==waitString:                    
+#                        flag = False 
+#                        #print("done")
+#
+#            return
+#        #self.ser.flushOutput()
+#        #self.ser.flushInput()
+#        #get the number of repetitions of the 5 choice block
+#        numReps=self.timeR1.get()
+#        numReps=int(numReps)
+#        #print (numReps)
+#        commList = list()
+#        nullList = []
+#        #loop the number of repetitions
+#        for i in range(1,numReps+1):
+#            #commList.append("<>>")
+#            #commList.append("<>>")
+#            #get all matrix steps
+#            for k in range(1,6):#hard coded because there are only 5 periods 
+#                                #per trial.
+#                
+#
+#                #LED1
+#                if "led1V" in self.varNames:
+#                    com = eval("self.led1V"+str(k)+".get()")
+#                    nullList.append("LD1<0>>")
+#                    if com == "OFF":
+#                        commList.append("LD1<0>>")
+#                    else:
+#                        commList.append("LD1<1>>")
+#                        
+#                #LED2
+#                if "led2V" in self.varNames:
+#                    com = eval("self.led2V"+str(k)+".get()")
+#                    nullList.append("LD2<0>>")
+#                    if com == "OFF":
+#                        commList.append("LD2<0>>")
+#                    else:
+#                        commList.append("LD2<1>>")
+#                
+#                #peltier
+#
+#
+#                #matrix 
+#                if "matV" in self.varNames:
+#                    com = eval("self.matV"+str(k)+".get()")
+#                    nullList.append("MAT<0>>")
+#                    if com == "OFF":
+##                        commList.append(self.usedClasses["matrix"].matrixOff()) 
+#                        commList.append("MAT<0>>")
+#                        #commList=[self.usedClasses["matrix"].matrixOff()]
+#                    elif com == "Patt1":
+##                        commList.append(self.usedClasses["matrix"].matrixPattern1())
+#                        commList.append("MAT<1>>")                        
+#                    elif com == "Patt2":
+##                        commList.append(self.usedClasses["matrix"].matrixPattern2())
+#                        commList.append("MAT<2>>")
+#                    elif com == "Patt3":
+##                        commList.append(self.usedClasses["matrix"].matrixPattern3())
+#                        commList.append("MAT<3>>")
+#
+#                #ring
+#                if "ringV" in self.varNames:
+#                    nullList.append("RIN<0>>")
+#                    
+#                    blue = "RBL<"+eval("self.ringB"+str(k)+".get()")+">>"
+#                    red = "RRE<"+eval("self.ringR"+str(k)+".get()")+">>"
+#                    green ="RGR<"+ eval("self.ringG"+str(k)+".get()")+">>"
+#
+#                    commList.append(blue)
+#                    commList.append(red)                   
+#                    commList.append(green)                    
+#                        
+#                        
+#
+#                    comR = eval("self.ringV"+str(k)+".get()")
+#                    if comR=="ON":
+#                        commList.append("RIN<1>>")
+#
+#                    else:                    
+#                        commList.append("RIN<0>>")
+#                        
+#               
+#                #execute the time of the trial
+#                if "timeV"  in self.varNames:
+#                    nullList.append("TIM<10>>")
+#                    #self.ser.flush()
+#                    comT = eval("self.timeV"+str(k)+".get()")
+#                    
+#                    #print("comT: " + comT)
+##                    output = self.timingAdd+"<"+str(comT)+">>"
+#                    output = "TIM<"+str(comT)+">>"
+#
+#                    commList.append(output)
+#
+#                if "timeI" in self.varNames and k==5:     
+#                    ITI = "TIM<"+self.timeI.get()+">>"
+#                    commList.append(ITI)
+#                    
+##        for item in nullList:
+##            self.ser.write(item.encode("utf-8"))      
+#        
+#        for item in commList:
+##            print (self.ser.out_waiting())
+#            self.ser.write(item.encode("utf-8"))
+#            lockwait()           
+##                time.sleep(0.02)
+#                #execute inter timing interval
+#            
+#            #        #self.ser.flush()
+#            #        
+#            #        #print(ITI)
+#            #        output = self.timingAdd+"<"+ITI+">"
+#            #        self.ser.write(output.encode("utf-8"))
+#            #        #self.lockwait()
+#            #        #self.ser.flush()
+#            #        print("trial end")
+#            
+#            
+#
+#        return
