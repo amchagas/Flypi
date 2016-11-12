@@ -128,6 +128,7 @@ void loop() {
   if (Serial.available() > 0) {
     
     token = Serial.readStringUntil('>');
+    //Serial.println(sizeof(token));
     //delay(5);
     index = token.indexOf('<');
     term1 = token.substring(0,index);
@@ -138,7 +139,7 @@ void loop() {
     
   //timing
   if (term1 == "TIM") {
-    //Serial.println(term2);
+
     waitmils = term2.toInt();
     waiting(waitmils);
     Serial.println("waited");
@@ -416,7 +417,8 @@ void loop() {
   
   if (term1 == "PET") {newTemp = term2.toInt();
   Serial.println("waited");}
-
+term1=String("0");
+term2=String("0");
 }//end void loop
 
 

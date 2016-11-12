@@ -34,19 +34,13 @@ class Protocol:
         #get the number of repetitions of the 5 choice block
         numReps=self.timeR1.get()
         numReps=int(numReps)
-        #print (numReps)
-        commList = 300*[None]
-        x=0
-        nullList = []
+        commList = list()        
+
         #loop the number of repetitions
         for i in range(0,numReps):
-#            if i ==0:
-#                commList = ["LD1<0>>","LD2<0>>","MAT<0>>",
-#                    "RGR<100>>","RRE<100>>","RBL<100>>","RIN<0>>",
-#                    "TIM<10>>"]
+
             
-            #commList.append("<>>")
-            #commList.append("<>>")
+
             #get all matrix steps
             for k in range(1,6):#hard coded because there are only 5 periods 
                                 #per trial.
@@ -55,25 +49,23 @@ class Protocol:
                 #LED1
                 if "led1V" in self.varNames:
                     com = eval("self.led1V"+str(k)+".get()")
-                    nullList.append("LD1<0>>")
+
                     if com == "OFF":
-#                        commList.append("LD1<0>>")
-                        commList[x] = "LD1<0>>"
+                        commList.append("LD1<0>>")
+
                     else:
-#                        commList.append("LD1<1>>")
-                        commList[x] = "LD1<1>>"
-                    x=x+1  
+                        commList.append("LD1<1>>")
+
                 #LED2
                 if "led2V" in self.varNames:
                     com = eval("self.led2V"+str(k)+".get()")
-#                    nullList.append("LD2<0>>")
+
                     if com == "OFF":
-#                        commList.append("LD2<0>>")
-                        commList[x] = "LD2<0>>"                       
+                        commList.append("LD2<0>>")
+                       
                     else:
-#                        commList.append("LD2<1>>")
-                        commList[x] = "LD2<1>>"
-                    x=x+1
+                        commList.append("LD2<1>>")
+
                 
                 #peltier
 
@@ -81,85 +73,67 @@ class Protocol:
                 #matrix 
                 if "matV" in self.varNames:
                     com = eval("self.matV"+str(k)+".get()")
-#                    print(x)
-#                    nullList.append("MAT<0>>")
+
                     if com == "OFF":
 #                        commList.append(self.usedClasses["matrix"].matrixOff()) 
-#                        commList.append("MAT<0>>")
-                        #commList=[self.usedClasses["matrix"].matrixOff()]
-                        commList[x] = "MAT<0>>"
+                        commList.append("MAT<0>>")
+#                        commList=[self.usedClasses["matrix"].matrixOff()]
+
                     elif com == "Patt1":
 #                        commList.append(self.usedClasses["matrix"].matrixPattern1())
-#                        commList.append("MAT<1>>")                        
-                        commList[x] = "MAT<1>>"
+                        commList.append("MAT<1>>")                        
+
                     elif com == "Patt2":
 #                        commList.append(self.usedClasses["matrix"].matrixPattern2())
-#                        commList.append("MAT<2>>")
-                        commList[x] = "MAT<2>>"
+                        commList.append("MAT<2>>")
+
                     elif com == "Patt3":
 #                        commList.append(self.usedClasses["matrix"].matrixPattern3())
-#                        commList.append("MAT<3>>")
-                        commList[x] = "MAT<3>>"
-                    x=x+1
+                        commList.append("MAT<3>>")
+
                 #ring
                 if "ringV" in self.varNames:
-                    nullList.append("RIN<0>>")
-                    
-                    blue = "RBL<"+eval("self.ringB"+str(k)+".get()")+">>"
-                    red = "RRE<"+eval("self.ringR"+str(k)+".get()")+">>"
-                    green ="RGR<"+ eval("self.ringG"+str(k)+".get()")+">>"
-
-#                    commList.append(blue)
-#                    commList.append(red)                   
-#                    commList.append(green)                    
-                    commList[x] = blue
-                    x=x+1
-                    commList[x] = red
-                    x=x+1
-                    commList[x] = green
-                    x=x+1
-                        
-
+#                    nullList.append("RIN<0>>")
                     comR = eval("self.ringV"+str(k)+".get()")
                     if comR=="ON":
-#                        commList.append("RIN<1>>")
-                        commList[x] = "RIN<1>>"
+                        commList.append("RIN<1>>")
+                        blue = "RBL<"+eval("self.ringB"+str(k)+".get()")+">>"
+                        red = "RRE<"+eval("self.ringR"+str(k)+".get()")+">>"
+                        green ="RGR<"+ eval("self.ringG"+str(k)+".get()")+">>"
+
+
 
                     else:                    
-#                        commList.append("RIN<0>>")
-                        commList[x] = "RIN<0>>"
-                    x=x+1
-                        
+                        commList.append("RIN<0>>")
+                        blue = "RBL<0>>"
+                        red = "RRE<0>>"
+                        green ="RGR<0>>"
+                    
+                    
+                    commList.append(blue)
+                    commList.append(red)                   
+                    commList.append(green)                                        
+      
                
                 #execute the time of the trial
                 if "timeV"  in self.varNames:
-#                    nullList.append("TIM<10>>")
-                    #self.ser.flush()
+
                     comT = eval("self.timeV"+str(k)+".get()")
-                    
-                    #print("comT: " + comT)
+
 #                    output = self.timingAdd+"<"+str(comT)+">>"
                     output = "TIM<"+str(comT)+">>"
 
-#                    commList.append(output)
-                    commList[x] = output
-                    x=x+1
-                    
+                    commList.append(output)
+
                 if "timeI" in self.varNames and k==5:     
                     ITI = "TIM<"+self.timeI.get()+">>"
-#                    commList.append(ITI)
-                    commList[x] = ITI
-                    x=x+1
-                    
-#        for item in nullList:
-#            self.ser.write(item.encode("utf-8"))      
-        print(commList)
+                    commList.append(ITI)
+
+
         for item in commList:
-            if item is not None:
-#            print (self.ser.out_waiting())
-                self.ser.write(item.encode("utf-8"))
-                lockwait()           
-        return                           
+            self.ser.write(item.encode("utf-8"))
+            lockwait()           
+        return  #run_protocol                         
 
         
     def __init__(self, parent="none",ser="",

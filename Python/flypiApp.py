@@ -22,14 +22,14 @@ class flypiApp:
 
     cameraFlag = 1
     ringFlag = 1
-    led1Flag = 0
-    led2Flag = 0
-    matrixFlag = 0
-    peltierFlag = 0
-    autofocusFlag = 0
+    led1Flag = 1
+    led2Flag = 1
+    matrixFlag = 1
+    peltierFlag = 1
+    autofocusFlag = 1
     
     
-    protocolFlag = 0
+    protocolFlag = 1
     quitFlag = 1
 
     #############adresses for all arduino components:
