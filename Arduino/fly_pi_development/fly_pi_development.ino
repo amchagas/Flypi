@@ -187,12 +187,25 @@ void loop() {
     if (term2.toInt()==1){digitalWrite(LED1Pin, HIGH);}
     if (term2.toInt() == 0) {digitalWrite(LED1Pin, LOW);}
   Serial.println("waited");}
+  if (term1 == "LZ1"){
+    digitalWrite(LED1Pin, HIGH);
+    waiting(term2.toInt());
+    digitalWrite(LED1Pin, LOW);
+    Serial.println("waited");  
+  }
+
 
   //LED2
   if (term1 == "LD2") {
     if (term2.toInt()==1){digitalWrite(LED2Pin, HIGH);}
     if (term2.toInt() == 0) {digitalWrite(LED2Pin, LOW);}
   Serial.println("waited");} 
+    if (term1 == "LZ2"){
+    digitalWrite(LED2Pin, HIGH);
+    waiting(term2.toInt());
+    digitalWrite(LED2Pin, LOW);
+    Serial.println("waited");  
+  }
  
   //MATRIX
   if (term1 == "MAT"){

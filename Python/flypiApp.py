@@ -38,13 +38,13 @@ class flypiApp:
     ##LED1##
     led1OnAdd = "LD1<1>>"
     led1OffAdd = "LD1<0>>"
-    led1ZapDurAdd = timeAdd
+    led1ZapDurAdd = "LZ1"
 
     ##LED2##
     led2OnAdd = "LD2<1>>"
     led2OffAdd = "LD2<0>>"
-    led2ZapDurAdd = timeAdd
-
+    led2ZapDurAdd = "LZ2"
+    
     ##MATRIX##
     #matOnAdd = "39"
     matOffAdd = "MAT<0>>"
