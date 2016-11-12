@@ -66,10 +66,16 @@ class Protocol:
                     else:
                         commList.append("LD2<1>>")
 
-                
                 #peltier
-
-
+                if "peltV" in self.varNames:
+                    com = eval("self.peltV"+str(k)+".get()")
+                    tem = eval("self.peltT"+str(k)+".get()")
+                    if com=="OFF":
+                        commList.append("PEL<0>>")
+                        commList.append("")
+                    else:
+                        commList.append("PEL<1>>")
+                        commList.append("TEM<"+tem+">>")
                 #matrix 
                 if "matV" in self.varNames:
                     com = eval("self.matV"+str(k)+".get()")
