@@ -384,11 +384,11 @@ class Camera:
             self.verVal = self.verVar.get()
             if self.zoomVal == 1:
                 self.cam.zoom = (0, 0, 1, 1)
-                self.horVar.set(0)
-                self.verVar.set(0)
+                self.horVar.set(50)
+                self.verVar.set(50)
             else:
                 zoomSide = 1 / self.zoomVal
-                edge = 1 - zoomSide
+                edge = (1 - zoomSide)#*0.5
                 self.cam.zoom = ((self.horVal / 100.0) * edge,
                                (self.verVal / 100.0) * edge,
                                1 / self.zoomVal,
