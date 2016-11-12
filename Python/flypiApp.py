@@ -276,8 +276,8 @@ class flypiApp:
                 self.Peltier.fh.close()
             if serialAvail == True:
 
-                self.ser.flush()
-                self.ser.readline()
+                #self.ser.flush()
+                #self.ser.readline()
                 self.ser.close()
             #print(self.Matrix.ser.isOpen())
             self.quit.quit()
