@@ -14,7 +14,25 @@ class AutoFocus:
         velVar = tk.IntVar()
         self.vel1=velVar
         self.autofocusparent = parent
-        
+        def lockwait(waitString="waited"):
+            flag = True
+            #endFlag="END<>"
+            self.ser.flush()
+            while flag== True:
+                #if there is something to read on the serial port
+                test=self.ser.inWaiting()
+            
+                #            print("test: "+str(test))
+                if test>0:                
+                    #read line
+                    dummie=self.ser.readline()
+                    #print (dummie[0:-2])
+                    #if the line is "waited" get out of the waiting while loop
+                    if dummie[0:-2].decode("utf-8")==waitString:
+                    #                    self.ser.write(endFlag.encode("utf-8"))                    
+                        flag = False 
+
+            return
         frame1 = tk.Frame(master=self.autofocusparent)
         frame1.grid(row=0, column=1, sticky="NW")
         
@@ -26,6 +44,7 @@ class AutoFocus:
             vel = velAdd +"<"+ str(velVal) + ">>"
             #print(vel)
             ser.write(vel.encode("utf-8"))
+            lockwait()
             
         self.autoLabel = tk.Label(master=frame1, text="Auto Focus")
         self.autoLabel.pack(side="top")   
@@ -42,9 +61,29 @@ class AutoFocus:
                                      command=self.autoOff)
         
         self.autoOffButt.pack(side="top", fill="x")
+    
+    def lockwait(self,waitString="waited"):
+        flag = True
+        #endFlag="END<>"
+#        self.ser.flush()
+        while flag== True:
+            #if there is something to read on the serial port
+            test=self.ser.inWaiting()
         
+        #            print("test: "+str(test))
+            if test>0:                
+                #read line
+                dummie=self.ser.readline()
+                #print (dummie[0:-2])
+                #if the line is "waited" get out of the waiting while loop
+                if dummie[0:-2].decode("utf-8")==waitString:
+                #                    self.ser.write(endFlag.encode("utf-8"))                    
+                    flag = False 
+
+        return    
     def autoOff(self):
-        print("motor off")
+        #print("motor off")
         output = str(self.velAdd) + "<90>>"
         self.ser.write(output.encode("utf-8"))
+        self.lockwait()
         self.vel1.set(str(0))

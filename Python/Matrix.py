@@ -2,7 +2,7 @@
 import tkinter as tk
 
 
-class Matrix:
+class Matrix():
 
     def __init__(self, parent="none", label="none",
                  pat3Add="10", offAdd="7", pat1Add="8",
@@ -17,19 +17,40 @@ class Matrix:
         self.brightAdd = brightAdd
         self.ser = ser
         self.matParent = parent
+
         #####callback for brightness slider
         matBrightVar = tk.IntVar()
+        
+        def lockwait(waitString="waited"):
+            flag = True
+            #endFlag="END<>"
+            #self.ser.flush()
+            while flag== True:
+                #if there is something to read on the serial port
+                test=self.ser.inWaiting()
+            
+                #            print("test: "+str(test))
+                if test>0:                
+                    #read line
+                    dummie=self.ser.readline()
+                    #print (dummie[0:-2])
+                    #if the line is "waited" get out of the waiting while loop
+                    if dummie[0:-2].decode("utf-8")==waitString:
+                    #                    self.ser.write(endFlag.encode("utf-8"))                    
+                        flag = False 
 
+            return
+            
         def matrixUpdate(self, ser=self.ser, brightAdd=self.brightAdd):
-            #address = brightAdd + "*"
-            output = str(brightAdd)+ "<"
-            output1 = str(matBrightVar.get())+">>"
+            bright = matBrightVar.get()
+            output = str(brightAdd)+ "<"+str(bright)+">>"
             #print("mat bright " + str(output))
             #output = int(brightAdd) + output
             #output = str(output) + "*"
             #ser.write(address.encode("utf-8"))
             ser.write(output.encode("utf-8"))
-            ser.write(output1.encode("utf-8"))
+            lockwait()
+            #ser.write(output1.encode("utf-8"))
             
         frame1 = tk.Frame(master=self.matParent, width=10)
         frame1.pack()
@@ -67,6 +88,27 @@ class Matrix:
 
 
 ####################callbacks######################
+#
+    def lockwait(self,waitString="waited"):
+        flag = True
+        #self.ser.flush()
+        while flag== True:
+            #if there is something to read on the serial port
+            test=self.ser.inWaiting()
+            
+            #            print("test: "+str(test))
+            if test>0:                
+                #read line
+                dummie=self.ser.readline()
+                #print (dummie[0:-2])
+                #if the line is "waited" get out of the waiting while loop
+                if dummie[0:-2].decode("utf-8")==waitString:
+                    #                    self.ser.write(endFlag.encode("utf-8"))                    
+                    flag = False
+                    #print("donelock")
+
+        return
+        
     def MatButton(self, parent="none", fill="y",
                   side="top", buttText="button",
                   color="black", func="none"):
@@ -77,18 +119,19 @@ class Matrix:
         output = str(self.offAdd)
         print("matrix off " + output)
         self.ser.write(output.encode("utf-8"))
-
+        self.lockwait()
     def matrixPattern1(self):
         output = str(self.pat1Add)
         print("matrix pattern1 " + output)
         self.ser.write(output.encode("utf-8"))
-
+        self.lockwait()
     def matrixPattern2(self):
         output = str(self.pat2Add)
         print("matrix pattern2 " + output)
         self.ser.write(output.encode("utf-8"))
-
+        self.lockwait()
     def matrixPattern3(self):
         output = str(self.pat3Add)
         print ("matrix pattern3 " + output)
         self.ser.write(output.encode("utf-8"))
+        self.lockwait()

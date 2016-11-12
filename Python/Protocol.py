@@ -3,253 +3,151 @@
 import tkinter as tk
 import os
 import re
+import time
 
+#os.chdir ("/home/pi/Desktop/flypi/Flypi/Python/")
+#import flypiApp as fp
 class Protocol:
 
-
-    def lockwait():
-        print("herre")
-        leave=0
-        while(leave==0):
-            test=self.ser.inWaiting()
-            if test>0:
-                dummie=self.ser.readline()
-                #print(dummie[0:7].decode("utf-8"))
-                if dummie[0:7].decode("utf-8") == "waiting":
-                    print("done waiting") 
-                    leave=1
-        
-        return
-
-
-
-##############################################################################
-    def run_protocol(self):
-  
-        
-        #print("here")
-        coff=0        
-        l1off=0
-        l2off=0
-        moff=0
-        poff=0
-        roff=0
-        #get the number of repetitions of the 5 choice block
-        numReps="self.timeR1.get()"
-        numReps = eval(numReps)
-        numReps=int(numReps)
-        trialDur=0
-        print (numReps)
-        
-        #list to store all commands and run them at once in the end
-        chain=list()
-        
-        #loop through the repetitions
-        for j in range(numReps):
-            #loop 5 times (since it is 5 choice block)
-            for i in range(5):
-                #and get all the names in the varNames list
-                for name in self.varNames:
-                    print(name)
-                    com="self."+name+str(i+1)+".get()"
-                    #print(eval(com))
-                    #get the duration in every block in the 5 choice block                        
-                    for k in range(5):
-                        timeTemp = int(eval("self.timeV"+str(k+1)+".get()"))
-                        if isinstance(timeTemp,int):
-                            trialDur = trialDur+timeTemp
-                        else:
-                            trialDur = trialDur + 0
-                    ####camera
-                    if name =="camV" and i==0:
-                        
-                        if eval(com) =="OFF":
-                            self.usedClasses["camera"].camOff()
-                            coff=0
-                        else:#if the camera is set to ON
-                            recTime = 0.0
-                            #use the duration of the 5 choice block as recording time (plus a buffer)
-                            recTime = float(trialDur) + 1000.0
-                            #print (recTime)
-                            #convert it to secs
-                            recTime=float(recTime)/1000.
-                            print(recTime)
-                            #change the TL dur variable in the camera GUI
-                            self.usedClasses["camera"].TLdur.insert(0,str(recTime))
-                            #turn it on and start preview using the callback from camera class
-                            self.usedClasses["camera"].camOn()
-                            #start recording using the callback from camera class
-                            self.usedClasses["camera"].camRec()
-                            coff=1
-                            
-                    ####led1
-                    if name == "led1V":
-                        if eval(com) == "OFF":
-                            self.usedClasses["led1"].ledOff()
-                            l1off=0
-                        else:
-                            #chain.append()
-                            self.usedClasses["led1"].ledOn()
-                            l1off=1
-                            
-                    ####led2
-                    if name == "led2V":
-                        if eval(com) == "OFF":
-                            self.usedClasses["led2"].ledOff()
-                            l2off=0
-                        else:
-                            self.usedClasses["led2"].ledOn()
-                            l2off=1
-                    ####matrix
-                    if name == "matV":
-                        print("Here: ")
-                        print (eval(com)=="OFF")
-                        if eval(com) == "OFF":
-                            self.usedClasses["matrix"].matrixOff()
-                            moff=0
-                        elif eval(com) == "Patt1":
-                            self.usedClasses["matrix"].matrixPattern1()
-                            moff=1
-                        elif eval(com) == "Patt2":
-                            self.usedClasses["matrix"].matrixPattern2()
-                            moff=1
-                        elif eval(com) == "Patt3":
-                            self.usedClasses["matrix"].matrixPattern3()
-                            moff=1
-                    ####ring
-                    if name == "ringV":
-                        if eval(com) == "OFF":
-                            self.usedClasses["ring"].ringOff()
-                            roff=0
-                        elif eval(com) == "ON":
-                            red=eval ( "self.ringR"+str(i+1)+".get()")
-                            if red >"255":
-                                print ("setting red value to 255")
-                                red=255
-                            else:
-                                red=int(red)
-                            green=eval ( "self.ringG"+str(i+1)+".get()")
-                            if green >"255":
-                                print ("setting green value to 255")
-                                green=255
-                            else:
-                                green=int(green)
-
-                            blue=eval ( "self.ringB"+str(i+1)+".get()")
-                            if blue =="255":
-                                print ("setting blue value to 255")
-                                blue=255
-                            else:
-                                blue=int(blue)
-                            
-                            self.usedClasses["ring"].rrv.set(str(red))
-                            self.usedClasses["ring"].rgv.set(str(green))
-                            self.usedClasses["ring"].rbv.set(str(blue))
-                            
-                            self.usedClasses["ring"].ringOn()
-                            self.usedClasses["ring"].redUpdate(self)
-                            self.usedClasses["ring"].greenUpdate(self)
-                            self.usedClasses["ring"].blueUpdate(self)
-                            
-                            roff=1
-                            
-                    if name == "peltV":
-                        if eval(com) =="OFF":
-                            self.usedClasses["peltier"].peltOff()
-                            poff = 0
-                        else:
-                            temp = eval ( "self.peltT"+str(i+1)+".get()")
-                            temp = int(temp)
-                            self.usedClasses["peltier"].tempVar.set(temp)
-                            self.usedClasses["peltier"].logTemp.set(1)
-                            #self.usedClasses["peltier"].peltSetTemp()
-                            self.usedClasses["peltier"].peltOn()
-                            poff=1
-                            #get the duration of one repetition of the 5 choice block
-                    
-                    if name == "timeV":
-                        timeTemp = int(eval("self.timeV"+str(i+1)+".get()"))
-                        #print(timeTemp)
-                        if isinstance(timeTemp,int):
-                            timeTemp = "TIM<"+str(timeTemp)+">>"
-            
-                        else:
-                            timeTemp="TIM<0>>"
-                            
-                        self.ser.write(timeTemp.encode("utf-8"))
-#                        leave=0
-#                        while(leave==0):
-#                            test=self.ser.inWaiting()
-#                            if test>0:
-#                                dummie=self.ser.readline()
-#                                #print(dummie[0:7].decode("utf-8"))
-#                                if dummie[0:7].decode("utf-8") == "waiting":
-#                                    print("done waiting") 
-#                                    leave=1
-
-                        print("end of period " + str(i+1) +" of trial " + str(j+1))
-                
-                    #if one reached the end of the trial, turn everything off
-                    if i==4 and name =="timeI":
-                        #print(i)
-                        #print("here")
-                        if self.usedClasses["camera"] != 0:
-                        #if self.usedClasses["camera"]:
-                            self.usedClasses["camera"].camOff()
-                        if self.usedClasses["led1"] != 0:
-                        #if self.usedClasses["led1"]:
-                            self.usedClasses["led1"].ledOff()
-                        if self.usedClasses["led2"] != 0:
-                        #if self.usedClasses["led2"]:
-                            self.usedClasses["led2"].ledOff()
-                        if self.usedClasses["matrix"] != 0:
-                        #if self.usedClasses["matrix"]:
-                            self.usedClasses["matrix"].matrixOff()
-                        if self.usedClasses["ring"] != 0:
-                       #print("ringOff!!!!!!!!!!!")
-                        #if self.usedClasses["ring"]:
-                            self.usedClasses["ring"].rrv.set("0")
-                            self.usedClasses["ring"].rgv.set("0")
-                            self.usedClasses["ring"].rbv.set("0")
-                            
-                            self.usedClasses["ring"].redUpdate(self)
-                            self.usedClasses["ring"].greenUpdate(self)
-                            self.usedClasses["ring"].blueUpdate(self)
-                            self.usedClasses["ring"].ringOff()
-                        
-                        if self.usedClasses["peltier"] != 0:
-                        #if self.usedClasses["peltier"]:
-                            self.usedClasses["peltier"].peltOff#()
-
-                        time = eval("self."+name+str(1)+".get()")
-                        
-                        if time.isdigit():
-                            
-                            time="TIM<"+time+">>"
-                            self.ser.write(time.encode("utf-8"))
-                            #lockwait
-#                            leave=0
-#                            while(leave==0):
-#                                test=self.ser.inWaiting()
-#                                if test>0:
-#                                    dummie=self.ser.readline()
-#                                    #print(dummie[0:7].decode("utf-8"))
-#                                    if dummie[0:7].decode("utf-8") == "waiting":
-#                                        print("done waiting") 
-#                                        leave=1
-
-                    
 ############################################################################
-                                
+    ##############################################################################
+    def run_protocol(self):
+        def lockwait(waitString="waited"):
+            flag = True
+
+            while flag== True:
+                #if there is something to read on the serial port
+                test=self.ser.inWaiting()
+                
+                if test>0:                
+                    #read line
+                    dummie=self.ser.readline()
+                    #print("d"+str(dummie))
+                    #if the line is "waited" get out of the waiting while loop
+                    if dummie[0:-2].decode("utf-8")==waitString:                    
+                        flag = False 
+                        #print("done")
+
+            return
+        #self.ser.flushOutput()
+        #self.ser.flushInput()
+        #get the number of repetitions of the 5 choice block
+        numReps=self.timeR1.get()
+        numReps=int(numReps)
+        commList = list()        
+
+        #loop the number of repetitions
+        for i in range(0,numReps):
+
+            
+
+            #get all matrix steps
+            for k in range(1,6):#hard coded because there are only 5 periods 
+                                #per trial.
+                
+
+                #LED1
+                if "led1V" in self.varNames:
+                    com = eval("self.led1V"+str(k)+".get()")
+
+                    if com == "OFF":
+                        commList.append("LD1<0>>")
+
+                    else:
+                        commList.append("LD1<1>>")
+
+                #LED2
+                if "led2V" in self.varNames:
+                    com = eval("self.led2V"+str(k)+".get()")
+
+                    if com == "OFF":
+                        commList.append("LD2<0>>")
+                       
+                    else:
+                        commList.append("LD2<1>>")
+
+                #peltier
+                if "peltV" in self.varNames:
+                    com = eval("self.peltV"+str(k)+".get()")
+                    tem = eval("self.peltT"+str(k)+".get()")
+                    if com=="OFF":
+                        commList.append("PEL<0>>")
+                        commList.append("")
+                    else:
+                        commList.append("PEL<1>>")
+                        commList.append("TEM<"+tem+">>")
+                #matrix 
+                if "matV" in self.varNames:
+                    com = eval("self.matV"+str(k)+".get()")
+
+                    if com == "OFF":
+#                        commList.append(self.usedClasses["matrix"].matrixOff()) 
+                        commList.append("MAT<0>>")
+#                        commList=[self.usedClasses["matrix"].matrixOff()]
+
+                    elif com == "Patt1":
+#                        commList.append(self.usedClasses["matrix"].matrixPattern1())
+                        commList.append("MAT<1>>")                        
+
+                    elif com == "Patt2":
+#                        commList.append(self.usedClasses["matrix"].matrixPattern2())
+                        commList.append("MAT<2>>")
+
+                    elif com == "Patt3":
+#                        commList.append(self.usedClasses["matrix"].matrixPattern3())
+                        commList.append("MAT<3>>")
+
+                #ring
+                if "ringV" in self.varNames:
+#                    nullList.append("RIN<0>>")
+                    comR = eval("self.ringV"+str(k)+".get()")
+                    if comR=="ON":
+                        commList.append("RIN<1>>")
+                        blue = "RBL<"+eval("self.ringB"+str(k)+".get()")+">>"
+                        red = "RRE<"+eval("self.ringR"+str(k)+".get()")+">>"
+                        green ="RGR<"+ eval("self.ringG"+str(k)+".get()")+">>"
+
+
+
+                    else:                    
+                        commList.append("RIN<0>>")
+                        blue = "RBL<0>>"
+                        red = "RRE<0>>"
+                        green ="RGR<0>>"
+                    
+                    
+                    commList.append(blue)
+                    commList.append(red)                   
+                    commList.append(green)                                        
+      
+               
+                #execute the time of the trial
+                if "timeV"  in self.varNames:
+
+                    comT = eval("self.timeV"+str(k)+".get()")
+
+#                    output = self.timingAdd+"<"+str(comT)+">>"
+                    output = "TIM<"+str(comT)+">>"
+
+                    commList.append(output)
+
+                if "timeI" in self.varNames and k==5:     
+                    ITI = "TIM<"+self.timeI.get()+">>"
+                    commList.append(ITI)
+
+
+        for item in commList:
+            self.ser.write(item.encode("utf-8"))
+            lockwait()           
+        return  #run_protocol                         
+
+        
     def __init__(self, parent="none",ser="",
                  usedClasses = dict(),
-                 led1C="",
+                 timingAdd="",
                  label="Protocol", basePath="~/Desktop/"):
 
-       # self, parent="none", label="none", ser="", #protFrame="",
-       #          ringOnAdd="", ringOffAdd="", ringZapAdd="",
-       #          greenAdd="", redAdd="", blueAdd="",
-       #          allAdd="", rotAdd="")
+
         self.ser = ser
         frame1 = tk.Frame(master=parent)
         frame1.grid(row=0, column=0)
@@ -257,11 +155,10 @@ class Protocol:
         self.basePath = basePath
         #create list to store all variables prefixes
         self.varNames = list()
-        #buttonsFrame = tk.Frame(master=frame1, bd=3)
-        #buttonsFrame.grid(row=1, column=1)
-#        self.lockwait=lockwait
-        
+        self.timingAdd = timingAdd 
 
+
+        
         rows=0
         protLabel = tk.Label(master=frame1, text=label)
         protLabel.grid(row=rows, column=0)
@@ -284,11 +181,11 @@ class Protocol:
             
             temp = [self.led1V1, self.led1V2, self.led1V3, self.led1V4, self.led1V5]
 
-            for k in range(len(temp)):
-                protButt1 = tk.OptionMenu(frame1,temp[k], "ON", "OFF")
+            for z in range(len(temp)):
+                protButt1 = tk.OptionMenu(frame1,temp[z], "ON", "OFF")
 
-                temp[k].set("OFF")
-                protButt1.grid(row=rows, column=k+1, sticky="NW")
+                temp[z].set("OFF")
+                protButt1.grid(row=rows, column=z+1, sticky="NW")
             rows = rows+1
 
         ############ LED2 ###################
@@ -307,13 +204,13 @@ class Protocol:
             
             temp = [self.led2V1, self.led2V2, self.led2V3, self.led2V4, self.led2V5]
             tempName = ["led2V1", "led2V2", "led2V3", "led2V4", "led2V5"]
-            for k in range(len(temp)):
-                protButt2 = tk.OptionMenu(frame1, temp[k], "ON", "OFF")
+            for z in range(len(temp)):
+                protButt2 = tk.OptionMenu(frame1, temp[z], "ON", "OFF")
 
-                temp[k].set("OFF")
+                temp[z].set("OFF")
 
                 
-                protButt2.grid(row=rows, column=k+1, sticky="NW")
+                protButt2.grid(row=rows, column=z+1, sticky="NW")
             rows = rows+1
 
 
@@ -337,16 +234,16 @@ class Protocol:
             temp = [self.matV1, self.matV2, self.matV3, self.matV4, self.matV5]
 
             
-            for k in range(len(temp)):
+            for z in range(len(temp)):
                 protButt3 = tk.OptionMenu(frame1,
-                                          temp[k],
+                                          temp[z],
                                           "OFF",
                                           "Patt1",
                                           "Patt2",
                                           "Patt3")
 
-                temp[k].set("OFF")
-                protButt3.grid(row=rows, column=k+1, sticky="NW")
+                temp[z].set("OFF")
+                protButt3.grid(row=rows, column=z+1, sticky="NW")
 
             rows = rows+1
                 ##### ring ###########
@@ -402,24 +299,24 @@ class Protocol:
 
 
             x=1
-            for k in range(0,len(temp),4):
-                 
-                protButt3 = tk.OptionMenu(frame1,
-                                          temp[k],
+            for z in range(0,len(temp),4):
+#                print(k) 
+                protButt6 = tk.OptionMenu(frame1,
+                                          temp[z],
                                           "OFF",
                                           "ON")
-                temp[k].set("OFF")
+                temp[z].set("OFF")
                 
-                protButt3.grid(row=rows, column=x, sticky="NW")
-                protEntry2 = tk.Entry(master = frame1, width=7,textvariable=temp[k+1])
+                protButt6.grid(row=rows, column=x, sticky="NW")
+                protEntry2 = tk.Entry(master = frame1, width=7,textvariable=temp[z+1])
                 protEntry2.insert(0,"0")
                 protEntry2.grid(row=rows+1,column=x,sticky=("NW"))
 
-                protEntry2 = tk.Entry(master = frame1, width=7,textvariable=temp[k+2])
+                protEntry2 = tk.Entry(master = frame1, width=7,textvariable=temp[z+2])
                 protEntry2.insert(0,"0")
                 protEntry2.grid(row=rows+2,column=x,sticky=("NW"))
 
-                protEntry2 = tk.Entry(master = frame1, width=7,textvariable=temp[k+3])
+                protEntry2 = tk.Entry(master = frame1, width=7,textvariable=temp[z+3])
                 protEntry2.insert(0,"0")
                 protEntry2.grid(row=rows+3,column=x,sticky=("NW"))
                 
@@ -461,15 +358,15 @@ class Protocol:
                     self.peltV5,self.peltT5]
 
             x=1
-            for k in range(0,len(temp),2):
+            for z in range(0,len(temp),2):
                 protButt4 = tk.OptionMenu(frame1,
-                                        temp[k],
+                                        temp[z],
                                           "OFF",
                                           "ON")
-                temp[k].set("OFF")
+                temp[z].set("OFF")
                 protButt4.grid(row=rows, column=x, sticky="NW")
                 
-                protEntry1 = tk.Entry(master = frame1, width=7,textvariable=temp[k+1])
+                protEntry1 = tk.Entry(master = frame1, width=7,textvariable=temp[z+1])
                 protEntry1.insert(0,"25")
                 protEntry1.grid(row=rows+1,column=x,sticky=("NW"))
                 x=x+1
@@ -488,12 +385,18 @@ class Protocol:
         self.timeV5 = tk.StringVar(master=frame1)
         self.varNames.append("timeV")
         
-        temp = [self.timeV1, self.timeV2, self.timeV3, self.timeV4, self.timeV5]
-        for k in range(len(temp)):
-            timeEntry1 = tk.Entry(master = frame1, width=7,textvariable=temp[k])
-            timeEntry1.insert(0,"0")
-            timeEntry1.grid(row=rows,column=k+1,sticky=("NW"))
-            
+        temp = [self.timeV1, 
+                self.timeV2, 
+                self.timeV3, 
+                self.timeV4, 
+                self.timeV5]
+        z=1
+        for item in temp:
+            #print(item)
+            timeEntry1 = tk.Entry(master = frame1, width=7,textvariable=item)
+            timeEntry1.insert(0,"250")
+            timeEntry1.grid(row=rows,column=z,sticky=("NW"))
+            z=z+1
         rows=rows+1
         
         ##### number of repetitions
@@ -503,7 +406,7 @@ class Protocol:
         self.timeR1 = tk.StringVar(master=frame1)
         
         timeEntry2 = tk.Entry(master = frame1, width=7,textvariable=self.timeR1)
-        timeEntry2.insert(0,"1")
+        timeEntry2.insert(0,"2")
         timeEntry2.grid(row=rows,column=1,sticky=("NW"))
         rows=rows+1
         
@@ -511,11 +414,11 @@ class Protocol:
         timeLabel = tk.Label(master=frame1, text="IRI(ms)")
         timeLabel.grid(row=rows, column=0)
         
-        self.timeI1 = tk.StringVar(master=frame1)
+        self.timeI = tk.StringVar(master=frame1)
         self.varNames.append("timeI")
         
-        timeEntry3 = tk.Entry(master = frame1, width=7,textvariable=self.timeI1)
-        timeEntry3.insert(0,"0")
+        timeEntry3 = tk.Entry(master = frame1, width=7,textvariable=self.timeI)
+        timeEntry3.insert(0,"125")
         timeEntry3.grid(row=rows,column=1,sticky=("NW"))
         rows = rows+1
 
@@ -535,12 +438,9 @@ class Protocol:
             #since it has to be on when the other devices start
             self.varNames.insert(0,"camV")
             self.camV1 = tk.StringVar(master=frame1)
-            #self.camV2 = tk.StringVar(master=frame1)
-            #self.camV3 = tk.StringVar(master=frame1)
-            #self.camV4 = tk.StringVar(master=frame1)
-            #self.camV5 = tk.StringVar(master=frame1)
 
-            temp = [self.camV1,] #self.camV2, self.camV3, self.camV4, self.camV5]
+
+            temp = [self.camV1]
             
             #for k in range(len(temp)):
             protButt10 = tk.OptionMenu(frame1, temp[0], "ON", "OFF")
@@ -548,8 +448,146 @@ class Protocol:
             protButt10.grid(row=rows, column=0+1, sticky="NW")
             
             rows = rows+1
-            
-        runButt = tk.Button(master=frame1,text="RUN!",fg="green",command=self.run_protocol)
-        runButt.grid(row=rows-1,column=3)
-
+        #self.run_protocol()    
+        runButt = tk.Button(master=frame1,text="RUN!",fg="green",
+                            command=self.run_protocol,repeatdelay=10000)
+        runButt.grid(row=rows+1,column=0)
+        return
  
+    
+
+###############################################################################
+#    def run_protocol(self):
+#        def lockwait(waitString="waited"):
+#            flag = True
+#
+#            while flag== True:
+#                #if there is something to read on the serial port
+#                test=self.ser.inWaiting()
+#                
+#                if test>0:                
+#                    #read line
+#                    dummie=self.ser.readline()
+#                    #print("d"+str(dummie))
+#                    #if the line is "waited" get out of the waiting while loop
+#                    if dummie[0:-2].decode("utf-8")==waitString:                    
+#                        flag = False 
+#                        #print("done")
+#
+#            return
+#        #self.ser.flushOutput()
+#        #self.ser.flushInput()
+#        #get the number of repetitions of the 5 choice block
+#        numReps=self.timeR1.get()
+#        numReps=int(numReps)
+#        #print (numReps)
+#        commList = list()
+#        nullList = []
+#        #loop the number of repetitions
+#        for i in range(1,numReps+1):
+#            #commList.append("<>>")
+#            #commList.append("<>>")
+#            #get all matrix steps
+#            for k in range(1,6):#hard coded because there are only 5 periods 
+#                                #per trial.
+#                
+#
+#                #LED1
+#                if "led1V" in self.varNames:
+#                    com = eval("self.led1V"+str(k)+".get()")
+#                    nullList.append("LD1<0>>")
+#                    if com == "OFF":
+#                        commList.append("LD1<0>>")
+#                    else:
+#                        commList.append("LD1<1>>")
+#                        
+#                #LED2
+#                if "led2V" in self.varNames:
+#                    com = eval("self.led2V"+str(k)+".get()")
+#                    nullList.append("LD2<0>>")
+#                    if com == "OFF":
+#                        commList.append("LD2<0>>")
+#                    else:
+#                        commList.append("LD2<1>>")
+#                
+#                #peltier
+#
+#
+#                #matrix 
+#                if "matV" in self.varNames:
+#                    com = eval("self.matV"+str(k)+".get()")
+#                    nullList.append("MAT<0>>")
+#                    if com == "OFF":
+##                        commList.append(self.usedClasses["matrix"].matrixOff()) 
+#                        commList.append("MAT<0>>")
+#                        #commList=[self.usedClasses["matrix"].matrixOff()]
+#                    elif com == "Patt1":
+##                        commList.append(self.usedClasses["matrix"].matrixPattern1())
+#                        commList.append("MAT<1>>")                        
+#                    elif com == "Patt2":
+##                        commList.append(self.usedClasses["matrix"].matrixPattern2())
+#                        commList.append("MAT<2>>")
+#                    elif com == "Patt3":
+##                        commList.append(self.usedClasses["matrix"].matrixPattern3())
+#                        commList.append("MAT<3>>")
+#
+#                #ring
+#                if "ringV" in self.varNames:
+#                    nullList.append("RIN<0>>")
+#                    
+#                    blue = "RBL<"+eval("self.ringB"+str(k)+".get()")+">>"
+#                    red = "RRE<"+eval("self.ringR"+str(k)+".get()")+">>"
+#                    green ="RGR<"+ eval("self.ringG"+str(k)+".get()")+">>"
+#
+#                    commList.append(blue)
+#                    commList.append(red)                   
+#                    commList.append(green)                    
+#                        
+#                        
+#
+#                    comR = eval("self.ringV"+str(k)+".get()")
+#                    if comR=="ON":
+#                        commList.append("RIN<1>>")
+#
+#                    else:                    
+#                        commList.append("RIN<0>>")
+#                        
+#               
+#                #execute the time of the trial
+#                if "timeV"  in self.varNames:
+#                    nullList.append("TIM<10>>")
+#                    #self.ser.flush()
+#                    comT = eval("self.timeV"+str(k)+".get()")
+#                    
+#                    #print("comT: " + comT)
+##                    output = self.timingAdd+"<"+str(comT)+">>"
+#                    output = "TIM<"+str(comT)+">>"
+#
+#                    commList.append(output)
+#
+#                if "timeI" in self.varNames and k==5:     
+#                    ITI = "TIM<"+self.timeI.get()+">>"
+#                    commList.append(ITI)
+#                    
+##        for item in nullList:
+##            self.ser.write(item.encode("utf-8"))      
+#        
+#        for item in commList:
+##            print (self.ser.out_waiting())
+#            self.ser.write(item.encode("utf-8"))
+#            lockwait()           
+##                time.sleep(0.02)
+#                #execute inter timing interval
+#            
+#            #        #self.ser.flush()
+#            #        
+#            #        #print(ITI)
+#            #        output = self.timingAdd+"<"+ITI+">"
+#            #        self.ser.write(output.encode("utf-8"))
+#            #        #self.lockwait()
+#            #        #self.ser.flush()
+#            #        print("trial end")
+#            
+#            
+#
+#        return
