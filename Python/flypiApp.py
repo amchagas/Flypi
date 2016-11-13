@@ -28,7 +28,7 @@ class flypiApp:
     peltierFlag = 0
     autofocusFlag = 0
     
-    protocolFlag = 0
+    protocolFlag = 1
     quitFlag = 1
 
     #############adresses for all arduino components:
@@ -116,7 +116,7 @@ class flypiApp:
                                         label="CAMERA",
                                         basePath=self.basePath)
 
-            usedClasses["camera"] = 1#self.Camera
+            usedClasses["camera"] = self.Camera
         else:
             usedClasses["camera"] = 0
         ###LED1###
