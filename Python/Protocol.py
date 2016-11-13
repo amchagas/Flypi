@@ -2,15 +2,19 @@
 
 import tkinter as tk
 import os
-import re
 import time
 import subprocess
+from tkinter.filedialog import askopenfilename
 #os.chdir ("/home/pi/Desktop/flypi/Flypi/Python/")
 #import flypiApp as fp
 class Protocol:
 
 ############################################################################
     ##############################################################################
+#    def convert_video(self):
+
+#        return
+        
     def run_protocol(self):
         def lockwait(waitString="waited"):
             flag = True
@@ -48,7 +52,7 @@ class Protocol:
                 recTime = recTime + int(self.timeI.get())
                 recTime = (recTime * numReps)
                 #print(recTime)
-                recTime=(recTime/1000.0)+5
+                recTime=(recTime/1000.0)
                 videoPath = self.basePath + '/videos/'
                 if not os.path.exists(videoPath):
                     #if not, create it:
@@ -165,15 +169,10 @@ class Protocol:
             self.ser.write(item.encode("utf-8"))
             lockwait() 
         if camFlag==1:
+            #give extra 2 seconds at the end of the recording
+            self.usedClasses["camera"].cam.wait_recording(2.0)
             self.usedClasses["camera"].cam.stop_recording()
-            print ("converting video to avi")
-            outname = os.path.splitext(fileName)[0]+".avi"
-            command = ['avconv', '-i', 
-                       fileName, '-b:v',
-                       '2M','-codec',
-                       'mjpeg', outname]
-            subprocess.call(command,shell=False)
-            print("done.")
+            
             
         return  #run_protocol                         
 
@@ -448,14 +447,14 @@ class Protocol:
         
         #### interval in between repetitions
         timeLabel = tk.Label(master=frame1, text="IRI(ms)")
-        timeLabel.grid(row=rows, column=0)
+        timeLabel.grid(row=rows-1, column=2)
         
         self.timeI = tk.StringVar(master=frame1)
         self.varNames.append("timeI")
         
         timeEntry3 = tk.Entry(master = frame1, width=7,textvariable=self.timeI)
         timeEntry3.insert(0,"125")
-        timeEntry3.grid(row=rows,column=1,sticky=("NW"))
+        timeEntry3.grid(row=rows-1,column=3,sticky=("NW"))
         rows = rows+1
 
         ###start protocols
@@ -469,7 +468,7 @@ class Protocol:
         #######CAMERA##############
         if usedClasses["camera"] != 0:
             camLabel = tk.Label(master=frame1, text="Camera")
-            camLabel.grid(row=rows, column=0)
+            camLabel.grid(row=rows-1, column=0)
             #insert camera in the first position of the list,
             #since it has to be on when the other devices start
             self.varNames.insert(0,"camV")
@@ -481,12 +480,17 @@ class Protocol:
             #for k in range(len(temp)):
             protButt10 = tk.OptionMenu(frame1, temp[0], "ON", "OFF")
             temp[0].set("OFF") 
-            protButt10.grid(row=rows, column=0+1, sticky="NW")
+            protButt10.grid(row=rows-1, column=1, sticky="NW")
             
             rows = rows+1
         #self.run_protocol()    
         runButt = tk.Button(master=frame1,text="RUN!",fg="green",
-                            command=self.run_protocol,repeatdelay=10000)
-        runButt.grid(row=rows+1,column=0)
+                            command=self.run_protocol,repeatdelay=10000)        
+        runButt.grid(row=rows-2,column=5)
+        
+        convButt = tk.Button(master=frame1,text="to AVI",fg="blue",
+                            command=self.usedClasses["camera"].camConv,repeatdelay=10000)
+        convButt.grid(row=rows-2,column=4)
+                            
         return
  

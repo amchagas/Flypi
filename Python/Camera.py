@@ -2,7 +2,8 @@
 import tkinter as tk
 import os
 import time
-
+import subprocess
+from tkinter.filedialog import askopenfilename
 
 class Camera:
 
@@ -19,6 +20,7 @@ class Camera:
             self.cam.exposure_compensation = 0
             self.cam.brightness = 50
             self.cam.awb_mode = "auto"
+            
         except ImportError:
             #picameraAvail = False
             print ("picamera module not available!")
@@ -35,7 +37,7 @@ class Camera:
         self.zoomVal = 1.0
         self.FPSVar = tk.IntVar()
         self.FPSVal = 15
-
+        self.bitRate = 17000000
         self.binVar = tk.IntVar()
         self.binVal = 0
 
@@ -87,6 +89,9 @@ class Camera:
         self.camOffButt = self.camButton(parent=self.camFrame1,
                             rowIndx=1, colIndx=1, fill="x",
                             buttText="OFF", color="red", func=self.camOff)
+        self.camConvbutt = self.camButton(parent=self.camFrame1,
+                            rowIndx=1, colIndx=2, fill="x",
+                            buttText="to AVI", color="blue", func=self.camConv)
 
         self.camResLabel = tk.Label(master=self.camFrame1,
                                     text=" Resolution ")
@@ -438,11 +443,44 @@ class Camera:
         self.cam.preview.fullscreen = False
         #wait a second so the camera adjusts
         time.sleep(1)
+        return 
         
     def camOff(self):
         print ("cam Off")
         self.cam.stop_preview()
-
+        return
+        
+    def camConv(self):
+        #tk().withdraw()
+        opts = dict()
+        opts["filetypes"] = [('h264 files','.h264'),('all files','.*')]
+        opts["initialdir"] = [self.basePath]
+        
+        fileName = askopenfilename(**opts)
+        if fileName == '':
+            print ('no files selected')
+            return
+        fps = self.FPSVar.get()
+        fps = "-r" + str(fps)
+#        fps = int(fps)
+        print (fileName)
+        print ("converting video to avi")
+        outname = os.path.splitext(fileName)[0]+".avi"
+        lastInd=fileName.rindex("/")
+        files = os.listdir(fileName[0:lastInd])
+        outCore = outname.rindex("/")
+        print ("out:" + outname[outCore:])
+        if outname[outCore+1:] in files:
+            print ("file is already converted! Skipping...")
+            print("done.")
+            return
+        #print ("command:" + str(['avconv', '-i', fileName,  '2M','-codec','mjpeg', outname]))
+#        command = ['avconv','-i', fileName,'-b:v',str(self.bitRate),'-codec','mjpeg', outname ]
+        command = ['avconv', '-i', fileName,"-b",str(self.bitRate) ,"-c:v","copy", outname]
+        subprocess.call(command,shell=False)
+        print("done.")
+        return
+        
     def camRec(self):
         dur = self.TLdur.get()
         videoPath = self.basePath + '/videos/'
