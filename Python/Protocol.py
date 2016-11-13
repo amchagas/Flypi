@@ -34,42 +34,41 @@ class Protocol:
         #get the number of repetitions of the 5 choice block
         numReps=self.timeR1.get()
         numReps=int(numReps)
-        commList = list()        
-        if "camV" in self.varNames:
-            recTime = int(self.timeV1.get())
-            recTime = recTime + int(self.timeV2.get())
-            recTime = recTime + int(self.timeV3.get())
-            recTime = recTime + int(self.timeV4.get())
-            recTime = recTime + int(self.timeV5.get())
-            recTime = recTime + int(self.timeI.get())
-            recTime = (recTime * numReps)
-            videoPath = self.basePath + '/videos/'
-            if not os.path.exists(videoPath):
-                #if not, create it:
-                os.makedirs(videoPath)
-                os.chown(videoPath, 1000, 1000)
-            #it seems that the raspi-cam doesn't like shooting videos at full res.
-            #so the softw. will automatically use a lower resolution for videos
-            if self.usedClasses["camera"].resVal == "2592x1944":
-                self.usedClasses["camera"].cam.resolution = (1920, 1080)
-
         
-            self.usedClasses["camera"].cam.start_recording(output = videoPath +
-                                'video_' +
-                                time.strftime('%Y-%m-%d-%H-%M-%S') + '.h264',
+        commList = list()  
+        camFlag=0
+        if "camV" in self.varNames:
+            if self.camV1.get() == "ON":
+                camFlag=1
+                recTime = int(self.timeV1.get())
+                recTime = recTime + int(self.timeV2.get())
+                recTime = recTime + int(self.timeV3.get())
+                recTime = recTime + int(self.timeV4.get())
+                recTime = recTime + int(self.timeV5.get())
+                recTime = recTime + int(self.timeI.get())
+                recTime = (recTime * numReps)
+                #print(recTime)
+                recTime=recTime/1000.0
+                videoPath = self.basePath + '/videos/'
+                if not os.path.exists(videoPath):
+                    #if not, create it:
+                    os.makedirs(videoPath)
+                    os.chown(videoPath, 1000, 1000)
+                #it seems that the raspi-cam doesn't like shooting videos at full res.
+                #so the softw. will automatically use a lower resolution for videos
+                if self.usedClasses["camera"].resVal == "2592x1944":
+                    self.usedClasses["camera"].cam.resolution = (1920, 1080)       
+                self.usedClasses["camera"].cam.start_recording(output = videoPath +
+                                'video_' +time.strftime('%Y-%m-%d-%H-%M-%S') + '.h264',
                                 format = "h264",)
-            self.usedClasses["camera"].cam.wait_recording(float(recTime))
+                self.usedClasses["camera"].cam.wait_recording(float(recTime))
                                 #resize = (1920,1080))
+
         #loop the number of repetitions
-        for i in range(0,numReps):
-
-            
-
+        for i in range(0,numReps):          
             #get all matrix steps
             for k in range(1,6):#hard coded because there are only 5 periods 
-                                #per trial.
-                
-
+                                #per trial.                
                 #LED1
                 if "led1V" in self.varNames:
                     com = eval("self.led1V"+str(k)+".get()")
@@ -163,7 +162,9 @@ class Protocol:
         for item in commList:
             self.ser.write(item.encode("utf-8"))
             lockwait() 
-        self.usedClasses["camera"].cam.stop_recording()
+        if camFlag==1:
+            self.usedClasses["camera"].cam.stop_recording()
+
         return  #run_protocol                         
 
         
