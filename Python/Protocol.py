@@ -58,8 +58,8 @@ class Protocol:
                 #so the softw. will automatically use a lower resolution for videos
                 if self.usedClasses["camera"].resVal == "2592x1944":
                     self.usedClasses["camera"].cam.resolution = (1920, 1080) 
-                fileName = videoPath +'video_' + 
-                           time.strftime('%Y-%m-%d-%H-%M-%S') + 
+                fileName = videoPath +'video_' + \
+                           time.strftime('%Y-%m-%d-%H-%M-%S') + \
                            '.h264'
                 self.usedClasses["camera"].cam.start_recording(output = fileName,
                                 format = "h264",)
@@ -168,7 +168,7 @@ class Protocol:
             self.usedClasses["camera"].cam.stop_recording()
             print ("converting video to avi")
             outname = os.path.splitext(fileName)[0]+".avi"
-            command = ['avconv', 'i', 
+            command = ['avconv', '-i', 
                        fileName, '-b:v',
                        '2M','-codec',
                        'mjpeg', outname]
