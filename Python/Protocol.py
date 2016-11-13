@@ -4,7 +4,7 @@ import tkinter as tk
 import os
 import re
 import time
-
+import subprocess
 #os.chdir ("/home/pi/Desktop/flypi/Flypi/Python/")
 #import flypiApp as fp
 class Protocol:
@@ -48,7 +48,7 @@ class Protocol:
                 recTime = recTime + int(self.timeI.get())
                 recTime = (recTime * numReps)
                 #print(recTime)
-                recTime=recTime/1000.0
+                recTime=(recTime/1000.0)+5
                 videoPath = self.basePath + '/videos/'
                 if not os.path.exists(videoPath):
                     #if not, create it:
@@ -57,9 +57,11 @@ class Protocol:
                 #it seems that the raspi-cam doesn't like shooting videos at full res.
                 #so the softw. will automatically use a lower resolution for videos
                 if self.usedClasses["camera"].resVal == "2592x1944":
-                    self.usedClasses["camera"].cam.resolution = (1920, 1080)       
-                self.usedClasses["camera"].cam.start_recording(output = videoPath +
-                                'video_' +time.strftime('%Y-%m-%d-%H-%M-%S') + '.h264',
+                    self.usedClasses["camera"].cam.resolution = (1920, 1080) 
+                fileName = videoPath +'video_' + 
+                           time.strftime('%Y-%m-%d-%H-%M-%S') + 
+                           '.h264'
+                self.usedClasses["camera"].cam.start_recording(output = fileName,
                                 format = "h264",)
                 self.usedClasses["camera"].cam.wait_recording(float(recTime))
                                 #resize = (1920,1080))
@@ -164,7 +166,15 @@ class Protocol:
             lockwait() 
         if camFlag==1:
             self.usedClasses["camera"].cam.stop_recording()
-
+            print ("converting video to avi")
+            outname = os.path.splitext(fileName)[0]+".avi"
+            command = ['avconv', 'i', 
+                       fileName, '-b:v',
+                       '2M','-codec',
+                       'mjpeg', outname]
+            subprocess.call(command,shell=False)
+            print("done.")
+            
         return  #run_protocol                         
 
         
