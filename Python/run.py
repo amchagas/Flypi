@@ -13,7 +13,7 @@ from flypiApp import *
 root = tk.Tk()
 root.title("Fly Pi 0.99")
 
-flypiApp(root)
+dummie = flypiApp(root)
 
 
 #dummie.title("test")

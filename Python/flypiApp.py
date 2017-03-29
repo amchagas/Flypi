@@ -13,7 +13,6 @@ except ImportError:
 
 
 class flypiApp:
-    #global ser
     #filepath for output:
     basePath = '/home/pi/Desktop/flypi_output/'
     
@@ -24,27 +23,25 @@ class flypiApp:
     ringFlag = 1
     led1Flag = 0
     led2Flag = 0
-    matrixFlag = 0
-    peltierFlag = 0
-    autofocusFlag = 0
+    matrixFlag = 1
+    peltierFlag = 1
+    autofocusFlag = 1
+    
     
     protocolFlag = 1
     quitFlag = 1
 
     #############adresses for all arduino components:
-    #timing address    
-    timeAdd = "TIM"    
-
     ##LED1##
     led1OnAdd = "LD1<1>>"
     led1OffAdd = "LD1<0>>"
-    led1ZapDurAdd = "LZ1"
+    led1ZapDurAdd = "LD1"
 
     ##LED2##
     led2OnAdd = "LD2<1>>"
     led2OffAdd = "LD2<0>>"
-    led2ZapDurAdd = "LZ2"
-    
+    led2ZapDurAdd = "LD2"
+
     ##MATRIX##
     #matOnAdd = "39"
     matOffAdd = "MAT<0>>"
@@ -70,12 +67,10 @@ class flypiApp:
 
     ##autofocus##
     autoFocusAdd = "SER"
-    
 
     #row4Frame = tk.Frame()
     def __init__(self, master, ser=""):
-        
-            
+
         #create base path for storing files, temperature curves, etc:
         if not os.path.exists(self.basePath):
             #os.chdir('/home/pi/Desktop/')
@@ -98,8 +93,8 @@ class flypiApp:
             # for Arduino Uno from RPi
             #self.ser = serial.Serial('/dev/ttyACM0', 115200)
             # for Arduino Nano from RPi
-            self.ser = serial.Serial('/dev/ttyUSB0', 9600)
-#            ser = serial.Serial('/dev/ttyUSB0', 4800,timeout=0.05)
+            self.ser = serial.Serial('/dev/ttyUSB0', 115200)
+
         ##show the pieces of the GUI
         ##depending on which flags are on (see above):
         
@@ -132,11 +127,10 @@ class flypiApp:
                           #prot=self.prot,
                           #protFrame=self.frameProt,
                           )
-            led1Off = self.led1OffAdd
+            led1Off = self.led1OffAdd+"*"
             self.ser.write(led1Off.encode('utf-8'))
 
-#            usedClasses["led1"] = self.LED1
-            usedClasses["led1"] = 1
+            usedClasses["led1"] = self.LED1
             #print (self.LED1)
         else:
             usedClasses["led1"] = 0
@@ -148,13 +142,11 @@ class flypiApp:
             self.LED2 = LED.LED(parent=self.frameLed2, label="LED 2",
                           onAdd=self.led2OnAdd, offAdd=self.led2OffAdd,
                           zapDurAdd=self.led2ZapDurAdd, ser=self.ser,
-                          
                           #prot=self.prot, protFrame=self.frameProt,
                           )
-            led2Off = self.led2OffAdd
+            led2Off = self.led2OffAdd+"*"
             self.ser.write(led2Off.encode('utf-8'))
-#            usedClasses["led2"] = self.LED2
-            usedClasses["led2"] = 1
+            usedClasses["led2"] = self.LED2
         else:   
             usedClasses["led2"] = 0
 
@@ -168,12 +160,11 @@ class flypiApp:
                                pat3Add=self.matPat3Add, offAdd=self.matOffAdd,
                                pat1Add=self.matPat1Add, pat2Add=self.matPat2Add,
                                brightAdd=self.matBrightAdd,
-                
-                               ser=self.ser
-                               )
-            matOff = self.matOffAdd
+                               # prot=self.prot, protFrame=self.frameProt,
+                               ser=self.ser)
+            matOff = self.matOffAdd+"*"
             self.ser.write(matOff.encode('utf-8'))
-            usedClasses["matrix"] = 1#self.Matrix
+            usedClasses["matrix"] = self.Matrix
         else:   
             usedClasses["matrix"] = 0
 
@@ -195,9 +186,9 @@ class flypiApp:
                              rotAdd=self.ringRotAdd,
                              ser=self.ser)
 
-            ringOff=self.ringOffAdd
+            ringOff=self.ringOffAdd+"*"
             self.ser.write(ringOff.encode('utf-8'))
-            usedClasses["ring"] = 1#self.Ring
+            usedClasses["ring"] = self.Ring
         else:   
             usedClasses["ring"] = 0
             
@@ -213,9 +204,9 @@ class flypiApp:
                                            tempAdd=self.peltTempAdd,
                                            basePath=self.basePath,
                                            ser=self.ser)
-            peltOff = self.peltOffAdd
+            peltOff = self.peltOffAdd+"*"
             self.ser.write(peltOff.encode('utf-8'))
-            usedClasses["peltier"] = 1#self.Peltier
+            usedClasses["peltier"] = self.Peltier
             
         else:   
             usedClasses["peltier"] = 0
@@ -244,9 +235,7 @@ class flypiApp:
             self.Protocol = Protocol.Protocol(parent = self.frameProt,
                                               usedClasses=usedClasses,
                                               basePath = self.basePath+"/protocol/",
-                                              label="Protocols",ser=self.ser,
-                                              timingAdd=self.timeAdd)
-#            print(self.timeAdd)
+                                              label="Protocols",ser=self.ser)
             #self.prot = True
             #self.protocol = Protocol(parent=self.frameProt, ser=self.ser)
 
@@ -276,20 +265,12 @@ class flypiApp:
                 self.Peltier.fh.close()
             if serialAvail == True:
 
-                #self.ser.flush()
-                #self.ser.readline()
+                self.ser.flush()
                 self.ser.close()
-            #print(self.Matrix.ser.isOpen())
+
             self.quit.quit()
         self.qLabel=tk.Label(master=parent,text="exit program")
         self.qLabel.pack()
         self.quit = tk.Button(master=parent, text="QUIT",
                               fg="red", command=quitNcloseSerial)
         self.quit.pack(fill="x")
-        return   
-    #def test(self,parent = None):
-    #    self.after(500, self.test)
-    #    #if self.peltierFlag == 1:
-    #    #    self.Peltier.peltGetTempArd()
-    #    print("herre")        
-    #    return            

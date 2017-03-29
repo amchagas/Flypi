@@ -6,22 +6,22 @@
 /// tombaden.wordpress.com ///
 /////////////////////////////////////////////////////////////////////////////////
 //// SWITCHES //////////
-PartA = 	0; // Base
+PartA = 	1; // Base
 PartA1=	0; // Base clamps
 PartA2 = 	0; // Feet
-PartB= 	    0; // Wall
-PartB3=	0; // PCB mount
-PartC= 	01; // Cam Mount
+PartB= 	1; // Wall
+PartB3=	1; // Fritzing mount
+PartC= 	0; // Cam Mount
 PartC1= 	0; // Cam Mount Servo
 PartC2= 	0; // Cam Mount Cogwheels
 PartD= 	0; // High Power LED mount
-PartE= 	    0; // angled mounting stick
+PartE= 	0; // angled mounting stick
 PartF1= 	0; // straight mounting stick, long
 PartF2= 	0; // straight mounting stick, short
 PartF3= 	0; // straight mounting stick, long 90°
 PartG= 	0; // thumbscrew & manipulator links
 PartH= 	0; // AdaFruit 8x8 LED Matrix mount
-PartI= 	    0; // Adafruit 12 LED Ring mount
+PartI= 	      0; // Adafruit 12 LED Ring mount
 PartJ1= 	0; // Mini Petri dish mount
 PartJ2= 	0; // Midi Petri dish mount
 PartK= 	0; // Diffusor mount

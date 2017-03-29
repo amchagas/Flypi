@@ -8,7 +8,7 @@ class Ring:
 
     def __init__(self, parent="none", label="none", ser="", #protFrame="",
                  ringOnAdd="", ringOffAdd="", ringZapAdd="",
-                 greenAdd="RGR", redAdd="RRE", blueAdd="RBL",
+                 greenAdd="", redAdd="", blueAdd="",
                  allAdd="", rotAdd=""):
 
         self.ser = ser
@@ -20,7 +20,7 @@ class Ring:
         self.blueAdd = blueAdd
         self.allAdd = allAdd
         self.rotAdd = rotAdd
-        
+
         ###########variables for ring sliders
         ringGreenVar = tk.IntVar()
         self.rgv=ringGreenVar
@@ -41,59 +41,36 @@ class Ring:
         zapGreenVar = tk.IntVar()
         zapRedVar = tk.IntVar()
         zapBlueVar = tk.IntVar()
-        
-        def lockwait(waitString="waited"):
-            flag = True
-            #endFlag="END<>"
-            #self.ser.flush()
-            while flag== True:
-                #if there is something to read on the serial port
-                test=self.ser.inWaiting()
-                
-                #            print("test: "+str(test))
-                if test>0:                
-                    #read line
-                    dummie=self.ser.readline()
-                    #print (dummie[0:-2])
-                    #if the line is "waited" get out of the waiting while loop
-                    if dummie[0:-2].decode("utf-8")==waitString:
-                        #                    self.ser.write(endFlag.encode("utf-8"))                    
-                        flag = False 
 
-            return
         ############callbacks for ring sliders
         def greenUpdate(self, ser=self.ser, address1=self.greenAdd,rgv=self.rgv):
-#            print ("here11")
+            
             value = rgv.get()           
             output = str(greenAdd) + "<" + str(value) + ">>"
             ser.write(output.encode("utf-8"))
-            lockwait()
-#            output = str(redAdd) + "<" + str(ringRedVar.get()) + ">"
+            
+#            output = str(redAdd) + "<" + str(ringRedVar.get()) + ">>"
 #            ser.write(output.encode("utf-8"))
-#            output = str(blueAdd) + "<" + str(ringBlueVar.get()) + ">"
+#            output = str(blueAdd) + "<" + str(ringBlueVar.get()) + ">>"
 #            ser.write(output.encode("utf-8")) 
-            return
+
             
         
-        self.greenUpdate=greenUpdate  
-
+        self.greenUpdate=greenUpdate        
         
         def redUpdate(self, ser=self.ser, address1=self.redAdd,redvar=self.rrv):
             value = redvar.get()            
             output = str(address1) + "<" + str(value) + ">>"         
             ser.write(output.encode("utf-8"))
-            lockwait()
-            return
-        self.redUpdate=redUpdate
             
+        self.redUpdate=redUpdate
 
         def blueUpdate(self, ser=self.ser, address1=self.blueAdd,bluevar=self.rbv):
             value = bluevar.get()
             output = str(address1) + "<" + str(value) + ">>"
             
             ser.write(output.encode("utf-8"))
-            lockwait()
-            return
+        
         self.blueUpdate=blueUpdate
 
         def allUpdate(self, ser=self.ser, address1=self.allAdd,
@@ -104,12 +81,11 @@ class Ring:
             rrv.set(value)
             output = address1 + "<" + str(value) + ">>"
             ser.write(output.encode("utf-8"))
-            lockwait()
-            return
+
         def rotUpdate(self, ser=self.ser, address1=self.rotAdd, rrotv=self.rrotv):
             output = str(address1) +"<"+ str(rrotv.get())+">>"
             ser.write(output.encode("utf-8"))
-            return
+
         frame1 = tk.Frame(master=parent)
         frame1.grid(row=0, column=0)
         frame2 = tk.Frame(master=parent)
@@ -244,32 +220,12 @@ class Ring:
 #                                       colSpan=1, delay=300,color="black",
 #                                       from__=100, to__=-100, res=10, set_=0)
 
-
-    def lockwait(self,waitString="waited"):
-        flag = True
-        #endFlag="END<>"
-        #self.ser.flush()
-        while flag== True:
-            #if there is something to read on the serial port
-            test=self.ser.inWaiting()
-            
-            #            print("test: "+str(test))
-            if test>0:                
-                #read line
-                dummie=self.ser.readline()
-                #print (dummie[0:-2])
-                #if the line is "waited" get out of the waiting while loop
-                if dummie[0:-2].decode("utf-8")==waitString:
-                    #                    self.ser.write(endFlag.encode("utf-8"))                    
-                    flag = False 
-
-        return
     def ringButton(self, parent="none", side="top", fill="x",
                    buttText="button", color="black", func="none"):
 
         button = tk.Button(parent, text=buttText, fg=color, command=func)
         button.pack(side=side, fill=fill)
-        return
+
     def ringSlider(self, parent="none", text_="empty", side="right",
                    func="", var="",  fill_="x",color="black",
                    rowIndx=1, colIndx=0, orient_="vertical",delay=100,
@@ -284,20 +240,19 @@ class Ring:
         Slider.set(set_)
         Slider.pack()
         frame_loc.grid(row=rowIndx, column=colIndx)
-        return
+
 
     def ringOn(self):
         output = str(self.ringOnAdd)
         print("ring on " + output)
         self.ser.write(output.encode("utf-8"))
-        self.lockwait()
-        return
+
     def ringOff(self):
         output = str(self.ringOffAdd)
         print("ringOff" + output)
         self.ser.write(output.encode("utf-8"))
-        self.lockwait()
-        return
+
+        
     def ringZap(self):
         
         zapAdd = self.ringZapAdd
@@ -310,7 +265,7 @@ class Ring:
         green = int(green)
         output = zapAdd+"G<"+str(green)+">>"
         self.ser.write(output.encode("utf-8"))
-        self.lockwait()
+
         
         red = self.ringRZap.get()
         if int(red) > 255:
@@ -320,7 +275,7 @@ class Ring:
         red = int(red)
         output = zapAdd+"R<"+str(red)+">>"
         self.ser.write(output.encode("utf-8"))
-        self.lockwait()
+
         
         blue = self.ringBZap.get()
         if int(blue) > 255:
@@ -330,8 +285,7 @@ class Ring:
         blue = int(blue)
         output = zapAdd+"B<"+str(blue)+">>"
         self.ser.write(output.encode("utf-8"))
-        self.lockwait()
-        
+
         time = self.ringZapTime.get()
         if time == "zap in ms":
             time = 500
@@ -340,5 +294,5 @@ class Ring:
         output = zapAdd+"T<"+time+">>"
         print(output)
         self.ser.write(output.encode("utf-8"))
-        self.lockwait()
-        return
+
+
