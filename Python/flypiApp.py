@@ -27,6 +27,7 @@ class flypiApp:
     matrixFlag = 1
     peltierFlag = 1
     autofocusFlag = 1
+    mockupFlag = 0
 
     
     protocolFlag = 1
@@ -243,6 +244,15 @@ class flypiApp:
         else:
             self.frameProt = ""
             self.prot = False
+        
+        ###mock up###
+        if self.mockupFlag == 1:
+            import mock_up
+            self.frameMock = tk.Frame(row4Frame, bd=3)
+            self.frameMock.pack(side="left")
+            self.Mockup= mock_up.mock_up(parent=self.frameMocko,
+                                           label="mock_up",
+                                           ser=self.ser)
 
         ###QUIT###
         if self.quitFlag == 1:
