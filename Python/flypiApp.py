@@ -46,11 +46,11 @@ class flypiApp:
     led2ZapDurAdd = "LZ2"
     
     ##MATRIX##
-    #matOnAdd = "39"
     matOffAdd = "MAT<0>>"
     matPat1Add = "MAT<1>>"
     matPat2Add = "MAT<2>>"
     matPat3Add = "MAT<3>>"
+    matPat4Add = "MAT<4>>"
     matBrightAdd = "MAB"
 
     ##RING##
@@ -165,7 +165,7 @@ class flypiApp:
             self.frameMatrix = tk.Frame(row1Frame, bd=3)
             self.frameMatrix.grid(row=0, column=2, sticky="W",)
             self.Matrix = Matrix.Matrix(parent=self.frameMatrix, label="MATRIX",
-                               pat3Add=self.matPat3Add, offAdd=self.matOffAdd,
+                               pat3Add=self.matPat3Add,pat4Add=self.matPat4Add, offAdd=self.matOffAdd,
                                pat1Add=self.matPat1Add, pat2Add=self.matPat2Add,
                                brightAdd=self.matBrightAdd,
                 

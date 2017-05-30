@@ -69,7 +69,10 @@ float lowLimit = 13.0; //in Celsius
 //create function to control LED ring
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(ring_nPixels, RingPin, NEO_GRB + NEO_KHZ800);
 //create function to control matrix
-Adafruit_8x8matrix matrix = Adafruit_8x8matrix();
+//Adafruit_8x8matrix matrix = Adafruit_8x8matrix();
+
+//copntrol for long matrix
+Adafruit_8x16matrix matrix = Adafruit_8x16matrix();
 //matrix stimuli
 static const uint8_t PROGMEM // MATRIX PICS
 matrixPattern1[] =
@@ -91,9 +94,18 @@ matrixPattern2[] =
   B00001111,
   B00001111,
   B00001111
+},
+
+matrixPattern4[] =
+{ B11111111,
+  B11111111,
+  B11111111,
+  B11111111,
+  B11111111,
+  B11111111,
+  B11111111,
+  B11111111
 };
-
-
 void setup()
 { //start serial port
   Serial.begin(9600);
@@ -257,6 +269,14 @@ void loop() {
         }//end for i
       }//end for j
     }//end if incomingData==3
+    
+     if (term2.toInt() == 4) {
+      //matrix pattern 2
+      matrix.clear();
+      matrix.drawBitmap(0, 0, matrixPattern4, 8, 8, LED_ON);
+      matrix.drawBitmap(0, 8, matrixPattern4, 8, 8, LED_ON);
+      matrix.writeDisplay();
+      }
   Serial.println("waited");}//end if term1 == MAT
   
   if (term1=="MAB") {

@@ -5,15 +5,17 @@ import tkinter as tk
 class Matrix():
 
     def __init__(self, parent="none", label="none",
-                 pat3Add="10", offAdd="7", pat1Add="8",
+                 pat3Add="10", offAdd="7", pat1Add="8",pat4Add="12",
                  pat2Add="9", brightAdd="11", prot=False,
                  protFrame="", ser=""):
 
         self.label = label
-        self.pat3Add = pat3Add
+        
         self.offAdd = offAdd
         self.pat1Add = pat1Add
         self.pat2Add = pat2Add
+        self.pat3Add = pat3Add
+        self.pat4Add = pat4Add
         self.brightAdd = brightAdd
         self.ser = ser
         self.matParent = parent
@@ -73,6 +75,10 @@ class Matrix():
                                       buttText="PATTERN3", color="black",
                                       func=self.matrixPattern3, fill="x")
 
+        self.matrixPat4Butt = self.MatButton(parent=frame1, side="top",
+                                      buttText="PATTERN4", color="black",
+                                      func=self.matrixPattern4, fill="x")
+
         frame4 = tk.Frame(master=frame1)
 
         self.matrixBrightLabel = tk.Label(master=frame4, text="Brightness")
@@ -120,18 +126,32 @@ class Matrix():
         print("matrix off " + output)
         self.ser.write(output.encode("utf-8"))
         self.lockwait()
+        return
+
     def matrixPattern1(self):
         output = str(self.pat1Add)
         print("matrix pattern1 " + output)
         self.ser.write(output.encode("utf-8"))
         self.lockwait()
+        return
+
     def matrixPattern2(self):
         output = str(self.pat2Add)
         print("matrix pattern2 " + output)
         self.ser.write(output.encode("utf-8"))
         self.lockwait()
+        return
+
     def matrixPattern3(self):
         output = str(self.pat3Add)
         print ("matrix pattern3 " + output)
         self.ser.write(output.encode("utf-8"))
         self.lockwait()
+        return
+
+    def matrixPattern4(self):
+        output = str(self.pat4Add)
+        print ("matrix pattern4 " + output)
+        self.ser.write(output.encode("utf-8"))
+        self.lockwait()
+        return
