@@ -6,7 +6,7 @@ X_range = 44; // Length(70) - B_X(20) - 2*wall(6) = 44
 Y_range = 35; // Width(70) - C_Y(23) - 4*wall(12) = 38
 Z_range = 30; // C_Topheight(40) - D_Z(12) - 2*Wall(6) = 22
 
-Sliding_Gap = 0.1;
+Sliding_Gap = 0.15;
 
 Separation_of_pieces = 20; // 
 

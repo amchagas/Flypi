@@ -36,7 +36,7 @@ PartO= 	0; // Fluorescence Emission mount and wheel
 /////////////////////////////////////////////////////////////////////////////////
 sep = 30; // How far apart do pieces "float" in the model
 Walls = 5; // Global thickness of all walls
-Tol = 0.11; // Global gap between all parts that need to slide
+Tol = 0.15; // Global gap between all parts that need to slide
 
 // Base and mainwall details
 T_cableZ = 4; // Module A, height of thermistor cable slid
