@@ -21,6 +21,9 @@ sudo apt-get install libav-tools
 # *.h264 conversion to *.avi:
 is done via avconv (which is installed with libav-tools).
 
+# SD Card image containing Raspian image with all things installed:
+https://www.dropbox.com/sh/bibhy2sgadq30dm/AACD2Rdhmad2QdBi9q-pQfd6a?dl=0
+
 # outdated:
 # conversion from h264 to mp4 ()
 MP4Box -add filename.h264 filename.mp4
