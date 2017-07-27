@@ -25,9 +25,9 @@ class flypiApp:
     led1Flag = 1
     led2Flag = 1
     matrixFlag = 1
-    peltierFlag = 1
+    peltierFlag = 0
     autofocusFlag = 1
-    mockupFlag = 1
+    mockupFlag = 0
     protocolFlag = 1
     quitFlag = 1
 
