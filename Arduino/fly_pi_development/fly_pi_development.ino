@@ -108,7 +108,7 @@ matrixPattern4[] =
 };
 void setup()
 { //start serial port
-  Serial.begin(9600);
+  Serial.begin(115200);
   //Serial.flush();
   //Serial.println("start.");
   //set digital pin modes

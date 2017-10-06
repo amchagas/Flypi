@@ -26,8 +26,8 @@ class flypiApp:
     led2Flag = 1
     matrixFlag = 1
     peltierFlag = 1
-    autofocusFlag = 1
-    mockupFlag = 1
+    autofocusFlag=0
+    mockupFlag = 0
     protocolFlag = 1
     quitFlag = 1
 
@@ -98,7 +98,7 @@ class flypiApp:
             # for Arduino Uno from RPi
             #self.ser = serial.Serial('/dev/ttyACM0', 115200)
             # for Arduino Nano from RPi
-            self.ser = serial.Serial('/dev/ttyUSB0', 9600)
+            self.ser = serial.Serial('/dev/ttyUSB0', 115200)
 #            ser = serial.Serial('/dev/ttyUSB0', 4800,timeout=0.05)
         ##show the pieces of the GUI
         ##depending on which flags are on (see above):
