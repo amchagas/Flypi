@@ -7,30 +7,30 @@
 /////////////////////////////////////////////////////////////////////////////////
 //// SWITCHES //////////
 PartA = 	0; // Base
-PartA1=	0; // Base clamps
+PartA1 =	0; // Base clamps
 PartA2 = 	0; // Feet
-PartB= 	    0; // Wall
-PartB3=	0; // PCB mount
-PartC= 	0; // Cam Mount
-PartC1= 	0; // Cam Mount Servo
-PartC2= 	0; // Cam Mount Cogwheels
-PartC3=    1; // Cam V2 Mount 
-PartD= 	0; // High Power LED mount
-PartE= 	    0; // angled mounting stick
-PartF1= 	0; // straight mounting stick, long
-PartF2= 	0; // straight mounting stick, short
-PartF3= 	0; // straight mounting stick, long 90°
-PartG= 	0; // thumbscrew & manipulator links
-PartH= 	0; // AdaFruit 8x8 LED Matrix mount
-PartI= 	    0; // Adafruit 12 LED Ring mount
-PartJ1= 	0; // Mini Petri dish mount
-PartJ2= 	0; // Midi Petri dish mount
-PartK= 	0; // Diffusor mount
-PartL1= 	0; // microscope slide chamber small
+PartB =     1; // Wall
+PartB3 =	0; // PCB mount
+PartC = 	0; // Cam Mount
+PartC1 = 	0; // Cam Mount Servo
+PartC2_1 = 	0; // Cam Mount Cogwheel 1
+PartC2_2 = 	0; // Cam Mount Cogwheel 2
+PartD = 	0; // High Power LED mount
+PartE =     0; // angled mounting stick
+PartF1 = 	0; // straight mounting stick, long
+PartF2 = 	0; // straight mounting stick, short
+PartF3 = 	0; // straight mounting stick, long 90°
+PartG = 	0; // thumbscrew & manipulator links
+PartH = 	0; // AdaFruit 8x8 LED Matrix mount
+PartI = 	0; // Adafruit 12 LED Ring mount
+PartJ1 = 	0; // Mini Petri dish mount
+PartJ2 = 	0; // Midi Petri dish mount
+PartK = 	0; // Diffusor mount
+PartL1 = 	0; // microscope slide chamber small
 PartL2= 	0; // microscope slide chamber big
-PartM= 	0; // Fluorescence Excitation light mount
-PartN= 	0; // Fluorescence Exitaton tube plug
-PartO= 	0; // Fluorescence Emission mount and wheel
+PartM = 	0; // Fluorescence Excitation light mount
+PartN = 	0; // Fluorescence Exitaton tube plug
+PartO = 	0; // Fluorescence Emission mount and wheel
 
 /////////////////////////////////////////////////////////////////////////////////
 ///// KEY VARIABLES ////////////////////////////////////////////
@@ -38,6 +38,8 @@ PartO= 	0; // Fluorescence Emission mount and wheel
 sep = 30; // How far apart do pieces "float" in the model
 Walls = 5; // Global thickness of all walls
 Tol = 0.15; // Global gap between all parts that need to slide
+corner_radius = 4; // Round corner radius
+
 
 // Base and mainwall details
 T_cableZ = 4; // Module A, height of thermistor cable slid
@@ -74,13 +76,15 @@ Cam_X = 32.2;//24 for "classic RPi Cam. i.e the one without the adjustable focus
 Cam_Y = 32.2;//25 for "classic RPi Cam";
 Cam_X_offset = 0;// 2.5 for "classic RPi Cam";
 C_Z = 2; // thickness of camera mount
-C_Z2 = 5; // thickness of cmaera mount walls
+C_Z2 = 5; // thickness of camera mount walls
 C_ridge = 2; // width of ridge for camera mount
 Cam_Zfloat = 200; // Module B, max height 
 CamGroove_X = 12;
 CamGroove_Y = 16.1;
 CamGroove2_Y = 24;
 
+// Default number of faces 
+$fn=100;
 
 /////////////////////////////////////////////////////////////////////////////////
 /// MODULE A - base   //////////////////////////////////////////
@@ -207,9 +211,9 @@ module B2_sub(){
 	translate([-P_XY/2-P_border+Walls-Mount_h,-RPi_holedist_Yb,RPi_groundZ+sep]){rotate ([0,90,0]) {cylinder($fn = 50, r = S_hole_R, h = Mount_h+Walls, center = true );}} // m hole_bottom
 	translate([-P_XY/2-P_border+Walls-Mount_h,-RPi_holedist_Y,RPi_groundZ+RPi_holedist_Z+sep]){rotate ([0,90,0]) {cylinder($fn = 50, r = S_hole_R, h = Mount_h+Walls, center = true );}} // 
 }
-if (PartB==1){difference(){B();B_sub();}}
-if (PartB==1){difference(){B2();B2_sub();}}
-
+//if (PartB==1){difference(){B();B_sub();}}
+//if (PartB==1){difference(){B2();B2_sub();}}
+if (PartB==1){difference(){translate([-P_XY/2-P_border-A_Wall_X/2,0,A_Wall_Z_long/2+sep]){cube([A_Wall_X,A_Wall_Y_long,A_Wall_Z_long], center = true );}}}
 /////////////////////////////////////////////////////////////////////////////////
 ///// MODULE B3 - Arduino/Fritzing holder ////////
 /////////////////////////////////////////////////////////////////////////////////
@@ -242,27 +246,48 @@ module B3_sub(){
 }
 if (PartB3==1){difference(){B3();B3_sub();}}
 
+////////////////////////////////////////////////////////////////////////////////
+///// Common mount configuration modules /////
+/////////////////////////////////////////////////////////////////////////////////
+module Mount(X_dim, Y_dim, Z_offset, thickness = Walls, Y_extension=0, link_thickness=Walls){
+    thickness = thickness/2;  // Will be doubled again by the minkowski operation
+//    link_thickness = link_thickness > thickness ? link_thickness - thickness : thickness;  // Will be scaled up again by the minkowski operation
+    link_thickness = link_thickness - thickness;  // Will be scaled up again by the minkowski operation
+    xy_thickness_adj = 2*(Walls - corner_radius);
+    y_sep = Y_extension > 0 ? -2*sep-Y_extension/2 : 0;
+    minkowski()
+    {
+        union() {
+            translate([0,0,-(link_thickness - thickness)/2]) 
+            translate([sep+Cam_X_offset,y_sep,Cam_Zfloat-Z_offset]){cube([X_dim+xy_thickness_adj,Y_dim+Y_extension+xy_thickness_adj,thickness], center = true );} // Cam_mount
+            translate([sep-P_XY/4-P_border/2-thickness*2,y_sep+Y_extension/2,Cam_Zfloat-Z_offset]){cube([P_XY/2+P_border+xy_thickness_adj,A_Wall_Y_long+xy_thickness_adj,link_thickness], center = true );} // LINK
+        }
+        cylinder(r=corner_radius, h=thickness, center=true);
+    }
+}
+
+module Mount_link_holes(Z_offset, Y_offset=0, X_offset=sep, link_thickness=Walls)
+{
+    translate([X_offset-P_XY/2-P_border-Walls/2,Y_offset,Cam_Zfloat-Z_offset+link_thickness-Walls]){cube([Walls+Tol*2,A_Wall_Y_long+2*Tol,link_thickness*1.5], center = true );} // link_hole
+	translate([X_offset-Cam_X/2-CamGroove_X-15,Y_offset,Cam_Zfloat-Z_offset+(link_thickness-Walls)/2]){rotate ([0,90,0]) {cylinder(r = S_hole_R, h = 20, center = true );}} // link_screwhole
+}
+
 /////////////////////////////////////////////////////////////////////////////////
 ///// MODULE C - camera mount /////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
 
 MiniGrooveX = 15;
 
-module C(){
-	translate([sep+Cam_X_offset,0,Cam_Zfloat+sep]){cube([Cam_X+Walls*2,Cam_Y+Walls*2,Walls*1.5], center = true );} // Cam_mount
-	translate([sep-P_XY/4-P_border/2-Walls,0,Cam_Zfloat+sep]){cube([P_XY/2+P_border+2*Walls,A_Wall_Y_long+2*Walls,Walls*1.5], center = true );} // Cam_link
+module C_sub(Z_offset, Y_offset=0){
+	translate([sep+Cam_X_offset,Y_offset,Cam_Zfloat+Walls*0.75-C_Z/2-Z_offset]){cube([Cam_X+Tol*2,Cam_Y+Tol*2,C_Z], center = true );} // Cam_hole_ridge
+	translate([sep+Cam_X_offset-Cam_X/2-CamGroove_X/2,Y_offset,Cam_Zfloat+C_Z2/2-Z_offset]){cube([CamGroove_X,CamGroove_Y,C_Z2+Walls/2], center = true );} // Cam_cable_groove
+	translate([sep+Cam_X_offset+Cam_X/2-MiniGrooveX/2-C_ridge,-Cam_Y/2+C_ridge/2+Y_offset,Cam_Zfloat+C_Z2/2-Z_offset]){cube([MiniGrooveX,C_ridge,C_Z2+Walls/2], center = true );} // mini groove
+	translate([sep+Cam_X_offset-Cam_X/2+CamGroove_X/2,Y_offset,Cam_Zfloat+C_Z2/2-Z_offset]){cube([CamGroove_X,CamGroove2_Y,C_Z2+Walls/2], center = true );} // Cam_bmup_groove
+	translate([sep+Cam_X_offset,Y_offset,Cam_Zfloat-Z_offset]){cube([Cam_X-C_ridge*2,Cam_Y-C_ridge*2,Walls*3], center = true );} // Cam_hole
+    Mount_link_holes(Z_offset, Y_offset);
 }
-module C_sub(){
-	translate([sep+Cam_X_offset,0,Cam_Zfloat+sep+Walls*0.75-C_Z/2]){cube([Cam_X+Tol*2,Cam_Y+Tol*2,C_Z], center = true );} // Cam_hole_ridge
-	translate([sep+Cam_X_offset-Cam_X/2-CamGroove_X/2,0,Cam_Zfloat+sep+C_Z2/2]){cube([CamGroove_X,CamGroove_Y,C_Z2+Walls/2], center = true );} // Cam_cable_groove
-	translate([sep+Cam_X_offset+Cam_X/2-MiniGrooveX/2-C_ridge,-Cam_Y/2+C_ridge/2,Cam_Zfloat+sep+C_Z2/2]){cube([MiniGrooveX,C_ridge,C_Z2+Walls/2], center = true );} // mini groove
-	translate([sep+Cam_X_offset-Cam_X/2+CamGroove_X/2,0,Cam_Zfloat+sep+C_Z2/2]){cube([CamGroove_X,CamGroove2_Y,C_Z2+Walls/2], center = true );} // Cam_bmup_groove
-	translate([sep+Cam_X_offset,0,Cam_Zfloat+sep]){cube([Cam_X-C_ridge*2,Cam_Y-C_ridge*2,Walls*3], center = true );} // Cam_hole
-	translate([sep-P_XY/2-P_border-Walls/2,0,Cam_Zfloat+sep]){cube([Walls+Tol*2,A_Wall_Y_long+2*Tol,Walls*1.5], center = true );} // Cam_link_hole
-	translate([sep-Cam_X/2-CamGroove_X-15,0,Cam_Zfloat+sep]){rotate ([0,90,0]) {cylinder(r = S_hole_R, h = 20, center = true );}} // screwhole
-}
-if (PartC==1){difference(){C();C_sub();}}
-
+if (PartC==1){difference(){Mount(Cam_X, Cam_Y, -sep, Walls*1.5, 0, Walls*1.5);C_sub(-sep);}}
+//Mount(Cam_X, Cam_Y, -sep, Walls*1.5);
 
 /////////////////////////////////////////////////////////////////////////////////
 ///// MODULE C1 - camera mount with servo ////
@@ -272,6 +297,19 @@ Servo_Y = 12.2;
 Servo_X = 23.7;
 Servo_X_offset = 5.5;
 // height of Servo is 29 in total, which is counted from the bottom
+
+module C1_sub(Z_offset){
+    C_sub(Z_offset, -2*sep);
+    translate([sep+Cam_X_offset-Servo_X_offset,-2*sep-Servo_Y/2-Cam_Y/2-Walls,Cam_Zfloat-Z_offset]){cube([Servo_X+Tol,Servo_Y+Tol,Walls*3], center = true );} // Servo_hole
+    translate([sep+Cam_X_offset-Servo_X_offset+Servo_X/2,-2*sep-Servo_Y/2-Cam_Y/2-Walls,Cam_Zfloat-Z_offset]){cylinder( $fn=50, r = 4, h = 100, center = true );} // Servo_cablegroove
+
+}
+if (PartC1==1){difference(){Mount(Cam_X, Cam_Y, -sep, Walls*1.5, Servo_Y+Walls, Walls*1.5);C1_sub(-sep);}}
+
+///////////////////////////
+//  Cogwheel design using involute teeth
+//
+//////////////////////////
 cogwheel_R = 14.1;
 cogwheel_R2 = 10.5;
 cogwheel_Z = 10;
@@ -283,63 +321,71 @@ cogwheel_cross_Z = 3;
 cogwheel_cross_Width = 4.5+Tol;
 cogwheel_cross_Length = cogwheel_R2*2-1;
 
-module C1(){
-	translate([sep+Cam_X_offset,-2*sep-Walls/2-Servo_Y/2,Cam_Zfloat+sep]){cube([Cam_X+Walls*2,Cam_Y+Servo_Y+Walls*3,Walls*1.5], center = true );} // Cam_mount
-	translate([sep-P_XY/4-P_border/2-Walls,-2*sep,Cam_Zfloat+sep]){cube([P_XY/2+P_border+2*Walls,A_Wall_Y_long+2*Walls,Walls*1.5], center = true );} // Cam_link
+include <MCAD/involute_gears.scad>
+// Gear parameter description from: http://www.thingiverse.com/thing:3575
+/*
+    Parametric Involute Spur Gears take the following parameters:
+    number_of_teeth
+    circular_pitch or diametral_pitch: controls the size of the teeth (and hence the size of the gear).
+    The circular pitch is in units of pi/180 mm (according to a comment by the author on Thingiverse).
+    pressure_angle: controls the shape of the teeth.
+    clearance: The gap between the root between teeth and the teeth point on a meshing gear.
+    gear_thickness: the thickness of the gear plate.
+    rim_thickness: the thickness of the gear at the rim (including the teeth).
+    rim_width: radial distance from the root of the teeth to the inside of the rim.
+    hub_thickness: the thickness of the section around the bore.
+    hub_diameter
+    bore_diameter: size of the hole in the middle
+    circles: the number of circular holes to cut in the gear plate.
+    backlash: the space between this the back of this gears teeth and the front of its meshing gear\\'s teeth when the gear is correctly spaced from it.
+    twist: for making helical gears.
+    involute_facets: the number of facets in one side of the involute tooth shape. If this is omitted it will be 1/4 of $fn. If $fn is not set, it will be 5.
+*/
 
+module cogwheel(bore_radius)
+{
+    pressure_angle = 22; // degrees
+    pitch_circle_diameter = 2*cogwheel_R*15/16;
+    gear_thickness = cogwheel_Z2;  
+    rim_thickness = cogwheel_Z;
+    bore_diameter = 2*bore_radius;
+    hub_diameter = 0;  
+    cutout_circles = 0;  // Symmetrically balanced circles on the inside of the gear
+    circular_pitch = 180 * pitch_circle_diameter/cogwheel_nteeth;  // in units of pi/180 mm
+    
+    gear (number_of_teeth=cogwheel_nteeth, circular_pitch=circular_pitch,
+          pressure_angle=pressure_angle,
+          clearance=0.05*(pi/180)*circular_pitch,  // Formula derived from info. in Ivan Law's book "Gears and Gear Cutting"
+          bore_diameter= bore_diameter,
+          gear_thickness = gear_thickness,
+          rim_thickness = rim_thickness,
+          rim_width=cogwheel_R/8,
+          hub_diameter=hub_diameter,  
+          hub_thickness = cogwheel_Z,
+          circles=cutout_circles,                   
+          involute_facets=10);
 }
-module C1_sub(){
-	translate([sep+Cam_X_offset,-2*sep,Cam_Zfloat+sep+Walls*0.75-C_Z/2]){cube([Cam_X+Tol*2,Cam_Y+Tol*2,C_Z], center = true );} // Cam_hole_ridge
-	translate([sep+Cam_X_offset-Cam_X/2-CamGroove_X/2,-2*sep,Cam_Zfloat+sep+C_Z2/2]){cube([CamGroove_X,CamGroove_Y,C_Z2+Walls/2], center = true );} // Cam_cable_groove
-	translate([sep+Cam_X_offset+Cam_X/2-MiniGrooveX/2-C_ridge,-Cam_Y/2+C_ridge/2-2*sep,Cam_Zfloat+sep+C_Z2/2]){cube([MiniGrooveX,C_ridge,C_Z2+Walls/2], center = true );} // mini groove
-	translate([sep+Cam_X_offset-Cam_X/2+CamGroove_X/2,-2*sep,Cam_Zfloat+sep+C_Z2/2]){cube([CamGroove_X,CamGroove2_Y,C_Z2+Walls/2], center = true );} // Cam_bmup_groove
-	translate([sep+Cam_X_offset,-2*sep,Cam_Zfloat+sep]){cube([Cam_X-C_ridge*2,Cam_Y-C_ridge*2,Walls*3], center = true );} // Cam_hole
-	translate([sep-P_XY/2-P_border-Walls/2,-2*sep,Cam_Zfloat+sep]){cube([Walls+Tol*2,A_Wall_Y_long+2*Tol,Walls*1.5], center = true );} // Cam_link_hole
-	translate([sep-Cam_X/2-CamGroove_X-15,-2*sep,Cam_Zfloat+sep]){rotate ([0,90,0]) {cylinder(r = S_hole_R, h = 20, center = true );}} // screwhole
-      translate([sep+Cam_X_offset-Servo_X_offset,-2*sep-Servo_Y/2-Cam_Y/2-Walls,Cam_Zfloat+sep]){cube([Servo_X+Tol,Servo_Y+Tol,Walls*3], center = true );} // Servo_hole
- translate([sep+Cam_X_offset-Servo_X_offset+Servo_X/2,-2*sep-Servo_Y/2-Cam_Y/2-Walls,Cam_Zfloat+sep]){cylinder( $fn=50, r = 4, h = 100, center = true );} // Servo_cablegroove
 
+if (PartC2_1==1)
+{
+    translate([sep+Cam_X_offset,-sep,Cam_Zfloat+2*sep-cogwheel_Z2-1])
+    difference()
+    {
+        cogwheel(cogwheel_R_inner1);
+        translate([0,0,cogwheel_cross_Z+0.5]){cube([cogwheel_cross_Length,cogwheel_cross_Width, cogwheel_cross_Z+1], center = true);} // Servo_cog cross1
+        translate([0,0,cogwheel_cross_Z+0.5]){cube([cogwheel_cross_Width,cogwheel_cross_Length,cogwheel_cross_Z+1], center = true);} // Servo_cog cross2    
+  }
 }
-if (PartC1==1){difference(){C1();C1_sub();}}
 
-module C2(){
-      for (i = [0 : cogwheel_nteeth/3]) {
-		translate([sep+Cam_X_offset,-2*sep,Cam_Zfloat+2*sep]){rotate ([0,0,(i+0.5)*360/cogwheel_nteeth]) {cylinder($fn = 3, r = cogwheel_R, h = cogwheel_Z, center = true );}} // cogs wheel 1
-		translate([sep+Cam_X_offset,-2*sep-Servo_Y/2-Cam_Y/2-Walls,Cam_Zfloat+2*sep]){rotate ([0,0,i*360/cogwheel_nteeth]) {cylinder($fn = 3, r = cogwheel_R, h = cogwheel_Z, center = true );}} // cogs wheel 2
-	}
+if (PartC2_2==1)
+{
+    translate([sep+Cam_X_offset,-2*sep-Servo_Y/2-Cam_Y/2-Walls,Cam_Zfloat+2*sep-cogwheel_Z2-1])
+    rotate([0, 0, 180/cogwheel_nteeth])
+    {
+        cogwheel(cogwheel_R_inner2);
+    }
 }
-module C2_sub(){
-	translate([sep+Cam_X_offset,-2*sep,Cam_Zfloat+2*sep]){rotate ([0,0,0]) {cylinder($fn = 50, r = cogwheel_R_inner1, h = cogwheel_Z+1, center = true );}} // Cam_cog Lens hole 
-	translate([sep+Cam_X_offset,-2*sep,Cam_Zfloat+2*sep+cogwheel_Z2/2+1]){rotate ([0,0,0]) {cylinder($fn = 50, r = cogwheel_R2, h = cogwheel_Z-cogwheel_Z2+1, center = true );}} // Cam_cog main hole
-	
-	translate([sep+Cam_X_offset,-2*sep-Servo_Y/2-Cam_Y/2-Walls,Cam_Zfloat+2*sep+cogwheel_Z2/2+1]){rotate ([0,0,0]) {cylinder($fn = 50, r = cogwheel_R2, h = cogwheel_Z - cogwheel_Z2+1, center = true );}} // Servo_cog main hole
-	translate([sep+Cam_X_offset,-2*sep-Servo_Y/2-Cam_Y/2-Walls,Cam_Zfloat+2*sep]){rotate ([0,0,0]) {cylinder($fn = 12, r = cogwheel_R_inner2, h = cogwheel_Z+1, center = true );}} // Servo_cog mount hole
-	translate([sep+Cam_X_offset,-2*sep-Servo_Y/2-Cam_Y/2-Walls,Cam_Zfloat+2*sep-cogwheel_cross_Z/2]){cube([cogwheel_cross_Length,cogwheel_cross_Width,cogwheel_cross_Z], center = true);} // Servo_cog cross1
-	translate([sep+Cam_X_offset,-2*sep-Servo_Y/2-Cam_Y/2-Walls,Cam_Zfloat+2*sep-cogwheel_cross_Z/2]){cube([cogwheel_cross_Width,cogwheel_cross_Length,cogwheel_cross_Z], center = true);} // Servo_cog cross2
 
-}
-if (PartC2==1){difference(){C2();C2_sub();}}
-
-/////////////////////////////////////////////////////////////////////////////////
-///// MODULE C3 - camera mount /////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
-
-MiniGrooveX = 15;
-
-module C3(){
-	translate([sep+Cam_X_offset,0,Cam_Zfloat+sep]){cube([Cam_X+Walls*2,Cam_Y+Walls*2,Walls*1.5], center = true );} // Cam_mount
-	translate([sep-P_XY/4-P_border/2-Walls,0,Cam_Zfloat+sep]){cube([P_XY/2+P_border+2*Walls,A_Wall_Y_long+2*Walls,Walls*1.5], center = true );} // Cam_link
-}
-module C3_sub(){
-	translate([sep+Cam_X_offset,0,Cam_Zfloat+sep+Walls*0.75-C_Z/2]){cube([Cam_X+Tol*2,Cam_Y+Tol*2,C_Z], center = true );} // Cam_hole_ridge
-	translate([sep+Cam_X_offset-Cam_X/2-CamGroove_X/2,0,Cam_Zfloat+sep+C_Z2/2]){cube([CamGroove_X,CamGroove_Y,C_Z2+Walls/2], center = true );} // Cam_cable_groove
-	translate([sep+Cam_X_offset+Cam_X/2-MiniGrooveX/2-C_ridge,-Cam_Y/2+C_ridge/2,Cam_Zfloat+sep+C_Z2/2]){cube([MiniGrooveX,C_ridge,C_Z2+Walls/2], center = true );} // mini groove
-	translate([sep+Cam_X_offset-Cam_X/2+CamGroove_X/2,0,Cam_Zfloat+sep+C_Z2/2]){cube([CamGroove_X,CamGroove2_Y,C_Z2+Walls/2], center = true );} // Cam_bmup_groove
-	translate([sep+Cam_X_offset,0,Cam_Zfloat+sep]){cube([Cam_X-C_ridge*2,Cam_Y--2,Walls*3], center = true );} // Cam_hole
-	translate([sep-P_XY/2-P_border-Walls/2,0,Cam_Zfloat+sep]){cube([Walls+Tol*2,A_Wall_Y_long+2*Tol,Walls*1.5], center = true );} // Cam_link_hole
-	translate([sep-Cam_X/2-CamGroove_X-15,0,Cam_Zfloat+sep]){rotate ([0,90,0]) {cylinder(r = S_hole_R, h = 20, center = true );}} // screwhole
-}
-if (PartC3==1){difference(){C3();C3_sub();}}
 
 /////////////////////////////////////////////////////////////////////////////////
 ///// MODULE D - high power LED mount  /////////
@@ -350,17 +396,13 @@ LED_holder_inside = 35+2*Tol;
 LED_holder_outside = 35+2*Tol+2*Walls;
 LED_holder_ridge = 3;
 
-module D(){
-	translate([sep+Cam_X_offset,0,Cam_Zfloat]){cube([Cam_X+Walls*2,Cam_Y+Walls*2,Walls*1.5], center = true );} // Cam_mount
-	translate([sep-P_XY/4-P_border/2-Walls,0,Cam_Zfloat]){cube([P_XY/2+P_border+2*Walls,A_Wall_Y_long+2*Walls,Walls*1.5], center = true );} // Cam_link
-}
 module D_sub(){
 	translate([sep+Cam_X_offset,0,Cam_Zfloat]){cylinder(r = Excit_hole_R+Tube_wall+Tol, h = Walls*2, center = true );} 
 	translate([sep+Cam_X_offset,0,Cam_Zfloat+Walls*0.4]){cube([LED_holder_inside,LED_holder_inside,Walls], center = true );} // LED_holder_groove2
-	translate([sep-P_XY/2-P_border-Walls/2,0,Cam_Zfloat]){cube([Walls+Tol*2,A_Wall_Y_long+2*Tol,Walls*1.5], center = true );} // Cam_link_hole
-	translate([sep-Cam_X/2-CamGroove_X-15,0,Cam_Zfloat]){rotate ([0,90,0]) {cylinder(r = S_hole_R, h = 20, center = true );}} // screwhole
+    Mount_link_holes(0);
 }
-if (PartD==1){difference(){D();D_sub();}}
+
+if (PartD==1){difference(){Mount(Cam_X, Cam_Y, 0, Walls*1.5, 0, Walls*1.5);D_sub();}}
 
 /////////////////////////////////////////////////////////////////////////////////
 ///// MODULE E - angled pillars  //////////////////////////
@@ -379,7 +421,7 @@ module E(){
 }
 module E_sub(){
 	translate([-P_XY/2-P_border-Walls/2,2*sep,Cam_Zfloat]){cube([Walls+Tol*2,A_Wall_Y_long+2*Tol,Walls*10], center = true );} // Cam_link_hole
-	translate([-Cam_X/2-CamGroove_X-15,2*sep,Cam_Zfloat]){rotate ([0,90,0]) {cylinder(r = S_hole_R, h = 100, center = true );}} // screwhole
+	translate([-Cam_X/2-CamGroove_X-15,2*sep,Cam_Zfloat]){rotate ([0,90,0]) {cylinder(r = S_hole_R, h = 20, center = false );}} // screwhole
 }
 if (PartE==1){difference(){E();E_sub();}}
 
@@ -479,7 +521,8 @@ module G_sub(){
 }
 if (PartG==1){difference(){G();G_sub();}}
 
-/////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////
 ///// MODULE H - Adafruit 8x8 Matrix mount /////
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -488,22 +531,17 @@ Matrix_screwdistY = 28;
 Matrix_screwdistX = 37;
 Smini_hole_R = 1;
 
-module H(){
-	translate([sep+Cam_X_offset,0,Cam_Zfloat-2*sep]){cube([Cam_X+Walls*2,Cam_Y+Walls*2,Walls], center = true );} // Main
-	translate([sep-P_XY/4-P_border/2-Walls,0,Cam_Zfloat-2*sep]){cube([P_XY/2+P_border+2*Walls,A_Wall_Y_long+2*Walls,Walls], center = true );} // LINK
+module H_sub(Z_offset){
+	translate([sep+Cam_X_offset,0,Cam_Zfloat-Z_offset]){cube([Matrix_XY+Tol*2,Matrix_XY+Tol*2,Walls], center = true );} // Main hole
+	translate([sep+Cam_X_offset-Cam_X/2-CamGroove_X/2,0,Cam_Zfloat-Z_offset+C_Z2/2]){cube([CamGroove_X,CamGroove_Y,C_Z2+Walls/2], center = true );} // Cable_groove
+	translate([sep+Cam_X_offset-Cam_X/2-CamGroove_X/2-3,0,Cam_Zfloat-Z_offset]){rotate ([0,0,0]) {cylinder(r = CamGroove_X/4, h = Walls, center = true );}} // Cable thre
+	translate([sep+Matrix_screwdistX/2,Matrix_screwdistY/2,Cam_Zfloat-Z_offset]){rotate ([0,0,0]) {cylinder(r = Smini_hole_R, h = 10, center = true );}} // Matrix_screwhole1
+	translate([sep-Matrix_screwdistX/2,Matrix_screwdistY/2,Cam_Zfloat-Z_offset]){rotate ([0,0,0]) {cylinder(r = Smini_hole_R, h = 10, center = true );}} // Matrix_screwhole2
+	translate([sep+Matrix_screwdistX/2,-Matrix_screwdistY/2,Cam_Zfloat-Z_offset]){rotate ([0,0,0]) {cylinder(r = Smini_hole_R, h = 10, center = true );}} // Matrix_screwhole3
+	translate([sep+-Matrix_screwdistX/2,-Matrix_screwdistY/2,Cam_Zfloat-Z_offset]){rotate ([0,0,0]) {cylinder(r = Smini_hole_R, h = 10, center = true );}} // Matrix_screwhole4
+    Mount_link_holes(Z_offset);
 }
-module H_sub(){
-	translate([sep+Cam_X_offset,0,Cam_Zfloat-2*sep]){cube([Matrix_XY+Tol*2,Matrix_XY+Tol*2,Walls], center = true );} // Main hole
-	translate([sep+Cam_X_offset-Cam_X/2-CamGroove_X/2,0,Cam_Zfloat-2*sep+C_Z2/2]){cube([CamGroove_X,CamGroove_Y,C_Z2+Walls/2], center = true );} // Cable_groove
-	translate([sep+Cam_X_offset-Cam_X/2-CamGroove_X/2-3,0,Cam_Zfloat-2*sep]){rotate ([0,0,0]) {cylinder(r = CamGroove_X/4, h = Walls, center = true );}} // Cable thre
-	translate([sep+Matrix_screwdistX/2,Matrix_screwdistY/2,Cam_Zfloat-2*sep]){rotate ([0,0,0]) {cylinder(r = Smini_hole_R, h = 10, center = true );}} // Matrix_screwhole1
-	translate([sep-Matrix_screwdistX/2,Matrix_screwdistY/2,Cam_Zfloat-2*sep]){rotate ([0,0,0]) {cylinder(r = Smini_hole_R, h = 10, center = true );}} // Matrix_screwhole2
-	translate([sep+Matrix_screwdistX/2,-Matrix_screwdistY/2,Cam_Zfloat-2*sep]){rotate ([0,0,0]) {cylinder(r = Smini_hole_R, h = 10, center = true );}} // Matrix_screwhole3
-	translate([sep+-Matrix_screwdistX/2,-Matrix_screwdistY/2,Cam_Zfloat-2*sep]){rotate ([0,0,0]) {cylinder(r = Smini_hole_R, h = 10, center = true );}} // Matrix_screwhole4
-	translate([sep-P_XY/2-P_border-Walls/2,0,Cam_Zfloat-2*sep]){cube([Walls+Tol*2,A_Wall_Y_long+2*Tol,Walls*1.5], center = true );} // link_hole
-	translate([sep-Cam_X/2-CamGroove_X-15,0,Cam_Zfloat-2*sep]){rotate ([0,90,0]) {cylinder(r = S_hole_R, h = 20, center = true );}} // link_screwhole
-}
-if (PartH==1){difference(){H();H_sub();}}
+if (PartH==1){difference(){Mount(Cam_X, Cam_Y, 2*sep);H_sub(2*sep);}}
 
 /////////////////////////////////////////////////////////////////////////////////
 ///// MODULE I - Adafruit 16LED ring mount //////
@@ -511,23 +549,18 @@ if (PartH==1){difference(){H();H_sub();}}
 
 R_LEDring = 40/2;
 
-module I(){
-	translate([sep+Cam_X_offset,0,Cam_Zfloat-sep]){cube([Cam_X+Walls*2,Cam_Y+Walls*2,Walls], center = true );} // Main
-	translate([sep-P_XY/4-P_border/2-Walls,0,Cam_Zfloat-sep]){cube([P_XY/2+P_border+2*Walls,A_Wall_Y_long+2*Walls,Walls], center = true );} // LINK
+module I_sub(Z_offset){
+	translate([sep,0,Cam_Zfloat-Z_offset]){rotate ([0,0,0]) {cylinder(r = R_LEDring-Tol, h = Walls, center = true );}} // Main hole
+	translate([sep,0,Cam_Zfloat-Z_offset+1]){rotate ([0,0,0]) {cylinder(r = R_LEDring+Tol, h = Walls, center = true );}} // Main hole
+	translate([sep,R_LEDring/2+1.5,Cam_Zfloat-Z_offset+1]){rotate ([0,0,0]) {cylinder(r = R_LEDring/2, h = Walls, center = true );}} // extra sidegrooves1
+	translate([sep,-R_LEDring/2-1.5,Cam_Zfloat-Z_offset+1]){rotate ([0,0,0]) {cylinder(r = R_LEDring/2, h = Walls, center = true );}} // extra sidegrooves2
+	translate([sep-R_LEDring/2-1.5,0,Cam_Zfloat-Z_offset+1]){rotate ([0,0,0]) {cylinder(r = R_LEDring/2, h = Walls, center = true );}} // extra sidegrooves3
+	translate([sep+R_LEDring/2+1.5,0,Cam_Zfloat-Z_offset+1]){rotate ([0,0,0]) {cylinder(r = R_LEDring/2, h = Walls, center = true );}} // extra sidegrooves4
+	translate([sep+Cam_X_offset-Cam_X/2-CamGroove_X/2,0,Cam_Zfloat-Z_offset+C_Z2/2]){cube([CamGroove_X,CamGroove_Y,C_Z2+Walls/2], center = true );} // Cable_groove
+	translate([sep+Cam_X_offset-Cam_X/2-CamGroove_X/2-3,0,Cam_Zfloat-Z_offset]){rotate ([0,0,0]) {cylinder(r = CamGroove_X/4, h = Walls, center = true );}} // Cable thread
+    Mount_link_holes(Z_offset);
 }
-module I_sub(){
-	translate([sep,0,Cam_Zfloat-sep]){rotate ([0,0,0]) {cylinder(r = R_LEDring-Tol, h = Walls, center = true );}} // Main hole
-	translate([sep,0,Cam_Zfloat-sep+1]){rotate ([0,0,0]) {cylinder(r = R_LEDring+Tol, h = Walls, center = true );}} // Main hole
-	translate([sep,R_LEDring/2+1.5,Cam_Zfloat-sep+1]){rotate ([0,0,0]) {cylinder(r = R_LEDring/2, h = Walls, center = true );}} // extra sidegrooves1
-	translate([sep,-R_LEDring/2-1.5,Cam_Zfloat-sep+1]){rotate ([0,0,0]) {cylinder(r = R_LEDring/2, h = Walls, center = true );}} // extra sidegrooves2
-	translate([sep-R_LEDring/2-1.5,0,Cam_Zfloat-sep+1]){rotate ([0,0,0]) {cylinder(r = R_LEDring/2, h = Walls, center = true );}} // extra sidegrooves3
-	translate([sep+R_LEDring/2+1.5,0,Cam_Zfloat-sep+1]){rotate ([0,0,0]) {cylinder(r = R_LEDring/2, h = Walls, center = true );}} // extra sidegrooves4
-	translate([sep+Cam_X_offset-Cam_X/2-CamGroove_X/2,0,Cam_Zfloat-sep+C_Z2/2]){cube([CamGroove_X,CamGroove_Y,C_Z2+Walls/2], center = true );} // Cable_groove
-	translate([sep+Cam_X_offset-Cam_X/2-CamGroove_X/2-3,0,Cam_Zfloat-sep]){rotate ([0,0,0]) {cylinder(r = CamGroove_X/4, h = Walls, center = true );}} // Cable thread
-	translate([sep-P_XY/2-P_border-Walls/2,0,Cam_Zfloat-sep]){cube([Walls+Tol*2,A_Wall_Y_long+2*Tol,Walls*1.5], center = true );} // link_hole
-	translate([sep-Cam_X/2-CamGroove_X-15,0,Cam_Zfloat-sep]){rotate ([0,90,0]) {cylinder(r = S_hole_R, h = 20, center = true );}} // link_screwhole
-}
-if (PartI==1){difference(){I();I_sub();}}
+if (PartI==1){difference(){Mount(Cam_X, Cam_Y, sep);I_sub(sep);}}
 
 /////////////////////////////////////////////////////////////////////////////////
 ///// MODULE J - mini petri dish mount ///////////////
@@ -536,53 +569,40 @@ if (PartI==1){difference(){I();I_sub();}}
 Petri_R = 35/2; // 
 Petri_R_outer = 39/2; // for lid
 
-module J(){
-	translate([sep+Cam_X_offset,0,Cam_Zfloat-3*sep]){cube([Cam_X+Walls*2,Cam_Y+Walls*2,Walls], center = true );} // Main
-	translate([sep-P_XY/4-P_border/2-Walls,0,Cam_Zfloat-3*sep]){cube([P_XY/2+P_border+2*Walls,A_Wall_Y_long+2*Walls,Walls], center = true );} // LINK
+module J_sub(Z_offset){
+	translate([sep,0,Cam_Zfloat-Z_offset]){rotate ([0,0,0]) {cylinder(r = Petri_R_outer+Tol, h = Walls, center = true );}} // Main hole
+    Mount_link_holes(Z_offset);
 }
-module J_sub(){
-	translate([sep,0,Cam_Zfloat-3*sep]){rotate ([0,0,0]) {cylinder(r = Petri_R_outer+Tol, h = Walls, center = true );}} // Main hole
-	translate([sep-P_XY/2-P_border-Walls/2,0,Cam_Zfloat-3*sep]){cube([Walls+Tol*2,A_Wall_Y_long+2*Tol,Walls*1.5], center = true );} // link_hole
-	translate([sep-Cam_X/2-CamGroove_X-15,0,Cam_Zfloat-3*sep]){rotate ([0,90,0]) {cylinder(r = S_hole_R, h = 20, center = true );}} // link_screwhole
-}
-if (PartJ1==1){difference(){J();J_sub();}}
+if (PartJ1==1){difference(){Mount(Cam_X, Cam_Y, 3*sep);J_sub(3*sep);}}
 
 /////////////////////////////////////////////////////////////////////////////////
 ///// MODULE J2 - midi petri dish mount /////////////
 /////////////////////////////////////////////////////////////////////////////////
 
 Petri2_R = 58.8/2; // 
-Petri2_R_outer = 58.8/2; // for lid
 
-module J2(){
-	translate([sep+Cam_X_offset,0,Cam_Zfloat-4*sep]){cube([Walls+Petri2_R*2,Walls+Petri2_R*2,Walls], center = true );} // Main
-	translate([sep-P_XY/4-P_border/2-Walls,0,Cam_Zfloat-4*sep]){cube([P_XY/2+P_border+2*Walls,A_Wall_Y_long+2*Walls,Walls], center = true );} // LINK
+module J2_sub(Z_offset){
+	translate([sep,0,Cam_Zfloat-Z_offset]){rotate ([0,0,0]) {cylinder(r = Petri2_R+Tol, h = Walls, center = true );}} // Main hole
+    Mount_link_holes(Z_offset);
+
 }
-module J2_sub(){
-	translate([sep,0,Cam_Zfloat-4*sep]){rotate ([0,0,0]) {cylinder(r = Petri2_R+Tol, h = Walls, center = true );}} // Main hole
-	translate([sep-P_XY/2-P_border-Walls/2,0,Cam_Zfloat-4*sep]){cube([Walls+Tol*2,A_Wall_Y_long+2*Tol,Walls*1.5], center = true );} // link_hole
-	translate([sep-Cam_X/2-CamGroove_X-15,0,Cam_Zfloat-4*sep]){rotate ([0,90,0]) {cylinder(r = S_hole_R, h = 20, center = true );}} // link_screwhole
-}
-if (PartJ2==1){difference(){J2();J2_sub();}}
+if (PartJ2==1){difference(){Mount(Petri2_R*2, Petri2_R*2, 4*sep);J2_sub(4*sep);}}
 
 /////////////////////////////////////////////////////////////////////////////////
 ///// MODULE K - diffuser mount /////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
 
-Link_Opening = 1;
+Link_Opening = A_Wall_Y_long;
 Diffuser_XY = 45;
 Diffuser_XY_inner = 38.5+2*Tol;
 
-module K(){
-	translate([sep+Cam_X_offset,0,Cam_Zfloat-5*sep]){cube([Diffuser_XY,Diffuser_XY,Walls], center = true );} // Main
-	translate([sep-P_XY/4-P_border/2-Walls,0,Cam_Zfloat-5*sep]){cube([P_XY/2+P_border+2*Walls,A_Wall_Y_long+2*Walls,Walls], center = true );} // LINK
+module K_sub(Z_offset){
+	translate([sep+Cam_X_offset,0,Cam_Zfloat-Z_offset]){cube([Diffuser_XY_inner,Diffuser_XY_inner,Walls], center = true );} // Main_hole
+	translate([sep-P_XY/2-P_border-Walls/2,-Link_Opening,Cam_Zfloat-Z_offset]){cube([Walls+Tol*2,A_Wall_Y_long+2*Tol+2*Link_Opening,Walls*1.5], center = true );} // link opening slot
+    Mount_link_holes(Z_offset);
 }
-module K_sub(){
-	translate([sep+Cam_X_offset,0,Cam_Zfloat-5*sep]){cube([Diffuser_XY_inner,Diffuser_XY_inner,Walls], center = true );} // Main_hole
-	translate([sep-P_XY/2-P_border-Walls/2,-5*Link_Opening,Cam_Zfloat-5*sep]){cube([Walls+Tol*2,A_Wall_Y_long+2*Tol+10*Link_Opening,Walls*1.5], center = true );} // link_hole
-	translate([sep-Cam_X/2-CamGroove_X-15,0,Cam_Zfloat-5*sep]){rotate ([0,90,0]) {cylinder(r = S_hole_R, h = 20, center = true );}} // link_screwhole
-}
-if (PartK==1){difference(){K();K_sub();}}
+if (PartK==1){difference(){Mount(Diffuser_XY, Diffuser_XY, 5*sep);K_sub(5*sep);}}
+
 
 /////////////////////////////////////////////////////////////////////////////////
 ///// MODULE L1 - small microsc. sl. chamber  //
@@ -643,21 +663,28 @@ Excit_tube_h = 40;
 Excit_focal_depth = 5; // how far below base is focal point 
 Vert_tube_h = 30;
 
-module M(){
-	translate([sep+Cam_X_offset,4*sep,Cam_Zfloat-5*sep-Walls/4]){cube([Excit_XY,Excit_XY,Walls/2], center = true );} // Main
-	translate([sep-P_XY/4-P_border/2-Walls,4*sep,Cam_Zfloat-5*sep+Walls/2]){cube([P_XY/2+P_border+2*Walls,A_Wall_Y_long+2*Walls,Walls*2], center = true );} // LINK
-	translate([sep,4*sep,Cam_Zfloat-5*sep+Vert_tube_h/2]){rotate ([0,0,0]) {cylinder(r = Excit_hole_R+Tube_wall, h = Vert_tube_h, center = true );}} // Vert_tube
-	translate([sep,4*sep,Cam_Zfloat-5*sep-Excit_focal_depth-Walls/2]){rotate ([45,0,0]) {cylinder(r = Excit_hole_R+Tube_wall, h = Excit_tube_h*2, center = true );}} // Excit_tube	
-	translate([sep,4*sep,Cam_Zfloat-5*sep-Excit_focal_depth-Walls/2]){rotate ([-45,0,0]) {cylinder(r = Excit_hole_R+Tube_wall, h = Excit_tube_h*2, center = true );}} // Excit_tbe	
+module ExcitationTube()
+{
+    cylinder(r = Excit_hole_R+Tube_wall, h = Vert_tube_h+Excit_focal_depth*sqrt(2), center = false );
 }
+
+module M(){
+    translate([0, 4*sep, Walls/2]) Mount(Excit_XY, Excit_XY, 5*sep, thickness = Walls/2, Y_extension=0, link_thickness=Walls*2);
+    
+    // Add the tubes
+    translate([sep,4*sep,Cam_Zfloat-5*sep]) rotate ([0,0,0]) cylinder(r = Excit_hole_R+Tube_wall, h = Vert_tube_h, center = false ); // Vert_tube
+    translate([sep,4*sep,Cam_Zfloat-5*sep-Excit_focal_depth+Tube_wall]) rotate ([45,0,0]) ExcitationTube();  
+    translate([sep,4*sep,Cam_Zfloat-5*sep-Excit_focal_depth+Tube_wall]) rotate ([-45,0,0]) ExcitationTube(); 
+}
+
 module M_sub(){
 	translate([sep,4*sep,Cam_Zfloat-5*sep+Vert_tube_h/2]){rotate ([0,0,0]) {cylinder(r = Excit_hole_R, h = Vert_tube_h*2, center = true );}} // Main hole	
-	translate([sep,4*sep,Cam_Zfloat-5*sep-Excit_focal_depth-Walls/2]){rotate ([45,0,0]) {cylinder(r = Excit_hole_R, h = Excit_tube_h*2, center = true );}} // Excit_tube	
-	translate([sep,4*sep,Cam_Zfloat-5*sep-Excit_focal_depth-Walls/2]){rotate ([-45,0,0]) {cylinder(r = Excit_hole_R, h = Excit_tube_h*2, center = true );}} // Excit_tube	
+	translate([sep,4*sep,Cam_Zfloat-5*sep-Excit_focal_depth-Walls/2+Tube_wall*2*sqrt(2)]){rotate ([45,0,0]) {cylinder(r = Excit_hole_R, h = Excit_tube_h+Excit_focal_depth, center = false );}} // Excit_tube	
+	translate([sep,4*sep,Cam_Zfloat-5*sep-Excit_focal_depth-Walls/2+Tube_wall*2*sqrt(2)]){rotate ([-45,0,0]) {cylinder(r = Excit_hole_R, h = Excit_tube_h+Excit_focal_depth, center = false );}} // Excit_tube	
 	translate([sep+Cam_X_offset,4*sep,Cam_Zfloat-5*sep-Walls/2-Excit_tube_h]){cube([Excit_XY,Excit_XY*2,Excit_tube_h*2], center = true );} // cut_below
-	translate([sep-P_XY/2-P_border-Walls/2,4*sep,Cam_Zfloat-5*sep+Walls]){cube([Walls+Tol*2,A_Wall_Y_long+2*Tol,Walls*3], center = true );} // link_hole
-	translate([sep-Cam_X/2-CamGroove_X-15,4*sep,Cam_Zfloat-5*sep+Walls/2]){rotate ([0,90,0]) {cylinder(r = S_hole_R, h = 20, center = true );}} // link_screwhole
+    Mount_link_holes(5*sep, Y_offset=4*sep, X_offset=sep, link_thickness=Walls*2);
 }
+
 if (PartM==1){difference(){M();M_sub();}}
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -689,24 +716,34 @@ Emiss_wheel_h = 1;
 Spacer_Z = 0.5;
 Emiss_wheel_peg_Z = 8;
 
-module O(){
-	translate([sep+Cam_X_offset,4*sep,Cam_Zfloat-6*sep-Walls/4]){cube([Excit_XY,Excit_XY,Walls/2], center = true );} // Main
+module old_O(){
+    translate([sep+Cam_X_offset,4*sep,Cam_Zfloat-6*sep-Walls/4]){cube([Excit_XY,Excit_XY,Walls/2], center = true );} // Main
 	translate([sep-P_XY/4-P_border/2-Walls*2,4*sep,Cam_Zfloat-6*sep-Walls/2]){cube([P_XY/2+P_border,A_Wall_Y_long+2*Walls,Walls], center = true );} // LINK
+}
+
+module O(){
+    
+    translate([0, 4*sep, Cam_Zfloat-6*sep-Walls/2]) rotate([180,0,0]) translate([0,0,-Cam_Zfloat+6*sep]) Mount(Excit_XY, Excit_XY, 6*sep, thickness = Walls/2, Y_extension=0, link_thickness=Walls);
+    
 	translate([sep,4*sep+Emiss_pivot_hole_offset,Cam_Zfloat-5.5*sep]){rotate ([0,0,0]) {cylinder($fn = 50, r = Emiss_Wheel_R, h = Emiss_wheel_h, center = true );}} // Wheel
 	translate([sep,4*sep+Emiss_pivot_hole_offset,Cam_Zfloat-5.5*sep-Spacer_Z/2-Emiss_wheel_h/2]){rotate ([0,0,0]) {cylinder($fn = 50, r = Emiss_pivot_hole_R+1, h = Spacer_Z, center = true );}} // Wheel_peg_spacer	
 	translate([sep,4*sep+Emiss_pivot_hole_offset,Cam_Zfloat-5.5*sep-Emiss_wheel_peg_Z/2]){rotate ([0,0,0]) {cylinder($fn = 50, r = Emiss_pivot_hole_R-Tol, h = Emiss_wheel_peg_Z, center = true );}} // Wheel_peg		
-	
-
-
 }
 module O_sub(){
-	translate([sep,4*sep,Cam_Zfloat-6*sep]){rotate ([0,0,0]) {cylinder($fn = 50, r = Emiss_hole_R, h = Walls, center = true );}} // Main hole	
-	translate([sep,4*sep+Emiss_pivot_hole_offset,Cam_Zfloat-6*sep]){rotate ([0,0,0]) {cylinder($fn = 50, r = Emiss_pivot_hole_R, h = Walls, center = true );}} // screw pivot hole	
-	translate([sep-P_XY/2-P_border-Walls/2,4*sep,Cam_Zfloat-6*sep-Walls]){cube([Walls+Tol*2,A_Wall_Y_long+2*Tol,Walls*3], center = true );} // link_hole
-	translate([sep-Cam_X/2-CamGroove_X-15,4*sep,Cam_Zfloat-6*sep-Walls/2]){rotate ([0,90,0]) {cylinder(r = S_hole_R, h = 20, center = true );}} // link_screwhole
+	translate([sep+Cam_X_offset,4*sep,Cam_Zfloat-6*sep-Walls]){cube([Excit_XY/2,Excit_XY/2,Walls], center = true );} // cut away part of the link area
+	translate([sep,4*sep,Cam_Zfloat-6*sep]){rotate ([0,0,0]) {cylinder($fn = 50, r = Emiss_hole_R, h = Walls*1.5, center = true );}} // Main hole	
+	translate([sep,4*sep+Emiss_pivot_hole_offset,Cam_Zfloat-6*sep]){rotate ([0,0,0]) {cylinder($fn = 50, r = Emiss_pivot_hole_R, h = Walls*1.5, center = true );}} // screw pivot hole	
+    translate([0, 0, -Walls/2]) Mount_link_holes(6*sep, Y_offset=4*sep, X_offset=sep, link_thickness=Walls);
+
 	translate([sep,4*sep,Cam_Zfloat-5.5*sep]){rotate ([0,0,0]) {cylinder($fn = 50, r = Emiss_wheel_hole_R, h = Walls, center = true );}} // Wheel hole 1	
-      translate([sep,4*sep+Emiss_pivot_hole_offset*2,Cam_Zfloat-5.5*sep]){rotate ([0,0,0]) {cylinder($fn = 50, r = Emiss_wheel_hole_R, h = Walls, center = true );}} // Wheel hole 2
-      translate([sep-Emiss_pivot_hole_offset,4*sep+Emiss_pivot_hole_offset,Cam_Zfloat-5.5*sep]){rotate ([0,0,0]) {cylinder($fn = 50, r = Emiss_wheel_hole_R, h = Walls, center = true );}} // Wheel hole 3
-      translate([sep+Emiss_pivot_hole_offset,4*sep+Emiss_pivot_hole_offset,Cam_Zfloat-5.5*sep]){rotate ([0,0,0]) {cylinder($fn = 50, r = Emiss_wheel_hole_R, h = Walls, center = true );}} // Wheel hole 4
+    translate([sep,4*sep+Emiss_pivot_hole_offset*2,Cam_Zfloat-5.5*sep]){rotate ([0,0,0]) {cylinder($fn = 50, r = Emiss_wheel_hole_R, h = Walls, center = true );}} // Wheel hole 2
+    translate([sep-Emiss_pivot_hole_offset,4*sep+Emiss_pivot_hole_offset,Cam_Zfloat-5.5*sep]){rotate ([0,0,0]) {cylinder($fn = 50, r = Emiss_wheel_hole_R, h = Walls, center = true );}} // Wheel hole 3
+    translate([sep+Emiss_pivot_hole_offset,4*sep+Emiss_pivot_hole_offset,Cam_Zfloat-5.5*sep]){rotate ([0,0,0]) {cylinder($fn = 50, r = Emiss_wheel_hole_R, h = Walls, center = true );}} // Wheel hole 4
 }
 if (PartO==1){difference(){O();O_sub();}}
+
+//difference()
+//{
+//    old_O();
+//    translate([0, 4*sep, Cam_Zfloat-6*sep-Walls/2]) rotate([180,0,0]) translate([0,0,-Cam_Zfloat+6*sep]) Mount(Excit_XY, Excit_XY, 6*sep, thickness = Walls/2, Y_extension=0, link_thickness=Walls);
+//}
