@@ -1,4 +1,4 @@
-# Notes on `FlyPi.scad`
+# Notes on `FlyPi_v29.scad`
 
 ## _Caution_
 
@@ -54,4 +54,4 @@ angle was chosen to be 20 degrees but this may need to be changed.
 ## Selection of parts
 
 Parts may be selected for construction in either viewing mode by setting the
-switch variables at the top of the `FlyPi.scad` file.
+switch variables at the top of the `FlyPi_v29.scad` file.
