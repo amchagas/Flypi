@@ -11,10 +11,10 @@ PartA1=	0; // Base clamps
 PartA2 = 	0; // Feet
 PartB= 	    0; // Wall
 PartB3=	0; // PCB mount
-PartC= 	0; // Cam Mount
+PartC= 	1; // Cam Mount
 PartC1= 	0; // Cam Mount Servo
 PartC2= 	0; // Cam Mount Cogwheels
-PartC3=    1; // Cam V2 Mount 
+PartC3=    0; // Cam V2 Mount 
 PartD= 	0; // High Power LED mount
 PartE= 	    0; // angled mounting stick
 PartF1= 	0; // straight mounting stick, long
@@ -37,7 +37,7 @@ PartO= 	0; // Fluorescence Emission mount and wheel
 /////////////////////////////////////////////////////////////////////////////////
 sep = 30; // How far apart do pieces "float" in the model
 Walls = 5; // Global thickness of all walls
-Tol = 0.15; // Global gap between all parts that need to slide
+Tol = 0.2; // Global gap between all parts that need to slide
 
 // Base and mainwall details
 T_cableZ = 4; // Module A, height of thermistor cable slid
@@ -335,7 +335,7 @@ module C3_sub(){
 	translate([sep+Cam_X_offset-Cam_X/2-CamGroove_X/2,0,Cam_Zfloat+sep+C_Z2/2]){cube([CamGroove_X,CamGroove_Y,C_Z2+Walls/2], center = true );} // Cam_cable_groove
 	translate([sep+Cam_X_offset+Cam_X/2-MiniGrooveX/2-C_ridge,-Cam_Y/2+C_ridge/2,Cam_Zfloat+sep+C_Z2/2]){cube([MiniGrooveX,C_ridge,C_Z2+Walls/2], center = true );} // mini groove
 	translate([sep+Cam_X_offset-Cam_X/2+CamGroove_X/2,0,Cam_Zfloat+sep+C_Z2/2]){cube([CamGroove_X,CamGroove2_Y,C_Z2+Walls/2], center = true );} // Cam_bmup_groove
-	translate([sep+Cam_X_offset,0,Cam_Zfloat+sep]){cube([Cam_X-C_ridge*2,Cam_Y--2,Walls*3], center = true );} // Cam_hole
+	translate([sep+Cam_X_offset,0,Cam_Zfloat+sep]){cube([Cam_X-C_ridge*2,Cam_Y--1.5,Walls*3], center = true );} // Cam_hole
 	translate([sep-P_XY/2-P_border-Walls/2,0,Cam_Zfloat+sep]){cube([Walls+Tol*2,A_Wall_Y_long+2*Tol,Walls*1.5], center = true );} // Cam_link_hole
 	translate([sep-Cam_X/2-CamGroove_X-15,0,Cam_Zfloat+sep]){rotate ([0,90,0]) {cylinder(r = S_hole_R, h = 20, center = true );}} // screwhole
 }
@@ -512,7 +512,7 @@ if (PartH==1){difference(){H();H_sub();}}
 R_LEDring = 40/2;
 
 module I(){
-	translate([sep+Cam_X_offset,0,Cam_Zfloat-sep]){cube([Cam_X+Walls*2,Cam_Y+Walls*2,Walls], center = true );} // Main
+	translate([sep+Cam_X_offset,0,Cam_Zfloat-sep]){cube([Cam_X+Walls*4,Cam_Y+Walls*4,Walls], center = true );} // Main
 	translate([sep-P_XY/4-P_border/2-Walls,0,Cam_Zfloat-sep]){cube([P_XY/2+P_border+2*Walls,A_Wall_Y_long+2*Walls,Walls], center = true );} // LINK
 }
 module I_sub(){
