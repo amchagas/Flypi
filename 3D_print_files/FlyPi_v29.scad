@@ -65,7 +65,7 @@ sep = 30; // How far apart do pieces "float" in the model
 MINIMUM_PRINT_LAYOUT_SEPARATION = 5;       // Minimum distance between parts for the print layout
 MINIMUM_WIRE_SIZE = 2;  // Depends on the printer and the material
 Walls = 5; // Global thickness of all walls
-Tol = 0.15; // Global gap between all parts that need to slide
+Tol = 0.2; // Global gap between all parts that need to slide
 corner_radius = 4; // Round corner radius
 
 // Base and mainwall details
