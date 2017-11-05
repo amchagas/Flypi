@@ -172,7 +172,7 @@ U 1 1 577E166B
 P 5350 2850
 F 0 "R2" V 5430 2850 50  0000 C CNN
 F 1 "270" V 5350 2850 50  0000 C CNN
-F 2 "Resistors_ThroughHole:Resistor_Horizontal_RM10mm" V 5280 2850 50  0001 C CNN
+F 2 "Resistors_THT:R_Box_L13.0mm_W4.0mm_P9.00mm" V 5280 2850 50  0001 C CNN
 F 3 "" H 5350 2850 50  0000 C CNN
 	1    5350 2850
 	1    0    0    -1  
@@ -183,7 +183,7 @@ U 1 1 577E1F76
 P 10000 1100
 F 0 "R7" V 10080 1100 50  0000 C CNN
 F 1 "220" V 10000 1100 50  0000 C CNN
-F 2 "Resistors_ThroughHole:Resistor_Horizontal_RM10mm" V 9930 1100 50  0001 C CNN
+F 2 "Resistors_THT:R_Box_L13.0mm_W4.0mm_P9.00mm" V 9930 1100 50  0001 C CNN
 F 3 "" H 10000 1100 50  0000 C CNN
 	1    10000 1100
 	0    1    1    0   
@@ -194,7 +194,7 @@ U 1 1 577E209A
 P 10000 1300
 F 0 "R8" V 10080 1300 50  0000 C CNN
 F 1 "220" V 10000 1300 50  0000 C CNN
-F 2 "Resistors_ThroughHole:Resistor_Horizontal_RM10mm" V 9930 1300 50  0001 C CNN
+F 2 "Resistors_THT:R_Box_L13.0mm_W4.0mm_P9.00mm" V 9930 1300 50  0001 C CNN
 F 3 "" H 10000 1300 50  0000 C CNN
 	1    10000 1300
 	0    1    1    0   
@@ -205,7 +205,7 @@ U 1 1 577E210B
 P 10000 1500
 F 0 "R9" V 10080 1500 50  0000 C CNN
 F 1 "220" V 10000 1500 50  0000 C CNN
-F 2 "Resistors_ThroughHole:Resistor_Horizontal_RM10mm" V 9930 1500 50  0001 C CNN
+F 2 "Resistors_THT:R_Box_L13.0mm_W4.0mm_P9.00mm" V 9930 1500 50  0001 C CNN
 F 3 "" H 10000 1500 50  0000 C CNN
 	1    10000 1500
 	0    1    1    0   
@@ -227,7 +227,7 @@ U 1 1 577E2E07
 P 6100 2850
 F 0 "R4" V 6180 2850 50  0000 C CNN
 F 1 "270" V 6100 2850 50  0000 C CNN
-F 2 "Resistors_ThroughHole:Resistor_Horizontal_RM10mm" V 6030 2850 50  0001 C CNN
+F 2 "Resistors_THT:R_Box_L13.0mm_W4.0mm_P9.00mm" V 6030 2850 50  0001 C CNN
 F 3 "" H 6100 2850 50  0000 C CNN
 	1    6100 2850
 	1    0    0    -1  
@@ -326,7 +326,7 @@ U 1 1 577E5D84
 P 6800 2850
 F 0 "R5" V 6880 2850 50  0000 C CNN
 F 1 "270" V 6800 2850 50  0000 C CNN
-F 2 "Resistors_ThroughHole:Resistor_Horizontal_RM10mm" V 6730 2850 50  0001 C CNN
+F 2 "Resistors_THT:R_Box_L13.0mm_W4.0mm_P9.00mm" V 6730 2850 50  0001 C CNN
 F 3 "" H 6800 2850 50  0000 C CNN
 	1    6800 2850
 	1    0    0    -1  
@@ -371,15 +371,15 @@ NoConn ~ 4400 6000
 NoConn ~ 4400 5800
 NoConn ~ 4400 5600
 $Comp
-L HighLoadRes R1
+L R R1
 U 1 1 577E8665
-P 3000 4950
-F 0 "R1" H 3000 4950 60  0000 C CNN
-F 1 "1 - 18W" H 3050 5050 60  0000 C CNN
-F 2 "footprints:high_load_res" H 3000 4950 60  0001 C CNN
-F 3 "" H 3000 4950 60  0000 C CNN
-	1    3000 4950
-	0    1    1    0   
+P 2900 4910
+F 0 "R1" H 2900 4910 60  0000 C CNN
+F 1 "20W " H 2950 5010 60  0000 C CNN
+F 2 "TO_SOT_Packages_THT:TO-220-2_Vertical" H 2900 4910 60  0001 C CNN
+F 3 "" H 2900 4910 60  0000 C CNN
+	1    2900 4910
+	-1   0    0    1   
 $EndComp
 $Comp
 L Q_NPN_ECB Q1
@@ -398,7 +398,7 @@ U 1 1 577EB79F
 P 5550 5050
 F 0 "R3" V 5630 5050 50  0000 C CNN
 F 1 "270" V 5550 5050 50  0000 C CNN
-F 2 "Resistors_ThroughHole:Resistor_Horizontal_RM10mm" V 5480 5050 50  0001 C CNN
+F 2 "Resistors_THT:R_Box_L13.0mm_W4.0mm_P9.00mm" V 5480 5050 50  0001 C CNN
 F 3 "" H 5550 5050 50  0000 C CNN
 	1    5550 5050
 	1    0    0    -1  
@@ -415,12 +415,12 @@ NoConn ~ 7450 5700
 NoConn ~ 7450 4350
 NoConn ~ 6900 3750
 $Comp
-L CONN_01X03 P4
+L Conn_01x03 P4
 U 1 1 577F06E4
 P 5200 6650
 F 0 "P4" H 5200 6850 50  0000 C CNN
 F 1 "Therm +s-" V 5300 6650 50  0000 C CNN
-F 2 "Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_3pol" H 5200 6650 50  0001 C CNN
+F 2 "Connectors_JST:JST_EH_S03B-EH_03x2.50mm_Angled" H 5200 6650 50  0001 C CNN
 F 3 "" H 5200 6650 50  0000 C CNN
 	1    5200 6650
 	0    1    1    0   
@@ -431,7 +431,7 @@ U 1 1 577F0E14
 P 5200 6100
 F 0 "1k1" V 5280 6100 50  0000 C CNN
 F 1 "R" V 5200 6100 50  0000 C CNN
-F 2 "Resistors_ThroughHole:Resistor_Horizontal_RM10mm" V 5130 6100 50  0001 C CNN
+F 2 "Resistors_THT:R_Box_L13.0mm_W4.0mm_P9.00mm" V 5130 6100 50  0001 C CNN
 F 3 "" H 5200 6100 50  0000 C CNN
 	1    5200 6100
 	1    0    0    -1  
@@ -441,133 +441,99 @@ L C C8
 U 1 1 577F0EB3
 P 5200 5550
 F 0 "C8" H 5225 5650 50  0000 L CNN
-F 1 "0.1µ" H 5225 5450 50  0000 L CNN
+F 1 "100n" H 5225 5450 50  0000 L CNN
 F 2 "Capacitors_ThroughHole:C_Disc_D3_P2.5" H 5238 5400 50  0001 C CNN
 F 3 "" H 5200 5550 50  0000 C CNN
 	1    5200 5550
 	1    0    0    -1  
 $EndComp
 $Comp
-L CONN_01X03 P8
+L Conn_01x03 P8
 U 1 1 577F19C2
 P 7900 700
 F 0 "P8" H 7900 900 50  0000 C CNN
 F 1 "Ring +-s" V 8000 700 50  0000 C CNN
-F 2 "Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_3pol" H 7900 700 50  0001 C CNN
+F 2 "Connectors_JST:JST_EH_S03B-EH_03x2.50mm_Angled" H 7900 700 50  0001 C CNN
 F 3 "" H 7900 700 50  0000 C CNN
 	1    7900 700 
 	0    -1   -1   0   
 $EndComp
 $Comp
-L CONN_01X04 P9
+L Conn_01x04 P9
 U 1 1 577F1F65
-P 8800 1350
-F 0 "P9" H 8800 1600 50  0000 C CNN
-F 1 "matrix +-scsd" V 8900 1350 50  0000 C CNN
-F 2 "Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_4pol" H 8800 1350 50  0001 C CNN
-F 3 "" H 8800 1350 50  0000 C CNN
-	1    8800 1350
+P 8750 1350
+F 0 "P9" H 8750 1600 50  0000 C CNN
+F 1 "matrix +-scsd" V 8850 1350 50  0000 C CNN
+F 2 "Connectors_JST:JST_EH_S04B-EH_04x2.50mm_Angled" H 8750 1350 50  0001 C CNN
+F 3 "" H 8750 1350 50  0000 C CNN
+	1    8750 1350
 	0    -1   -1   0   
 $EndComp
 $Comp
-L CONN_01X03 P7
+L Conn_01x03 P7
 U 1 1 577F2704
 P 7100 1350
 F 0 "P7" H 7100 1550 50  0000 C CNN
 F 1 "servo +s-" V 7200 1350 50  0000 C CNN
-F 2 "Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_3pol" H 7100 1350 50  0001 C CNN
+F 2 "Connectors_JST:JST_EH_S03B-EH_03x2.50mm_Angled" H 7100 1350 50  0001 C CNN
 F 3 "" H 7100 1350 50  0000 C CNN
 	1    7100 1350
 	0    -1   -1   0   
 $EndComp
 $Comp
-L CONN_01X02 P6
+L Conn_01x02 P6
 U 1 1 577F293A
 P 6350 1350
 F 0 "P6" H 6350 1500 50  0000 C CNN
 F 1 "HP2+-" V 6450 1350 50  0000 C CNN
-F 2 "Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_2pol" H 6350 1350 50  0001 C CNN
+F 2 "Connectors_JST:JST_EH_S02B-EH_02x2.50mm_Angled" H 6350 1350 50  0001 C CNN
 F 3 "" H 6350 1350 50  0000 C CNN
 	1    6350 1350
 	0    -1   -1   0   
 $EndComp
 $Comp
-L CONN_01X02 P5
+L Conn_01x02 P5
 U 1 1 577F29F3
 P 5650 1350
 F 0 "P5" H 5650 1500 50  0000 C CNN
 F 1 "HP1+-" V 5750 1350 50  0000 C CNN
-F 2 "Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_2pol" H 5650 1350 50  0001 C CNN
+F 2 "Connectors_JST:JST_EH_S02B-EH_02x2.50mm_Angled" H 5650 1350 50  0001 C CNN
 F 3 "" H 5650 1350 50  0000 C CNN
 	1    5650 1350
 	0    -1   -1   0   
 $EndComp
 $Comp
-L CONN_01X02 P2
-U 1 1 577F2AAE
-P 4750 1350
-F 0 "P2" H 4750 1500 50  0000 C CNN
-F 1 "Pi+-" V 4850 1350 50  0000 C CNN
-F 2 "Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_2pol" H 4750 1350 50  0001 C CNN
-F 3 "" H 4750 1350 50  0000 C CNN
-	1    4750 1350
-	0    -1   -1   0   
-$EndComp
-$Comp
-L CONN_01X04 P10
+L Conn_01x04 P10
 U 1 1 577F3156
-P 10700 1250
-F 0 "P10" H 10700 1500 50  0000 C CNN
-F 1 "RGB RG-B" V 10800 1250 50  0000 C CNN
-F 2 "Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_4pol" H 10700 1250 50  0001 C CNN
-F 3 "" H 10700 1250 50  0000 C CNN
-	1    10700 1250
+P 10700 1200
+F 0 "P10" H 10700 1450 50  0000 C CNN
+F 1 "RGB RG-B" V 10800 1200 50  0000 C CNN
+F 2 "Connectors_JST:JST_EH_S04B-EH_04x2.50mm_Angled" H 10700 1200 50  0001 C CNN
+F 3 "" H 10700 1200 50  0000 C CNN
+	1    10700 1200
 	1    0    0    -1  
 $EndComp
 NoConn ~ 6050 6100
-NoConn ~ 6850 6450
 $Comp
-L CONN_01X02 P1
+L Conn_01x02 P1
 U 1 1 577F4FBB
-P 1650 5450
-F 0 "P1" H 1650 5600 50  0000 C CNN
-F 1 "PeltS1S2" V 1750 5450 50  0000 C CNN
-F 2 "Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_2pol" H 1650 5450 50  0001 C CNN
-F 3 "" H 1650 5450 50  0000 C CNN
-	1    1650 5450
+P 1650 5500
+F 0 "P1" H 1650 5650 50  0000 C CNN
+F 1 "PeltS1S2" V 1750 5500 50  0000 C CNN
+F 2 "Connectors_JST:JST_EH_S02B-EH_02x2.50mm_Angled" H 1650 5500 50  0001 C CNN
+F 3 "" H 1650 5500 50  0000 C CNN
+	1    1650 5500
 	-1   0    0    1   
 $EndComp
 $Comp
-L R R6
-U 1 1 577F5D30
-P 7800 1450
-F 0 "R6" V 7880 1450 50  0000 C CNN
-F 1 "150" V 7800 1450 50  0000 C CNN
-F 2 "Resistors_ThroughHole:Resistor_Horizontal_RM10mm" V 7730 1450 50  0001 C CNN
-F 3 "" H 7800 1450 50  0000 C CNN
-	1    7800 1450
-	1    0    0    -1  
-$EndComp
-$Comp
-L C C9
-U 1 1 577F601A
-P 7650 1100
-F 0 "C9" H 7675 1200 50  0000 L CNN
-F 1 "0.1µ" H 7675 1000 50  0000 L CNN
-F 2 "Capacitors_ThroughHole:C_Disc_D3_P2.5" H 7688 950 50  0001 C CNN
-F 3 "" H 7650 1100 50  0000 C CNN
-	1    7650 1100
-	0    1    1    0   
-$EndComp
-$Comp
-L CONN_01X02 P3
+L Conn_01x02 P3
 U 1 1 577F82F4
-P 5150 4350
-F 0 "P3" H 5150 4500 50  0000 C CNN
-F 1 "Fan+-" V 5250 4350 50  0000 C CNN
-F 2 "Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_2pol" H 5150 4350 50  0001 C CNN
-F 3 "" H 5150 4350 50  0000 C CNN
-	1    5150 4350
+P 5100 4350
+F 0 "P3" H 5100 4500 50  0000 C CNN
+F 1 "Fan+-" V 5200 4350 50  0000 C CNN
+F 2 "Connectors_JST:JST_EH_S02B-EH_02x2.50mm_Angled" H 5100 4350 50  0001 C CNN
+F 3 "" H 5100 4350 50  0000 C CNN
+	1    5100 4350
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
@@ -595,7 +561,7 @@ Wire Wire Line
 Wire Wire Line
 	4100 1750 3750 1750
 Wire Wire Line
-	4100 1550 4700 1550
+	4100 1550 5020 1550
 Wire Wire Line
 	1900 1650 1900 1550
 Wire Wire Line
@@ -608,10 +574,10 @@ Wire Wire Line
 	4050 2850 3800 2850
 Connection ~ 2800 1850
 Wire Wire Line
-	4800 1950 4800 1550
+	4800 1490 4800 1950
 Connection ~ 4350 1550
 Wire Wire Line
-	2800 1950 4800 1950
+	4800 1950 2800 1950
 Wire Wire Line
 	4350 1850 4350 1950
 Connection ~ 4350 1950
@@ -731,13 +697,7 @@ Wire Wire Line
 Wire Wire Line
 	2900 5300 3100 5300
 Wire Wire Line
-	1850 5400 2300 5400
-Wire Wire Line
-	2300 5400 2300 5700
-Wire Wire Line
 	2300 5700 3100 5700
-Wire Wire Line
-	1850 5500 3100 5500
 Wire Wire Line
 	8850 1550 8850 3450
 Wire Wire Line
@@ -938,22 +898,16 @@ Wire Wire Line
 Wire Wire Line
 	6900 6450 8200 6450
 Wire Wire Line
-	7800 1600 7800 3350
+	7800 900  7800 3350
 Wire Wire Line
 	8650 3350 8650 1550
 Connection ~ 7800 3350
-Wire Wire Line
-	7800 900  7800 1300
-Connection ~ 7800 1100
-Wire Wire Line
-	7500 1100 7500 3100
 Wire Wire Line
 	2200 3100 10350 3100
 Wire Wire Line
 	4250 2950 4250 3100
 Connection ~ 4250 3100
 Connection ~ 2200 3100
-Connection ~ 7500 3100
 Wire Wire Line
 	3150 2200 2200 2200
 Connection ~ 2200 2200
@@ -975,14 +929,12 @@ Wire Wire Line
 Wire Wire Line
 	4250 2550 4450 2550
 Wire Wire Line
-	4800 3750 6600 3750
-Wire Wire Line
 	4800 3750 4800 4450
 $Comp
-L GND #PWR?
+L GND #PWR01
 U 1 1 577EB9A4
 P 1800 2000
-F 0 "#PWR?" H 1800 1750 50  0001 C CNN
+F 0 "#PWR01" H 1800 1750 50  0001 C CNN
 F 1 "GND" H 1800 1850 50  0000 C CNN
 F 2 "" H 1800 2000 50  0000 C CNN
 F 3 "" H 1800 2000 50  0000 C CNN
@@ -994,4 +946,52 @@ Wire Wire Line
 Wire Wire Line
 	1800 1900 2200 1900
 Connection ~ 2200 1900
+Wire Wire Line
+	4800 3750 6600 3750
+$Comp
+L USB_A J12
+U 1 1 59ED406F
+P 4820 1140
+F 0 "J12" H 4620 1590 50  0000 L CNN
+F 1 "USB_A" H 4620 1490 50  0000 L CNN
+F 2 "Connectors:USB_A_Vertical" H 4970 1090 50  0001 C CNN
+F 3 "" H 4970 1090 50  0001 C CNN
+	1    4820 1140
+	0    1    1    0   
+$EndComp
+NoConn ~ 4820 1440
+NoConn ~ 4720 1440
+Wire Wire Line
+	4420 1040 4420 1230
+Wire Wire Line
+	4800 1490 4450 1490
+Wire Wire Line
+	4450 1490 4450 1230
+Wire Wire Line
+	4450 1230 4420 1230
+Connection ~ 4420 1140
+Wire Wire Line
+	5020 1550 5020 1440
+Wire Wire Line
+	5600 1550 5650 1550
+Wire Wire Line
+	5700 1550 5750 1550
+Wire Wire Line
+	6300 1550 6350 1550
+Wire Wire Line
+	6400 1550 6450 1550
+Wire Wire Line
+	2900 4600 2900 4760
+Wire Wire Line
+	2900 5060 2900 5300
+Wire Wire Line
+	3100 5500 2900 5500
+Wire Wire Line
+	2900 5500 2900 5400
+Wire Wire Line
+	2900 5400 1850 5400
+Wire Wire Line
+	2300 5500 2300 5700
+Wire Wire Line
+	2300 5500 1850 5500
 $EndSCHEMATC
