@@ -6,12 +6,12 @@
 /// tombaden.wordpress.com ///
 /////////////////////////////////////////////////////////////////////////////////
 //// SWITCHES //////////
-PartA = 	0; // Base
+PartA = 	1; // Base
 PartA1=	0; // Base clamps
 PartA2 = 	0; // Feet
 PartB= 	    0; // Wall
 PartB3=	0; // PCB mount
-PartC= 	1; // Cam Mount
+PartC= 	0; // Cam Mount
 PartC1= 	0; // Cam Mount Servo
 PartC2= 	0; // Cam Mount Cogwheels
 PartC3=    0; // Cam V2 Mount 
@@ -21,8 +21,8 @@ PartF1= 	0; // straight mounting stick, long
 PartF2= 	0; // straight mounting stick, short
 PartF3= 	0; // straight mounting stick, long 90°
 PartG= 	0; // thumbscrew & manipulator links
-PartH= 	0; // AdaFruit 8x8 LED Matrix mount
-PartI= 	    0; // Adafruit 12 LED Ring mount
+PartH= 	1; // AdaFruit 8x8 LED Matrix mount
+PartI= 	    1; // Adafruit 12 LED Ring mount
 PartJ1= 	0; // Mini Petri dish mount
 PartJ2= 	0; // Midi Petri dish mount
 PartK= 	0; // Diffusor mount
@@ -35,52 +35,9 @@ PartO= 	0; // Fluorescence Emission mount and wheel
 /////////////////////////////////////////////////////////////////////////////////
 ///// KEY VARIABLES ////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////
-sep = 30; // How far apart do pieces "float" in the model
-Walls = 5; // Global thickness of all walls
-Tol = 0.2; // Global gap between all parts that need to slide
+include <fly_pi_lib.scad>;
 
-// Base and mainwall details
-T_cableZ = 4; // Module A, height of thermistor cable slid
-T_cableY = 12; // Module A,width of thermistor cable slid
-T_cable_offset = 8; // Module A, lateral displacement of thermistor cable slid
-MarkerLED_R = 3+Tol; // Module A, radius of RGB LED hole in base
-MarkerLED_Z = 2; // Module A, depth beneath surface
-MarkerLED_XY = 4; // Module A, viewhole size
-Sidestand = 70; // Module A, extension in X dimension at the back of the base
-Sidestand_thickness = Walls; // Module A, thickness of extension at back of base
-Borders = 15; // Module B, thickness of borders on the back (saves plastic)
-Walls_thinning = 4; // Module B, how much thinner than "Walls" is thin part (saves plastic)
-
-//Peltier dimensions
-P_XY = 40+1; // Size of the Peltier
-P_Z = 3; // Thickness of the Peltier
-P_border = 12; // Extension in X dimension of base next to Peltier
-P_ridge = 2; // below Peltier, width of ridge
-P_cable = 3; // thickness of Peltier cable slid
-
-//Raspberry Pi type (mounting parameters)
-RPi_Width = 56+Walls*2; // Dimensions of the RPi 2 (below also for RPi 2)
-RPi_groundZ = 17; // 65; for RPi B (not RPi B+)
-RPi_holedist_Y = 49/2; // 15.5; // for RPi B (not RPi B+)
-RPi_holedist_Yb = 49/2; //-10; // for RPi B (not RPi B+)
-RPi_holedist_Z = 58; //54.5; // for RPi B (not RPi B+)
-Tube_wall = 1.5;
-S_hole_R = 1.5;
-S_mount_R = 4;
-Mount_h = 19; // RPi2 mount
-
-// RPi Camera Type
-Cam_X = 32.2;//24 for "classic RPi Cam. i.e the one without the adjustable focus lens";
-Cam_Y = 32.2;//25 for "classic RPi Cam";
-Cam_X_offset = 0;// 2.5 for "classic RPi Cam";
-C_Z = 2; // thickness of camera mount
-C_Z2 = 5; // thickness of cmaera mount walls
-C_ridge = 2; // width of ridge for camera mount
-Cam_Zfloat = 200; // Module B, max height 
-CamGroove_X = 12;
-CamGroove_Y = 16.1;
-CamGroove2_Y = 24;
-
+//echo (sep);
 
 /////////////////////////////////////////////////////////////////////////////////
 /// MODULE A - base   //////////////////////////////////////////
