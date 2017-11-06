@@ -1,11 +1,9 @@
-update=Sat 04 Nov 2017 15:04:27 CET
+update=Sun 05 Nov 2017 22:30:52 CET
 version=1
 last_client=kicad
 [cvpcb]
 version=1
 NetIExt=net
-[general]
-version=1
 [pcbnew]
 version=1
 PageLayoutDescrFile=
@@ -61,3 +59,5 @@ LibName29=valves
 LibName30=arduino/arduino
 LibName31=custom_components/flypi_components
 LibName32=template/Arduino_Nano/Arduino_Nano-cache
+[general]
+version=1
