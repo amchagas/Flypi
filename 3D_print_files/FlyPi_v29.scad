@@ -48,7 +48,7 @@ EXPLODED_VIEW = 0;
 PRINTABLE_LAYOUT = 1;
 assembly_location = EXPLODED_VIEW;
 max_print_bounds = [285, 150, 155];  // X, Y, Z: the maximum bounding box supported by the printer
-printing_batch_number = 2;  // Either 0, 1 or 2
+printing_batch_number = 0;  // Either 0, 1 or 2
 connect_parts = (assembly_location == PRINTABLE_LAYOUT);   // Connect parts with bridges when printing a batch as a single part
 
 // Make a layout guide for the maximum print bounding box
@@ -110,7 +110,7 @@ CamGroove_X = 12;
 CamGroove_Y = 16.1;
 CamGroove2_Y = 24;
 
-OPTICAL_AXIS_OFFSET_X = Cam_X/2+P_border-Walls;
+OPTICAL_AXIS_OFFSET_X = sep + Cam_X_offset;
 PELTIER_AXIS_OFFSET_X = P_XY/2+P_border-Walls;
 
 // Default number of faces 
@@ -413,9 +413,9 @@ module Mount_link_holes(link_thickness=Walls)
 
 MiniGrooveX = 15;
 Cam_Z = Walls*1.5;
-PartC_batch = 0;    // The printing batch that PartC belongs to
-PartC_locations = [[sep+Cam_X_offset, 0, 2*sep+Cam_Zfloat], [-A_Base_X/2-P_XY/2-3, A_Base_Y*0.5+5, Cam_Z/2]];
-PartC_rotations = [[0,0,0], [0, 0, 0]];
+PartC_batch = 2;    // The printing batch that PartC belongs to
+PartC_locations = [[OPTICAL_AXIS_OFFSET_X, 0, 2*sep+Cam_Zfloat], [Cam_X*2, Cam_Y*2-5, Cam_Z/2]];
+PartC_rotations = [[0,0,0], [0, 0, -90]];
 
 module C_sub(){
 	translate([OPTICAL_AXIS_OFFSET_X,0,Walls*0.75-C_Z/2]){cube([Cam_X+Tol*2,Cam_Y+Tol*2,C_Z], center = true );} // Cam_hole_ridge
@@ -428,16 +428,6 @@ module C_sub(){
 show_PartC = PartC==1 && (printing_batch_number == PartC_batch || assembly_location == EXPLODED_VIEW);
 if (show_PartC){translate(PartC_locations[assembly_location]) rotate(PartC_rotations[assembly_location]) {difference(){Mount(Cam_X, Cam_Y, Cam_Z, 0, Cam_Z);C_sub();}}}
 
-// Add in wire bridge to the nearby parts (note that the location of the bridges is sensitive to the location of the parts being connected)
-if (connect_parts && show_PartC && show_PartA2)
-{
-    translate([Cam_X/2, Cam_Y-12, -Cam_Z/2]) 
-    translate(PartC_locations[assembly_location])  
-        cube([MINIMUM_WIRE_SIZE, 
-              10,
-              MINIMUM_WIRE_SIZE],
-             center=false);
-}
 
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -448,8 +438,8 @@ Servo_Y = 12.2;
 Servo_X = 23.7;
 Servo_X_offset = 5.5;
 // height of Servo is 29 in total, which is counted from the bottom
-PartC1_locations = [[sep+Cam_X_offset, -(Servo_Y+Walls)/2, 2*sep+Cam_Zfloat], [-A_Base_X/2-P_XY/2-3, A_Base_Y*0.5-2, Cam_Z/2]];
-PartC1_rotations = [[0,0,0], [0, 0, 0]];
+PartC1_locations = [[OPTICAL_AXIS_OFFSET_X, -(Servo_Y+Walls)/2, 2*sep+Cam_Zfloat], [Cam_X*2, Cam_Y*2-5, Cam_Z/2]];
+PartC1_rotations = [[0,0,0], [0, 0, -90]];
 
 module C1_sub(){
     translate([0, (Servo_Y+Walls)/2, 0]) C_sub();
@@ -460,16 +450,7 @@ module C1_sub(){
 show_PartC1 = PartC1==1 && (printing_batch_number == PartC_batch || assembly_location == EXPLODED_VIEW);
 if (show_PartC1){translate(PartC1_locations[assembly_location]) rotate(PartC1_rotations[assembly_location]) {difference(){Mount(Cam_X, Cam_Y, Cam_Z, Servo_Y+Walls, Cam_Z);C1_sub();}}}
 
-// Add in wire bridge to the nearby parts (note that the location of the bridges is sensitive to the location of the parts being connected)
-if (connect_parts && show_PartC1 && show_PartA2)
-{
-    translate([Cam_X/2, Cam_Y-12, -Cam_Z/2]) 
-    translate(PartC_locations[assembly_location])  
-        cube([MINIMUM_WIRE_SIZE, 
-              10,
-              MINIMUM_WIRE_SIZE],
-             center=false);
-}
+// Add in wire bridge later, near the bottom of this file, since the camera mount is printed in batch 2
 
 ///////////////////////////
 //  Cogwheel design using involute teeth
@@ -509,7 +490,7 @@ include <MCAD/involute_gears.scad>
 
 module cogwheel(bore_radius)
 {
-    pressure_angle = 22; // degrees
+    pressure_angle = 20; // degrees
     pitch_circle_diameter = 2*cogwheel_R*15/16;
     gear_thickness = cogwheel_Z2;  
     rim_thickness = cogwheel_Z;
@@ -531,16 +512,16 @@ module cogwheel(bore_radius)
           involute_facets=10);
 }
 
-PartC2_1_locations = [[sep+Cam_X_offset,-2*sep,Cam_Zfloat+2*sep-cogwheel_Z2-1], 
-                      [-A_Base_Y, -1.5*cogwheel_R+2, 0]];
+PartC2_1_locations = [[OPTICAL_AXIS_OFFSET_X,-2*sep,Cam_Zfloat+2*sep-cogwheel_Z2-1], 
+                      [Cam_X*2+cogwheel_R*4-10, 0, 0]];
 PartC2_1_rotations = [[0, 0, 0], 
                       [0, 0, 45]]; // Rotate the cross engraving away from horizontal and vertical so a wire may be attached
-PartC2_2_locations = [[sep+Cam_X_offset,-3*sep-Servo_Y/2-Cam_Y/2-Walls,Cam_Zfloat+2*sep-cogwheel_Z2-1], 
-                      [-A_Base_Y, -3.5*cogwheel_R, 0]];
+PartC2_2_locations = [[OPTICAL_AXIS_OFFSET_X,-3*sep-Servo_Y/2-Cam_Y/2-Walls,Cam_Zfloat+2*sep-cogwheel_Z2-1], 
+                      [Cam_X*2+cogwheel_R*4-10, cogwheel_R*2+2, 0]];
 PartC2_2_rotations = [[0, 0, 180/cogwheel_nteeth], 
                       [0, 0, 180/cogwheel_nteeth]];
 
-show_PartC2_1 = PartC2_1==1 && use_servo_focus && (printing_batch_number == PartC_batch || assembly_location == EXPLODED_VIEW);
+show_PartC2_1 = PartC2_1==1 && show_PartC1 && (printing_batch_number == PartC_batch || assembly_location == EXPLODED_VIEW);
 if (show_PartC2_1)
 {
     translate(PartC2_1_locations[assembly_location]) rotate(PartC2_1_rotations[assembly_location]) 
@@ -552,7 +533,7 @@ if (show_PartC2_1)
   }
 }
 
-show_PartC2_2 = PartC2_2==1 && use_servo_focus && (printing_batch_number == PartC_batch || assembly_location == EXPLODED_VIEW);
+show_PartC2_2 = PartC2_2==1 && show_PartC1 && (printing_batch_number == PartC_batch || assembly_location == EXPLODED_VIEW);
 if (show_PartC2_2)
 {
     translate(PartC2_2_locations[assembly_location]) rotate(PartC2_2_rotations[assembly_location]) cogwheel(cogwheel_R_inner2);
@@ -561,10 +542,10 @@ if (show_PartC2_2)
 // Add in wire bridges to the nearby parts (note that the location of the bridges is sensitive to the location of the parts being connected)
 if (connect_parts && show_PartC2_1 && show_PartC2_2)
 {
-    translate(PartC2_2_locations[assembly_location]) translate([0, cogwheel_R+0.25, 0]) arch_bridge(cogwheel_R/2+1.5, 3);
-    if (show_PartA2)
+    translate(PartC2_1_locations[assembly_location]) translate([0, cogwheel_R+2, 0]) arch_bridge(cogwheel_R/2+1.5, 3);
+    if (show_PartC1)
     {
-        translate(PartC2_2_locations[assembly_location]) translate([0, -cogwheel_R+0.25, 0]) arch_bridge(cogwheel_R/2, 3);
+        translate(PartC2_2_locations[assembly_location]) translate([-cogwheel_R+0.25, 0, 0]) rotate([0,0,90]) arch_bridge(cogwheel_R/2, 3);
     }
 }
 
@@ -581,7 +562,7 @@ LED_holder_inside = 35+2*Tol;
 LED_holder_outside = 35+2*Tol+2*Walls;
 LED_holder_ridge = 3;
 PartD_batch = 2; // The printing batch that PartD belongs to
-PartD_locations = [[sep+Cam_X_offset, 0, Cam_Zfloat], [-OPTICAL_AXIS_OFFSET_X-5, -A_Base_Y+14, D_Z/2]];
+PartD_locations = [[OPTICAL_AXIS_OFFSET_X, 0, Cam_Zfloat], [-OPTICAL_AXIS_OFFSET_X-5, -A_Base_Y+14, D_Z/2]];
 PartD_rotations = [[0,0,0], [0, 0, 0]];
 
 
@@ -778,7 +759,7 @@ Matrix_screwdistY = 28;
 Matrix_screwdistX = 37;
 Smini_hole_R = 1;
 PartH_batch = 1; // The printing batch that PartH belongs to
-PartH_locations = [[sep+Cam_X_offset, 0, Cam_Zfloat-2*sep], [10, -Cam_Y*1.5, Walls/2]];
+PartH_locations = [[OPTICAL_AXIS_OFFSET_X, 0, Cam_Zfloat-2*sep], [10, -Cam_Y*1.5, Walls/2]];
 PartH_rotations = [[0,0,0], [0, 0, 0]];
 
 module H_sub(){
@@ -805,7 +786,7 @@ if (show_PartH){translate(PartH_locations[assembly_location]) rotate(PartH_rotat
 
 R_LEDring = 40/2;
 PartI_batch = 1; // The printing batch that PartI belongs to
-PartI_locations = [[sep+Cam_X_offset, 0, Cam_Zfloat-sep], [0, 10, Walls/2]];
+PartI_locations = [[OPTICAL_AXIS_OFFSET_X, 0, Cam_Zfloat-sep], [0, 10, Walls/2]];
 PartI_rotations = [[0,0,0], [0, 0, 0]];
 
 module I_sub(){
@@ -838,7 +819,7 @@ if (connect_parts && show_PartH && show_PartI)
 Petri_R = 35/2; // 
 Petri_R_outer = 39/2; // for lid
 PartJ_batch = 1; // The printing batch that PartJ1 and PartJ2 belong to
-PartJ1_locations = [[sep+Cam_X_offset, 0, Cam_Zfloat-3*sep], [-Cam_X*2+10, -Cam_Y*1.5, Walls/2]];
+PartJ1_locations = [[OPTICAL_AXIS_OFFSET_X, 0, Cam_Zfloat-3*sep], [-Cam_X*2+10, -Cam_Y*1.5, Walls/2]];
 PartJ1_rotations = [[0,0,0], [0, 0, 0]];
 
 module J_sub(){
@@ -869,7 +850,7 @@ if (connect_parts && show_PartJ1 && show_PartI)
 /////////////////////////////////////////////////////////////////////////////////
 
 Petri2_R = 58.8/2; // 
-PartJ2_locations = [[sep+Cam_X_offset, 0, Cam_Zfloat-4*sep], [Cam_X*2, -2, Walls/2]];
+PartJ2_locations = [[OPTICAL_AXIS_OFFSET_X, 0, Cam_Zfloat-4*sep], [Cam_X*2, -2, Walls/2]];
 PartJ2_rotations = [[0,0,0], [0, 0, 0]];
 
 module J2_sub(){
@@ -897,7 +878,7 @@ Link_Opening = A_Wall_Y_long;
 Diffuser_XY = 45;
 Diffuser_XY_inner = 38.5+2*Tol;
 PartK_batch = 0; // The printing batch that PartK belongs to
-PartK_locations = [[sep+Cam_X_offset, 0, Cam_Zfloat-5*sep], [A_Base_X/2-5, 0, Walls/2]];
+PartK_locations = [[OPTICAL_AXIS_OFFSET_X, 0, Cam_Zfloat-5*sep], [A_Base_X/2-5, 5, Walls/2]];
 PartK_rotations = [[0,0,0], [0, 0, 90]];
 
 module K_sub(){
@@ -1064,9 +1045,9 @@ if (show_PartM){translate(PartM_locations[assembly_location]) rotate(PartM_rotat
 N_Z1 = 3;
 N_Z2 = 5; 
 PartN_batch = 2; // The printing batch that PartN belongs to
-PartN1_locations = [[sep+OPTICAL_AXIS_OFFSET_X, 4*sep-(Excit_hole_R+Tube_wall)*2-5, Cam_Zfloat-3*sep+N_Z1/2], [0, 50, N_Z1*1.5]];
+PartN1_locations = [[sep+OPTICAL_AXIS_OFFSET_X, 4*sep-(Excit_hole_R+Tube_wall)*2-5, Cam_Zfloat-3*sep+N_Z1/2], [PartM_locations[1][0]+Excit_XY/2, Excit_XY, N_Z1*1.5]];
 PartN1_rotations = [[0,0,0], [180, 0, 0]];
-PartN2_locations = [[sep+OPTICAL_AXIS_OFFSET_X, 4*sep+(Excit_hole_R+Tube_wall)*2+5, Cam_Zfloat-3*sep+N_Z1/2], [0, +(Excit_hole_R+Tube_wall)*2+55, N_Z1*1.5]];
+PartN2_locations = [[sep+OPTICAL_AXIS_OFFSET_X, 4*sep+(Excit_hole_R+Tube_wall)*2+5, Cam_Zfloat-3*sep+N_Z1/2], [PartM_locations[1][0]+Excit_XY/2+2*(Excit_hole_R+Tube_wall+2), Excit_XY, N_Z1*1.5]];
 PartN2_rotations = [[0,0,0], [180, 0, 0]];
 
 module N(){
@@ -1080,6 +1061,17 @@ show_PartN = PartN==1 && (printing_batch_number == PartN_batch || assembly_locat
 if (show_PartN){translate(PartN1_locations[assembly_location]) rotate(PartN1_rotations[assembly_location]) difference(){N();N_sub();}}
 if (show_PartN){translate(PartN2_locations[assembly_location]) rotate(PartN2_rotations[assembly_location]) difference(){N();N_sub();}}
 
+if (connect_parts && show_PartM && show_PartN)  // Connect the fluor.excitation LED mount to the fluor. excitation LED plugs
+{
+    translate([-MINIMUM_WIRE_SIZE/2, -Excit_hole_R*2, -N_Z1*1.5])  
+    translate(PartN1_locations[assembly_location])  
+        cube([MINIMUM_WIRE_SIZE, Excit_hole_R, MINIMUM_WIRE_SIZE], center=false);
+    
+    translate([-MINIMUM_WIRE_SIZE/2, -Excit_hole_R*2, -N_Z1*1.5])  
+    translate(PartN2_locations[assembly_location])  
+        cube([MINIMUM_WIRE_SIZE, Excit_hole_R, MINIMUM_WIRE_SIZE], center=false);
+}
+
 /////////////////////////////////////////////////////////////////////////////////
 ///// MODULE O - fluor emission filter mount /////
 /////////////////////////////////////////////////////////////////////////////////
@@ -1088,7 +1080,7 @@ Emiss_hole_R = 8;
 Emiss_Wheel_R = 26.5; //30;
 Emiss_pivot_hole_R = 3;
 Emiss_wheel_hole_offset = OPTICAL_AXIS_OFFSET_X;
-Emiss_pivot_hole_offset =  OPTICAL_AXIS_OFFSET_X + Emiss_Wheel_R/2 + Emiss_hole_R/2;
+Emiss_pivot_hole_offset =  Emiss_Wheel_R/2 + Emiss_hole_R/2;
 Emiss_wheel_hole_R = Emiss_hole_R+0.5;
 Emiss_wheel_h = 2;
 Spacer_R = Emiss_pivot_hole_R+2;
@@ -1096,9 +1088,9 @@ Spacer_Z = 0.5;
 Emiss_wheel_peg_Z = 8;
 
 PartO_batch = 2; // The printing batch that PartO belongs to
-PartO_filter_wheel_mount_locations = [[sep+Cam_X_offset, 4*sep, Cam_Zfloat-2*sep], [Excit_XY*2, 0, Walls/2]];
+PartO_filter_wheel_mount_locations = [[OPTICAL_AXIS_OFFSET_X, 4*sep, Cam_Zfloat-2*sep], [Excit_XY*2, -Excit_XY/2-5, Walls/2]];
 PartO_filter_wheel_mount_rotations = [[0,0,0], [180, 0, 180]];
-PartO_filter_wheel_locations = [[sep+Cam_X_offset+Emiss_pivot_hole_offset, 4*sep, Cam_Zfloat-1.5*sep], [0, 5, Emiss_wheel_h/2]];
+PartO_filter_wheel_locations = [[OPTICAL_AXIS_OFFSET_X+Emiss_wheel_hole_offset, 4*sep+Emiss_pivot_hole_offset, Cam_Zfloat-1.5*sep], [0, 5, Emiss_wheel_h/2]];
 PartO_filter_wheel_rotations = [[0,0,0], [180, 0, 45]];
 
 module filter_wheel()
@@ -1125,7 +1117,7 @@ module filter_wheel_mount()
         union() {
             // Make the holes in the mount and link
             translate([Emiss_wheel_hole_offset, 0, 0]){rotate ([0,0,0]) {cylinder($fn = 50, r = Emiss_hole_R, h = Walls*1.5, center = true );}} // Main hole	
-            translate([Emiss_pivot_hole_offset, 0, 0]){rotate ([0,0,0]) {cylinder($fn = 50, r = Emiss_pivot_hole_R, h = Walls*1.5, center = true );}} // screw pivot hole	
+            translate([Emiss_wheel_hole_offset, Emiss_pivot_hole_offset, 0]){rotate ([0,0,0]) {cylinder($fn = 50, r = Emiss_pivot_hole_R, h = Walls*1.5, center = true );}} // screw pivot hole	
             Mount_link_holes(link_thickness=Walls);
         }
     }
@@ -1145,11 +1137,21 @@ if (connect_parts && show_PartM && show_PartO)  // Connect the LED tube mount to
         cube([19, MINIMUM_WIRE_SIZE, Emiss_wheel_h], center=false);
 }
 
-if (connect_parts && show_PartO)  // Connect the wheel to the filter wheel mount
+show_offshoot_wire = connect_parts && (show_PartO || show_PartC || show_PartC1);
+LENGTH_WIRE_FROM_WHEEL = 25;
+if (show_offshoot_wire)  // Connect the wheel an offshoot wire
 {
     translate([Emiss_Wheel_R-0.5, -MINIMUM_WIRE_SIZE/2, -(Emiss_wheel_h)/2]) 
     translate(PartO_filter_wheel_locations[assembly_location])  
-        cube([19, MINIMUM_WIRE_SIZE, Emiss_wheel_h], center=false);
+        cube([LENGTH_WIRE_FROM_WHEEL, MINIMUM_WIRE_SIZE, Emiss_wheel_h], center=false);
+}
+
+if (connect_parts && show_PartO)  // Connect the wheel to the filter wheel mount
+{
+    LENGTH_OFFSHOOT_WIRE = 5;
+    translate([Emiss_Wheel_R-0.5+LENGTH_WIRE_FROM_WHEEL-MINIMUM_WIRE_SIZE, -MINIMUM_WIRE_SIZE/2-LENGTH_OFFSHOOT_WIRE, -(Emiss_wheel_h)/2]) 
+    translate(PartO_filter_wheel_locations[assembly_location])  
+        cube([MINIMUM_WIRE_SIZE, LENGTH_OFFSHOOT_WIRE, Emiss_wheel_h], center=false);
 }
 
 if (connect_parts && show_PartO && show_PartD)  // Connect the wheel to the High Power LED mount
@@ -1159,15 +1161,13 @@ if (connect_parts && show_PartO && show_PartD)  // Connect the wheel to the High
         cube([MINIMUM_WIRE_SIZE, 17, Emiss_wheel_h], center=false);
 }
 
-if (connect_parts && show_PartO && show_PartN)  // Connect the wheel to the fluor. excitation LED plugs
+// Connect the wheel to the camera mount
+if (connect_parts && show_offshoot_wire && (show_PartC || show_PartC1) )
 {
-    translate([-MINIMUM_WIRE_SIZE/2, Emiss_Wheel_R-0.5, -(Emiss_wheel_h)/2]) 
+    translate([Emiss_Wheel_R-0.5+LENGTH_WIRE_FROM_WHEEL-MINIMUM_WIRE_SIZE, 0, -(Emiss_wheel_h)/2]) 
+    {
     translate(PartO_filter_wheel_locations[assembly_location])  
-        cube([MINIMUM_WIRE_SIZE, 8, Emiss_wheel_h], center=false);
-    
-    translate([-MINIMUM_WIRE_SIZE/2, Emiss_Wheel_R-0.5+(Excit_hole_R+Tube_wall)*2+5, -(Emiss_wheel_h)/2]) 
-    translate(PartO_filter_wheel_locations[assembly_location])  
-        cube([MINIMUM_WIRE_SIZE, 8, Emiss_wheel_h], center=false);
-
+        cube([MINIMUM_WIRE_SIZE, 6, MINIMUM_WIRE_SIZE], center=false);
+    }
 }
 
