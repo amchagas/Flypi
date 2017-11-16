@@ -1,4 +1,4 @@
-# Notes on `FlyPi_v29.scad`
+# Notes on `FlyPi_v30.scad`
 
 ## _Caution_
 
