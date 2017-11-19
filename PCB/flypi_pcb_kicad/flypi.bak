@@ -30,6 +30,7 @@ LIBS:contrib
 LIBS:valves
 LIBS:arduino
 LIBS:flypi_components
+LIBS:Arduino_Nano-cache
 LIBS:flypi-cache
 EELAYER 25 0
 EELAYER END
@@ -62,7 +63,7 @@ U 1 1 577DE666
 P 6750 4900
 F 0 "U5" H 7250 3950 70  0000 C CNN
 F 1 "arduino_mini" H 7500 3850 70  0000 C CNN
-F 2 "Housings_DIP:DIP-32_W15.24mm_LongPads" H 6750 4850 60  0001 C CNN
+F 2 "arduino_nano:DIP-30_W15.24mm_LongPads" H 6750 4850 60  0001 C CNN
 F 3 "" H 6750 4900 60  0000 C CNN
 	1    6750 4900
 	1    0    0    -1  
