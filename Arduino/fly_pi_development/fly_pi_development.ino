@@ -68,11 +68,12 @@ float lowLimit = 13.0; //in Celsius
 
 //create function to control LED ring
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(ring_nPixels, RingPin, NEO_GRB + NEO_KHZ800);
+/*
 //create function to control matrix
-//Adafruit_8x8matrix matrix = Adafruit_8x8matrix();
+Adafruit_8x8matrix matrix = Adafruit_8x8matrix();
 
 //copntrol for long matrix
-Adafruit_8x16matrix matrix = Adafruit_8x16matrix();
+//Adafruit_8x16matrix matrix = Adafruit_8x16matrix();
 //matrix stimuli
 static const uint8_t PROGMEM // MATRIX PICS
 matrixPattern1[] =
@@ -106,6 +107,8 @@ matrixPattern4[] =
   B11111111,
   B11111111
 };
+*/
+
 void setup()
 { //start serial port
   Serial.begin(115200);
@@ -126,6 +129,7 @@ void setup()
   focusServo.attach(servoPin);
   pixels.begin();
 
+/*
   // pass in the address for LED Matrix
   matrix.begin(0x70);
   matrix.clear();
@@ -133,6 +137,7 @@ void setup()
   matrix.writeDisplay();
   digitalWrite(servoOnPin, LOW);
   //Serial.println("waited");
+  */
 }//end void setup
 
 void loop() {
@@ -219,6 +224,7 @@ void loop() {
     Serial.println("waited");  
   }
  
+/*
   //MATRIX
   if (term1 == "MAT"){
     if (term2.toInt() == 0) { 
@@ -289,7 +295,8 @@ void loop() {
       matrix.writeDisplay();}
     Serial.println("waited");}
 
-
+*/
+  
   //RING
   if (term1=="RIN"){
     if (term2.toInt() == 1) { //ring on
@@ -554,4 +561,4 @@ void waiting(int millistowait) {
 //    if (token.substring(0,index)=="END"){flag=0;}
 //  }
   //Serial.flush();
-}
+}//waiting
