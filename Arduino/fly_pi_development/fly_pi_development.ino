@@ -128,7 +128,7 @@ void setup()
   //pinMode(peltierCoolPin2,OUTPUT);
   focusServo.attach(servoPin);
   pixels.begin();
-
+/*
   // pass in the address for LED Matrix
   matrix.begin(0x70);
   matrix.clear();
@@ -136,6 +136,7 @@ void setup()
   matrix.writeDisplay();
   digitalWrite(servoOnPin, LOW);
   //Serial.println("waited");
+  */
 }//end void setup
 
 void loop() {
