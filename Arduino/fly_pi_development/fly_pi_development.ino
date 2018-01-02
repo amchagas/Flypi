@@ -70,6 +70,8 @@ float lowLimit = 13.0; //in Celsius
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(ring_nPixels, RingPin, NEO_GRB + NEO_KHZ800);
 
 
+
+
 void setup()
 { //start serial port
   Serial.begin(115200);
@@ -89,7 +91,9 @@ void setup()
   //pinMode(peltierCoolPin2,OUTPUT);
   focusServo.attach(servoPin);
   pixels.begin();
+
   Serial.println("<wtd>>");
+
 
 }//end void setup
 
@@ -178,7 +182,7 @@ void loop() {
     Serial.println("<wtd>>");  
   }
  
-  
+
   //RING
   if (term1=="RIN"){
     if (term2.toInt() == 1) { //ring on
