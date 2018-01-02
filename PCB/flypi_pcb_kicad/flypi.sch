@@ -113,50 +113,6 @@ F 3 "" H 4350 1700 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L CP1 C3
-U 1 1 577DF624
-P 2450 2650
-F 0 "C3" H 2475 2750 50  0000 L CNN
-F 1 "680µ" H 2475 2550 50  0000 L CNN
-F 2 "Capacitors_ThroughHole:C_Radial_D10_L21_P5" H 2450 2650 50  0001 C CNN
-F 3 "" H 2450 2650 50  0000 C CNN
-	1    2450 2650
-	0    -1   -1   0   
-$EndComp
-$Comp
-L CP1 C4
-U 1 1 577DF6C1
-P 4250 2800
-F 0 "C4" H 4275 2900 50  0000 L CNN
-F 1 "220µ" H 4275 2700 50  0000 L CNN
-F 2 "Capacitors_ThroughHole:C_Radial_D8_L13_P3.8" H 4250 2800 50  0001 C CNN
-F 3 "" H 4250 2800 50  0000 C CNN
-	1    4250 2800
-	1    0    0    -1  
-$EndComp
-$Comp
-L LM2596 U3
-U 1 1 577DF744
-P 3350 2400
-F 0 "U3" H 3550 2400 60  0000 C CNN
-F 1 "LM2596" H 3300 2400 60  0000 C CNN
-F 2 "footprints:LM2596" H 3550 2400 60  0001 C CNN
-F 3 "" H 3550 2400 60  0000 C CNN
-	1    3350 2400
-	1    0    0    -1  
-$EndComp
-$Comp
-L D_Schottky D2
-U 1 1 577DF7A9
-P 3300 2200
-F 0 "D2" H 3300 2300 50  0000 C CNN
-F 1 "Schottky 5A" H 3300 2100 50  0000 C CNN
-F 2 "Diodes_ThroughHole:Diode_DO-201AD_Horizontal_RM15" H 3300 2200 50  0001 C CNN
-F 3 "" H 3300 2200 50  0000 C CNN
-	1    3300 2200
-	-1   0    0    1   
-$EndComp
-$Comp
 L Q_NPN_ECB Q2
 U 1 1 577E148F
 P 5350 2350
@@ -286,17 +242,6 @@ F 1 "33µH" V 4100 3350 50  0000 C CNN
 F 2 "Inductors_NEOSID:Neosid_Inductor_MA-Bs75" H 4000 3350 50  0001 C CNN
 F 3 "" H 4000 3350 50  0000 C CNN
 	1    4000 3350
-	0    -1   -1   0   
-$EndComp
-$Comp
-L INDUCTOR L3
-U 1 1 577E390F
-P 4150 2450
-F 0 "L3" V 4100 2450 50  0000 C CNN
-F 1 "33µH" V 4250 2450 50  0000 C CNN
-F 2 "Inductors_NEOSID:Neosid_Inductor_MA-Bs75" H 4150 2450 50  0001 C CNN
-F 3 "" H 4150 2450 50  0000 C CNN
-	1    4150 2450
 	0    -1   -1   0   
 $EndComp
 $Comp
@@ -464,8 +409,8 @@ L Conn_01x04 P9
 U 1 1 577F1F65
 P 8750 1350
 F 0 "P9" H 8750 1600 50  0000 C CNN
-F 1 "matrix +-scsd" V 8850 1350 50  0000 C CNN
-F 2 "Connectors_JST:JST_EH_S04B-EH_04x2.50mm_Angled" H 8750 1350 50  0001 C CNN
+F 1 "I2C +-scsd" V 8850 1350 50  0000 C CNN
+F 2 "Socket_Strips:Socket_Strip_Straight_1x04_Pitch2.54mm" H 8750 1350 50  0001 C CNN
 F 3 "" H 8750 1350 50  0000 C CNN
 	1    8750 1350
 	0    -1   -1   0   
@@ -565,14 +510,6 @@ Wire Wire Line
 	4100 1550 5020 1550
 Wire Wire Line
 	1900 1650 1900 1550
-Wire Wire Line
-	3450 2200 3800 2200
-Wire Wire Line
-	3800 2200 3800 2650
-Wire Wire Line
-	3800 2650 3950 2650
-Wire Wire Line
-	4050 2850 3800 2850
 Connection ~ 2800 1850
 Wire Wire Line
 	4800 1490 4800 1950
@@ -585,8 +522,7 @@ Connection ~ 4350 1950
 Wire Wire Line
 	5350 2550 5350 2700
 Wire Wire Line
-	5150 2650 5150 2250
-Connection ~ 4250 2650
+	5150 2250 5150 3350
 Wire Wire Line
 	5550 2250 5600 2250
 Wire Wire Line
@@ -603,14 +539,6 @@ Connection ~ 5700 3100
 Wire Wire Line
 	5900 2650 5900 2250
 Connection ~ 5150 2650
-Wire Wire Line
-	3850 2450 3850 2550
-Wire Wire Line
-	3850 2550 3950 2550
-Wire Wire Line
-	3950 2550 3950 2650
-Wire Wire Line
-	4450 2550 4450 2450
 Wire Wire Line
 	3750 3500 3750 3800
 Wire Wire Line
@@ -843,14 +771,8 @@ Connection ~ 2200 4550
 Connection ~ 2200 4400
 Connection ~ 2200 3350
 Wire Wire Line
-	2300 2550 2950 2550
-Wire Wire Line
 	2700 3800 2700 4100
 Connection ~ 2200 4100
-Wire Wire Line
-	2200 2750 2950 2750
-Wire Wire Line
-	2600 2950 2950 2950
 Wire Wire Line
 	8750 3100 8750 1550
 Wire Wire Line
@@ -905,30 +827,11 @@ Wire Wire Line
 Connection ~ 7800 3350
 Wire Wire Line
 	2200 3100 10350 3100
-Wire Wire Line
-	4250 2950 4250 3100
 Connection ~ 4250 3100
 Connection ~ 2200 3100
-Wire Wire Line
-	3150 2200 2200 2200
 Connection ~ 2200 2200
-Wire Wire Line
-	2300 2650 2050 2650
 Connection ~ 2050 2650
-Wire Wire Line
-	2300 2650 2300 2550
-Wire Wire Line
-	2600 2650 2600 2950
 Connection ~ 2200 2750
-Connection ~ 2600 2750
-Wire Wire Line
-	4050 2650 6600 2650
-Wire Wire Line
-	4050 2650 4050 2850
-Wire Wire Line
-	4250 2650 4250 2550
-Wire Wire Line
-	4250 2550 4450 2550
 Wire Wire Line
 	4800 3750 4800 4450
 $Comp
@@ -995,4 +898,7 @@ Wire Wire Line
 	2300 5500 2300 5700
 Wire Wire Line
 	2300 5500 1850 5500
+Wire Wire Line
+	5150 2650 6600 2650
+Connection ~ 5150 3350
 $EndSCHEMATC
