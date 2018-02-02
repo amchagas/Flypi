@@ -21,7 +21,7 @@ libav library:
 sudo apt-get update
 sudo apt-get install libav-tools
 
-update pyserial library
+update pyserial library:
 sudo pip3 install --upgrade serial
 
 # *.h264 conversion to *.avi:
