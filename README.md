@@ -18,8 +18,7 @@ libav library:
 sudo apt-get update
 sudo apt-get install libav-tools
 
-Up to date version of the pyserial library:
-sudo pip3 install --upgrade pyserial
+
 
 # *.h264 conversion to *.avi:
 is done via avconv (which is installed with libav-tools).
