@@ -1,9 +1,9 @@
 # Flypi
 This is the repository for the flypi project
 
-#to maintain this repository as close as possible to the publication describing it (http://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.2002702) further development is being done on the following fork: https://github.com/prometheus-science/Flypi/commit/ac9aac55044f0e4dddc3e00e41459db75cc05826
+## to maintain this repository as close as possible to the publication describing it (http://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.2002702) further development is being done on the following fork: https://github.com/prometheus-science/Flypi/commit/ac9aac55044f0e4dddc3e00e41459db75cc05826
 
-#We've created a Forum for users to posts questions and suggestions too! Please take a look at http://forum.prometheus-science.com/home/categories/flypi-user-forum 
+## We've created a Forum for users to posts questions and suggestions too! Please take a look at http://forum.prometheus-science.com/home/categories/flypi-user-forum 
 
 # necessary libraries:
 
