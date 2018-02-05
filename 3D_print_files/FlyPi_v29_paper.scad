@@ -9,7 +9,7 @@
 PartA = 	0; // Base
 PartA1=	0; // Base clamps
 PartA2 = 	0; // Feet
-PartB= 	    0; // Wall
+PartB= 	    1; // Wall
 PartB3=	0; // PCB mount
 PartC= 	1; // Cam Mount
 PartC1= 	0; // Cam Mount Servo
