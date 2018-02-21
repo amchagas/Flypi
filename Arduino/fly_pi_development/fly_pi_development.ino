@@ -1,8 +1,8 @@
 // Import libraries
 #include <Adafruit_NeoPixel.h> // LED Ring
-#include <Wire.h> // LED Matrix
-#include <Adafruit_LEDBackpack.h> // LED Matrix
-#include <Adafruit_GFX.h> // LED Matrix
+//#include <Wire.h> // LED Matrix
+//#include <Adafruit_LEDBackpack.h> // LED Matrix
+//#include <Adafruit_GFX.h> // LED Matrix
 #include <Servo.h> //servo motor controlling the autofocus
 
 //create servo object ****************//
