@@ -1,8 +1,8 @@
 // Import libraries
 #include <Adafruit_NeoPixel.h> // LED Ring
-//#include <Wire.h> // LED Matrix
-//#include <Adafruit_LEDBackpack.h> // LED Matrix
-//#include <Adafruit_GFX.h> // LED Matrix
+#include <Wire.h> // LED Matrix
+#include <Adafruit_LEDBackpack.h> // LED Matrix
+#include <Adafruit_GFX.h> // LED Matrix
 #include <Servo.h> //servo motor controlling the autofocus
 
 //create servo object ****************//
@@ -41,9 +41,11 @@ int ringOn = 0;
 int ringRedHue = 10;
 int ringGreenHue = 10;
 int ringBlueHue = 10;
+int ringWhiteHue=0;
 int zapRed = 0;
 int zapGreen = 0;
 int zapBlue = 0;
+int zapWhite = 0;
 int ringBright = 0;
 int matBright = 0;
 int waitmils = 0;
@@ -67,7 +69,7 @@ float lowLimit = 13.0; //in Celsius
 
 
 //create function to control LED ring
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel(ring_nPixels, RingPin, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(ring_nPixels, RingPin, NEO_GRBW + NEO_KHZ800);
 
 
 void setup()
@@ -183,12 +185,12 @@ void loop() {
   if (term1=="RIN"){
     if (term2.toInt() == 1) { //ring on
       ringOn = 1;
-      updateRing(ringRedHue, ringGreenHue, ringBlueHue);
+      updateRing(ringRedHue, ringGreenHue, ringBlueHue, ringWhiteHue);
       pixels.show();}
     if (term2.toInt() == 0) { //ring off
       incomingData = 0;
       ringOn = 0;
-      updateRing(0, 0, 0);
+      updateRing(0, 0, 0, 0);
       pixels.show();}
   Serial.println("<wtd>>");}//end if "RIN"
 
@@ -197,7 +199,7 @@ void loop() {
   if (term1=="RRE"){
     //oldRed = ringRedHue;
     ringRedHue=term2.toInt();
-    updateRing(ringRedHue, ringGreenHue, ringBlueHue);
+    updateRing(ringRedHue, ringGreenHue, ringBlueHue, ringWhiteHue);
     if (ringOn == 1) { 
       //if the ring is on
       //show the update
@@ -209,7 +211,7 @@ void loop() {
     //oldGreen = ringGreenHue;
     //set the brightness of the green channel
     ringGreenHue=term2.toInt();
-    updateRing(ringRedHue, ringGreenHue, ringBlueHue);
+    updateRing(ringRedHue, ringGreenHue, ringBlueHue,ringWhiteHue);
     if (ringOn == 1) {
       pixels.show();}
   Serial.println("<wtd>>");}//end if term1== "RGR"
@@ -217,7 +219,7 @@ void loop() {
   if (term1 == "RBL") { //ring blue
     //oldBlue = ringBlueHue;
     ringBlueHue = term2.toInt();
-    updateRing(ringRedHue, ringGreenHue, ringBlueHue);
+    updateRing(ringRedHue, ringGreenHue, ringBlueHue,ringWhiteHue);
     if (ringOn == 1) {pixels.show();}
 
   Serial.println("<wtd>>");}//end if RBL
@@ -226,7 +228,7 @@ void loop() {
     ringBlueHue = term2.toInt();
     ringGreenHue = term2.toInt();
     ringRedHue = term2.toInt();
-    updateRing(ringRedHue, ringGreenHue, ringBlueHue);
+    updateRing(ringRedHue, ringGreenHue, ringBlueHue,ringWhiteHue);
     if (ringOn == 1) {
       pixels.show();
     }
@@ -237,10 +239,10 @@ void loop() {
   if (term1=="RZAB") {zapBlue = term2.toInt();Serial.println("<wtd>>");}
   if (term1=="RZAT") {    
     if (ringOn == 1) {
-      updateRing(zapRed, zapGreen, zapBlue);
+      updateRing(zapRed, zapGreen, zapBlue, zapWhite);
       pixels.show();
       waiting(term2.toInt());
-      updateRing(ringRedHue, ringGreenHue, ringBlueHue);
+      updateRing(ringRedHue, ringGreenHue, ringBlueHue, ringWhiteHue);
       pixels.show();      
     }//end if ring on
   Serial.println("<wtd>>");}
@@ -307,9 +309,6 @@ float HoldTemp(float finalTemp, int tempSensorPin,
                int peltierCoolPin1, int peltierHeatPin1) {
   float temperature, temps;
 
-
-  
-
   
   temperature = checkTemp(tempSensorPin);
   //Serial.print("temp: ");
@@ -349,9 +348,9 @@ float HoldTemp(float finalTemp, int tempSensorPin,
 
 }
 
-void updateRing(int hue1, int hue2, int hue3) {
+void updateRing(int hue1, int hue2, int hue3, int hue4) {
   for (int i = 0; i < ring_nPixels; i++) {
-    pixels.setPixelColor(i, pixels.Color(hue1, hue2, hue3));
+    pixels.setPixelColor(i, pixels.Color(hue1, hue2, hue3, hue4));
   }
 }
 
