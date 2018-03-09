@@ -69,6 +69,7 @@ float lowLimit = 13.0; //in Celsius
 
 
 //create function to control LED ring
+
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(ring_nPixels, RingPin, NEO_GRBW + NEO_KHZ800);
 
 
@@ -91,7 +92,9 @@ void setup()
   //pinMode(peltierCoolPin2,OUTPUT);
   focusServo.attach(servoPin);
   pixels.begin();
+
   Serial.println("<wtd>>");
+
 
 }//end void setup
 
@@ -180,7 +183,9 @@ void loop() {
     Serial.println("<wtd>>");  
   }
  
+
   
+
   //RING
   if (term1=="RIN"){
     if (term2.toInt() == 1) { //ring on
