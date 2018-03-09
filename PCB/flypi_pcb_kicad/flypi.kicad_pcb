@@ -1,9 +1,9 @@
-(kicad_pcb (version 4) (host pcbnew 4.0.2-stable)
+(kicad_pcb (version 4) (host pcbnew 4.0.7-e2-6376~58~ubuntu16.04.1)
 
   (general
     (links 87)
     (no_connects 0)
-    (area 68.750001 33.044987 212.785715 161.577001)
+    (area 68.900001 33.15499 212.635715 161.577001)
     (thickness 1.6)
     (drawings 37)
     (tracks 300)
@@ -68,7 +68,7 @@
       (usegerberextensions false)
       (excludeedgelayer true)
       (linewidth 0.100000)
-      (plotframeref true)
+      (plotframeref false)
       (viasonmask false)
       (mode 1)
       (useauxorigin false)
@@ -87,7 +87,7 @@
       (mirror false)
       (drillshape 0)
       (scaleselection 1)
-      (outputdirectory E:/Dropbox/code/repositories/prometheus_repos/Flypi/PCB/flypi_pcb_kicad/gerber1/))
+      (outputdirectory gerber))
   )
 
   (net 0 "")
