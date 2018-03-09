@@ -1,4 +1,4 @@
-update=20/10/2017 10:12:11
+update=08/03/2018 17:06:48
 version=1
 last_client=kicad
 [cvpcb]
@@ -23,6 +23,8 @@ SolderMaskMinWidth=0
 DrawSegmentWidth=0.2
 BoardOutlineThickness=0.09999999999999999
 ModuleOutlineThickness=0.15
+[general]
+version=1
 [eeschema]
 version=1
 LibDir=arduino;custom_components;/home/andre/local_software/kicad-library-master/library
@@ -135,5 +137,3 @@ LibName105=DSP_Microchip_DSPIC33
 LibName106=Connector
 LibName107=Battery_Management
 LibName108=Altera
-[general]
-version=1
