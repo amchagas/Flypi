@@ -1,3 +1,0 @@
-arduino library downloaded on 07.07.2016
-http://www.kicadlib.org/
-developed by yann Jautard

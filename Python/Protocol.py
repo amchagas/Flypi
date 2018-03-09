@@ -7,17 +7,183 @@ import subprocess
 from tkinter.filedialog import askopenfilename
 #os.chdir ("/home/pi/Desktop/flypi/Flypi/Python/")
 #import flypiApp as fp
-class Protocol:                      
+class Protocol:
+
+############################################################################
+    ##############################################################################
+#    def convert_video(self):
+
+#        return
+        
+    def run_protocol(self):
+        def lockwait(waitString="waited"):
+            flag = True
+
+            while flag== True:
+                #if there is something to read on the serial port
+                test=self.ser.inWaiting()
+                
+                if test>0:                
+                    #read line
+                    dummie=self.ser.readline()
+                    #print("d"+str(dummie))
+                    #if the line is "waited" get out of the waiting while loop
+                    if dummie[0:-2].decode("utf-8")==waitString:                    
+                        flag = False 
+                        #print("done")
+
+            return
+        #self.ser.flushOutput()
+        #self.ser.flushInput()
+        #get the number of repetitions of the 5 choice block
+        numReps=self.timeR1.get()
+        numReps=int(numReps)
+        
+        commList = list()  
+        camFlag=0
+        if "camV" in self.varNames:
+            if self.camV1.get() == "ON":
+                camFlag=1
+                recTime = int(self.timeV1.get())
+                recTime = recTime + int(self.timeV2.get())
+                recTime = recTime + int(self.timeV3.get())
+                recTime = recTime + int(self.timeV4.get())
+                recTime = recTime + int(self.timeV5.get())
+                recTime = recTime + int(self.timeI.get())
+                recTime = (recTime * numReps)
+                #print(recTime)
+                recTime=(recTime/1000.0)
+                videoPath = self.basePath + '/videos/'
+                if not os.path.exists(videoPath):
+                    #if not, create it:
+                    os.makedirs(videoPath)
+                    os.chown(videoPath, 1000, 1000)
+                #it seems that the raspi-cam doesn't like shooting videos at full res.
+                #so the softw. will automatically use a lower resolution for videos
+                if self.usedClasses["camera"].resVal == "2592x1944":
+                    self.usedClasses["camera"].cam.resolution = (1920, 1080) 
+                fileName = videoPath +'video_' + \
+                           time.strftime('%Y-%m-%d-%H-%M-%S') + \
+                           '.h264'
+                self.usedClasses["camera"].cam.start_recording(output = fileName,
+                                format = "h264",)
+                self.usedClasses["camera"].cam.wait_recording(float(recTime))
+                                #resize = (1920,1080))
+
+        #loop the number of repetitions
+        for i in range(0,numReps):          
+            #get all matrix steps
+            for k in range(1,6):#hard coded because there are only 5 periods 
+                                #per trial.                
+                #LED1
+                if "led1V" in self.varNames:
+                    com = eval("self.led1V"+str(k)+".get()")
+
+                    if com == "OFF":
+                        commList.append("LD1<0>>")
+
+                    else:
+                        commList.append("LD1<1>>")
+
+                #LED2
+                if "led2V" in self.varNames:
+                    com = eval("self.led2V"+str(k)+".get()")
+
+                    if com == "OFF":
+                        commList.append("LD2<0>>")
+                       
+                    else:
+                        commList.append("LD2<1>>")
+
+                #peltier
+                if "peltV" in self.varNames:
+                    com = eval("self.peltV"+str(k)+".get()")
+                    tem = eval("self.peltT"+str(k)+".get()")
+                    if com=="OFF":
+                        commList.append("PEL<0>>")
+                        commList.append("")
+                    else:
+                        commList.append("PEL<1>>")
+                        commList.append("TEM<"+tem+">>")
+                #matrix 
+                if "matV" in self.varNames:
+                    com = eval("self.matV"+str(k)+".get()")
+
+                    if com == "OFF":
+#                        commList.append(self.usedClasses["matrix"].matrixOff()) 
+                        commList.append("MAT<0>>")
+#                        commList=[self.usedClasses["matrix"].matrixOff()]
+
+                    elif com == "Patt1":
+#                        commList.append(self.usedClasses["matrix"].matrixPattern1())
+                        commList.append("MAT<1>>")                        
+
+                    elif com == "Patt2":
+#                        commList.append(self.usedClasses["matrix"].matrixPattern2())
+                        commList.append("MAT<2>>")
+
+                    elif com == "Patt3":
+#                        commList.append(self.usedClasses["matrix"].matrixPattern3())
+                        commList.append("MAT<3>>")
+
+                #ring
+                if "ringV" in self.varNames:
+#                    nullList.append("RIN<0>>")
+                    comR = eval("self.ringV"+str(k)+".get()")
+                    if comR=="ON":
+                        commList.append("RIN<1>>")
+                        blue = "RBL<"+eval("self.ringB"+str(k)+".get()")+">>"
+                        red = "RRE<"+eval("self.ringR"+str(k)+".get()")+">>"
+                        green ="RGR<"+ eval("self.ringG"+str(k)+".get()")+">>"
+
+
+
+                    else:                    
+                        commList.append("RIN<0>>")
+                        blue = "RBL<0>>"
+                        red = "RRE<0>>"
+                        green ="RGR<0>>"
+                    
+                    
+                    commList.append(blue)
+                    commList.append(red)                   
+                    commList.append(green)                                        
+      
+               
+                #execute the time of the trial
+                if "timeV"  in self.varNames:
+
+                    comT = eval("self.timeV"+str(k)+".get()")
+
+#                    output = self.timingAdd+"<"+str(comT)+">>"
+                    output = "TIM<"+str(comT)+">>"
+
+                    commList.append(output)
+
+                if "timeI" in self.varNames and k==5:     
+                    ITI = "TIM<"+self.timeI.get()+">>"
+                    commList.append(ITI)
+
+
+        for item in commList:
+            self.ser.write(item.encode("utf-8"))
+            lockwait() 
+        if camFlag==1:
+            #give extra 2 seconds at the end of the recording
+            self.usedClasses["camera"].cam.wait_recording(2.0)
+            self.usedClasses["camera"].cam.stop_recording()
+            
+            
+        return  #run_protocol                         
 
         
-    def __init__(self, parent="none",#ser="",
+    def __init__(self, parent="none",ser="",
                  usedClasses = dict(),
                  timingAdd="",
                  label="Protocol", basePath="~/Desktop/"):
 
 
-        #self.ser = ser
-
+        self.ser = ser
         frame1 = tk.Frame(master=parent)
         frame1.grid(row=0, column=0)
         self.usedClasses = usedClasses
@@ -25,8 +191,7 @@ class Protocol:
         #create list to store all variables prefixes
         self.varNames = list()
         self.timingAdd = timingAdd 
-        self.protallcalls = list()
-        self.camFlag = 0
+
 
         
         rows=0
@@ -120,7 +285,7 @@ class Protocol:
 
                 
         if self.usedClasses["ring"] != 0:
-			
+ 
             ringLabel = tk.Label(master=frame1, text="Ring")
             ringLabel.grid(row=rows, column=0)
 
@@ -170,6 +335,7 @@ class Protocol:
 
             x=1
             for z in range(0,len(temp),4):
+#                print(k) 
                 protButt6 = tk.OptionMenu(frame1,
                                           temp[z],
                                           "OFF",
@@ -291,6 +457,10 @@ class Protocol:
         timeEntry3.grid(row=rows-1,column=3,sticky=("NW"))
         rows = rows+1
 
+        ###start protocols
+        #runLabel = tk.Label(master=frame1,text="Start protocols:")
+        #runLabel.grid(row=rows,column=0)
+        #runV1 = tk.StringVar(master=frame1)
         
 
         
@@ -315,173 +485,12 @@ class Protocol:
             rows = rows+1
         #self.run_protocol()    
         runButt = tk.Button(master=frame1,text="RUN!",fg="green",
-                            command=self.run_callback,repeatdelay=10000)        
+                            command=self.run_protocol,repeatdelay=10000)        
         runButt.grid(row=rows-2,column=5)
         
-        if usedClasses["camera"] != 0:
-            convButt = tk.Button(master=frame1,text="to AVI",fg="blue",
+        convButt = tk.Button(master=frame1,text="to AVI",fg="blue",
                             command=self.usedClasses["camera"].camConv,repeatdelay=10000)
-            convButt.grid(row=rows-2,column=4)
+        convButt.grid(row=rows-2,column=4)
                             
         return
-    def run_callback(self):
-        self.protallcalls.append("1")		
-        return
-        		 
-    def run_protocol(self):
-        
-        #get the number of repetitions of the 5 choice block
-        numReps=self.timeR1.get()
-        numReps=int(numReps)
-        
-        commList = list()  
-        camFlag=0
-        recTime = int(self.timeV1.get())
-        recTime = recTime + int(self.timeV2.get())
-        recTime = recTime + int(self.timeV3.get())
-        recTime = recTime + int(self.timeV4.get())
-        recTime = recTime + int(self.timeV5.get())
-        recTime = recTime + int(self.timeI.get())
-        recTime = (recTime * numReps)
-        #print(recTime)
-        recTime=(recTime/1000.0)
-        if "camV" in self.varNames:
-            if self.camV1.get() == "ON":
-                camFlag=1
-                
-                
-                
-                #videoPath = self.basePath + '/videos/'
-                #if not os.path.exists(videoPath):
-                #    #if not, create it:
-                #    os.makedirs(videoPath)
-                #    os.chown(videoPath, 1000, 1000)
-                #it seems that the raspi-cam doesn't like shooting videos at full res.
-                #so the softw. will automatically use a lower resolution for videos
-                
-                #if self.usedClasses["camera"].resVal == "2592x1944":
-                #    self.usedClasses["camera"].cam.resolution = (1920, 1080) 
-                #fileName = videoPath +'video_' + \
-                #           time.strftime('%Y-%m-%d-%H-%M-%S') + \
-                #           '.h264'
-                #self.usedClasses["camera"].cam.start_recording(output = fileName,
-                #                format = "h264",)
-                #self.usedClasses["camera"].cam.wait_recording(float(recTime))
-                                #resize = (1920,1080))
-
-        #loop the number of repetitions
-        for i in range(0,numReps):          
-            #get all matrix steps
-            for k in range(1,6):#hard coded because there are only 5 periods 
-                                #per trial.                
-                #LED1
-                if "led1V" in self.varNames:
-                    com = eval("self.led1V"+str(k)+".get()")
-
-                    if com == "OFF":
-                        commList.append("LD1<0>>")
-
-                    else:
-                        commList.append("LD1<1>>")
-
-                #LED2
-                if "led2V" in self.varNames:
-                    com = eval("self.led2V"+str(k)+".get()")
-
-                    if com == "OFF":
-                        commList.append("LD2<0>>")
-                       
-                    else:
-                        commList.append("LD2<1>>")
-
-                #peltier
-                if "peltV" in self.varNames:
-                    com = eval("self.peltV"+str(k)+".get()")
-                    tem = eval("self.peltT"+str(k)+".get()")
-                    if com=="OFF":
-                        commList.append("PEL<0>>")
-                        #commList.append("")
-                    else:
-                        commList.append("PEL<1>>")
-                        commList.append("TEM<"+tem+">>")
-                #matrix 
-                if "matV" in self.varNames:
-                    com = eval("self.matV"+str(k)+".get()")
-
-                    if com == "OFF":
-#                        commList.append(self.usedClasses["matrix"].matrixOff()) 
-                        commList.append("MAT<0>>")
-#                        commList=[self.usedClasses["matrix"].matrixOff()]
-
-                    elif com == "Patt1":
-#                        commList.append(self.usedClasses["matrix"].matrixPattern1())
-                        commList.append("MAT<1>>")                        
-
-                    elif com == "Patt2":
-#                        commList.append(self.usedClasses["matrix"].matrixPattern2())
-                        commList.append("MAT<2>>")
-
-                    elif com == "Patt3":
-#                        commList.append(self.usedClasses["matrix"].matrixPattern3())
-                        commList.append("MAT<3>>")
-
-                #ring
-                if "ringV" in self.varNames:
-#                    nullList.append("RIN<0>>")
-                    comR = eval("self.ringV"+str(k)+".get()")
-                    if comR=="ON":
-                        commList.append("RIN<1>>")
-                        #commList.append(self.usedClasses["ring"].ringOn())
-                        
-                        
-                        
-                        blue = "RBL<"+eval("self.ringB"+str(k)+".get()")+">>"
-                        red = "RRE<"+eval("self.ringR"+str(k)+".get()")+">>"
-                        green ="RGR<"+ eval("self.ringG"+str(k)+".get()")+">>"
-                        #green =eval("self.ringG"+str(k)+".get()")
-
-                        #commList.append(self.usedClasses["ring"].rgv.set(int(green)))
-                        #commList.append(self.usedClasses["ring"].greenUpdate())
-
-                    else:    
-                        #commList.append(self.usedClasses["ring"].ringOff())                
-                        commList.append("RIN<0>>")
-                        
-                        blue = "RBL<0>>"
-                        red = "RRE<0>>"
-                        green ="RGR<0>>"
-                    
-                    
-                    commList.append(blue)
-                    commList.append(red)                   
-                    commList.append(green)                                        
-      
-               
-                #execute the time of the trial
-                if "timeV"  in self.varNames:
-
-                    comT = eval("self.timeV"+str(k)+".get()")
-
-                    #output = self.usedClasses["app"].waittime(time1=comT)
-                    #print(output)
-                    output = "TIM<"+str(comT)+">>"
-                    
-                    commList.append(output)
-
-                if "timeI" in self.varNames and k==5:     
-                    ITI = "TIM<"+self.timeI.get()+">>"
-                    commList.append(ITI)
-
-        
-        #for item in commList:
-        #    #self.ser.write(item.encode("utf-8"))
-        #    print(str(item))
-            
-            
-        #if camFlag==1:
-        #    #give extra 2 seconds at the end of the recording
-        #    self.usedClasses["camera"].cam.wait_recording(2.0)
-        #    self.usedClasses["camera"].cam.stop_recording()
-            
-            
-        return  commList,camFlag, recTime#run_protocol   
+ 

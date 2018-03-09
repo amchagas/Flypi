@@ -1,6 +1,6 @@
 import tkinter as tk
 import os
-import time
+
 #import serial module
 try:
     import serial
@@ -23,11 +23,11 @@ class flypiApp:
     cameraFlag = 1
     ringFlag = 1
     led1Flag = 1
-    led2Flag = 0
-    matrixFlag = 0
+    led2Flag = 1
+    matrixFlag = 1
 
     peltierFlag = 1
-    autofocusFlag = 0
+    autofocusFlag=0
 
     mockupFlag = 0
     protocolFlag = 1
@@ -72,9 +72,8 @@ class flypiApp:
 
     ##autofocus##
     autoFocusAdd = "SER"
-    autoFocusOffAdd = "SER<0>>"
     
-    allCalls = list()
+
     #row4Frame = tk.Frame()
     def __init__(self, master, ser=""):
         
@@ -87,21 +86,15 @@ class flypiApp:
 
         #create dictionary to store all classes that will be used
         usedClasses = dict() 
-        usedClasses["app"] = self
+
         ##create the mainframe
         frame = tk.Frame()
-        self.frame = frame
-        
         frame.grid(row=0, column=0, rowspan=1, columnspan=1)
         
         row1Frame = tk.Frame(master=frame, bd=2, relief="ridge")
         row2Frame = tk.Frame(master=frame, bd=2, relief="ridge")
         row3Frame = tk.Frame(master=frame, bd=2, relief="ridge")
         row4Frame = tk.Frame(master=frame, bd=2, relief="ridge")
-        
-        #####callback for menus
-        #self.test_rec()
-        
         
         if serialAvail == True:
             # for Arduino Uno from RPi
@@ -137,7 +130,7 @@ class flypiApp:
 
             self.LED1 = LED.LED(parent=self.frameLed1, label="LED 1",
                           onAdd=self.led1OnAdd, offAdd=self.led1OffAdd,
-                          zapDurAdd=self.led1ZapDurAdd, #ser=self.ser,
+                          zapDurAdd=self.led1ZapDurAdd, ser=self.ser,
                           #prot=self.prot,
                           #protFrame=self.frameProt,
                           )
@@ -178,11 +171,11 @@ class flypiApp:
                                pat1Add=self.matPat1Add, pat2Add=self.matPat2Add,
                                brightAdd=self.matBrightAdd,
                 
-                               #ser=self.ser
+                               ser=self.ser
                                )
             matOff = self.matOffAdd
             self.ser.write(matOff.encode('utf-8'))
-            usedClasses["matrix"] = 1
+            usedClasses["matrix"] = 1#self.Matrix
         else:   
             usedClasses["matrix"] = 0
 
@@ -200,14 +193,13 @@ class flypiApp:
                              redAdd=self.ringRedAdd,
                              greenAdd=self.ringGreenAdd,
                              blueAdd=self.ringBlueAdd,
-                             #allAdd=self.ringAllAdd,
-                             #rotAdd=self.ringRotAdd,
-
-                             )
+                             allAdd=self.ringAllAdd,
+                             rotAdd=self.ringRotAdd,
+                             ser=self.ser)
 
             ringOff=self.ringOffAdd
             self.ser.write(ringOff.encode('utf-8'))
-            usedClasses["ring"] = self.Ring
+            usedClasses["ring"] = 1#self.Ring
         else:   
             usedClasses["ring"] = 0
             
@@ -222,8 +214,7 @@ class flypiApp:
                                            offAdd=self.peltOffAdd,
                                            tempAdd=self.peltTempAdd,
                                            basePath=self.basePath,
-                                           #ser=self.ser
-                                           )
+                                           ser=self.ser)
             peltOff = self.peltOffAdd
             self.ser.write(peltOff.encode('utf-8'))
             usedClasses["peltier"] = 1#self.Peltier
@@ -241,11 +232,9 @@ class flypiApp:
                                            label="Focus",
                                            velAdd=self.autoFocusAdd,
                                            ser=self.ser)
+            servoOff=str(self.autoFocusAdd)+"*"+ str(0)+"*"
+            self.ser.write(servoOff.encode('utf-8'))
 
-            autoFocusOffAdd = self.autoFocusOffAdd
-            self.ser.write(autoFocusOffAdd.encode('utf-8'))
-        else:   
-            usedClasses["autofocus"] = 0
         ###Protocol###
         if self.protocolFlag == 1:
             import Protocol
@@ -257,9 +246,11 @@ class flypiApp:
             self.Protocol = Protocol.Protocol(parent = self.frameProt,
                                               usedClasses=usedClasses,
                                               basePath = self.basePath+"/protocol/",
-                                              label="Protocols",#ser=self.ser,
+                                              label="Protocols",ser=self.ser,
                                               timingAdd=self.timeAdd)
-
+#            print(self.timeAdd)
+            #self.prot = True
+            #self.protocol = Protocol(parent=self.frameProt, ser=self.ser)
 
         else:
             self.frameProt = ""
@@ -271,11 +262,8 @@ class flypiApp:
             self.frameMock.pack(side="left")
             self.Mockup= Mock_up.Mock_up(parent=self.frameMock,
                                            label="mock_up",
-        
                                            ser=self.ser)
 
-        
-        ####
         ###QUIT###
         if self.quitFlag == 1:
             self.frameQuit = tk.Frame(master=row4Frame)
@@ -289,10 +277,7 @@ class flypiApp:
         row3Frame.grid(row=1, column=2, sticky="NWE")
         row2Frame.grid(row=0, column=0, sticky="NWE", columnspan=1)
 
-        #####callback for menus
-        self.test_rec()
     ######################################## QUIT
-
     def quitAPP(self, parent="none"):
         ##callback to close the program and close serial port
         def quitNcloseSerial():
@@ -311,143 +296,10 @@ class flypiApp:
         self.quit = tk.Button(master=parent, text="QUIT",
                               fg="red", command=quitNcloseSerial)
         self.quit.pack(fill="x")
-        return 
-        
-    def waittime(self,time1=100):
-        output = str(self.timeAdd)+"<"+str(time1)+">>"
-        print("wait time " + str(time1))
-        self.ser.write(output.encode("utf-8"))
-        self.lockwait()
-        #self.allcalls.append(output.encode("utf-8"))
-        return  
-         
-    def lockwait(self,waitString="<wtd>>"):
-        output = list()
-        flag=True
-        while flag== True:
-            #if there is something to read on the serial port
-            test=self.ser.in_waiting
-            
-            if test>0:                
-                #read line
-                dummie=self.ser.readline()
-                dummie = str(dummie)#.decode("utf-8")
-                
-                #if the line is "waited" get out of the waiting while loop
-                
-                if waitString in str(dummie):                   
-                    flag = False 
-                else:
-                    output.append(dummie)                
-                        
-					
-        return output
-        
-    def test_rec(self):
-        #print(self.Protocol.protallcalls)
-        if len(self.Protocol.protallcalls)>0:
-            #print(self.Protocol.protallcalls)
-            if self.Protocol.protallcalls[0]=="1":
-                self.Protocol.protallcalls=list()
-                commList,camFlag,recTime = self.Protocol.run_protocol()
-                if camFlag==1:
-                    folderPath = self.basePath+"/videos/test/"
-                    timenow = time.strftime('%Y-%m-%d-%H-%M-%S')
-                    recFileName = 'video_'+ timenow + '.h264'
-                    #print(self.basePath)
-                    self.create_folder(folderPath=self.basePath,
-                                  folderName="videos/test")
-                    #self.create_file(filePath = self.basePath+"/videos/",
-                    #       fileName = recFileName)
-                    self.Camera.cam.resolution = (1920, 1080)
-                    if self.Camera.FPSVar.get()<30:
-                       self.Camera.FPSVar.set(30)
-                    self.Camera.cam.start_preview()
-        
-                    self.Camera.cam.preview.fullscreen = False
-                    self.Camera.cam.start_recording(output = folderPath+\
-                                                    recFileName,
-                                                    format = "h264",)
-                    self.Camera.cam.wait_recording(float(recTime))
-                    
-                for call in commList:
-                    self.ser.write(call.encode("utf-8"))
-                    temp = self.lockwait(waitString="<wtd>>")
-                if camFlag==1:
-                    
-                    self.Camera.cam.wait_recording(1.0)
-                    self.Camera.cam.stop_recording()
-                camFlag=0
-                print("protocol done")
-
-                    
-                    
-					
-					
-					
-        else:
-            test = list()
-            #if usedClasses["ring"]==1:
-            if self.ringFlag==1:
-                test = test + self.Ring.update()
-                test = test + self.Ring.ringallcalls[:]
-                self.Ring.ringallcalls = list()
-            if self.led1Flag==1:
-                test = test + self.LED1.ledallcalls[:]     
-                self.LED1.ledallcalls=list()
-            if self.led2Flag==1:
-                test = test + self.LED2.ledallcalls[:]     
-                self.LED2.ledallcalls=list()
-        
-            if self.peltierFlag==1:
-                test = test + self.Peltier.peltierallcalls[:] 
-                test = test + [self.Peltier.peltGetTempArd()]
-                test = test + [self.Peltier.peltSetTemp()]
-                self.Peltier.peltierallcalls=list()
-            if len(test)>0:
-                for call in test:
-                    #print(call.encode("utf-8"))
-                
-                    self.ser.write(call.encode("utf-8"))
-                    temp = self.lockwait(waitString="<wtd>>")
-                    if len(temp)>0:
-                        self.Peltier.peltTempArd.set(temp[0])
-                        if self.Peltier.logTemp.get() == 1:
-                            self.create_folder(folderPath = self.basePath,
-                                      folderName = "log_temp")
-                            fh = self.create_file(filePath = self.basePath+"log_temp/",
-                            fileName = "temp_log_"+time.strftime('%Y-%m-%d')+".txt")
-                            fh.write(time.strftime('%Y-%m-%d-%H-%M-%S') + (','))
-                            fh.write(temp[0])
-
-        
-       
-        
-        self.frame.after(100, self.test_rec)
-        
-        return
-    
-    def create_folder(self,
-                      folderPath="/home/pi/Desktop/flypi_output/",
-                      folderName="output1"):
-        absPath = folderPath+folderName+"/"
-        if not os.path.exists(absPath):
-            #if not, create it:
-            os.makedirs(absPath)
-            os.chown(absPath, 1000, 1000)
-        return
-    
-    def create_file(self,
-                    filePath="/home/pi/Desktop/flypi_output/output1/",
-                    fileName="file1"+time.strftime('%Y-%m-%d') + ".txt"):
-        #check if the file already exists
-        if os.path.isfile(filePath + fileName) == False:
-            #if it does not exist, create it
-            fh = open(filePath + fileName, "w")
-        else:
-            #open file and append to it
-            fh = open(filePath + fileName, "a")
-        
-        
-        return fh
-        
+        return   
+    #def test(self,parent = None):
+    #    self.after(500, self.test)
+    #    #if self.peltierFlag == 1:
+    #    #    self.Peltier.peltGetTempArd()
+    #    print("herre")        
+    #    return            
