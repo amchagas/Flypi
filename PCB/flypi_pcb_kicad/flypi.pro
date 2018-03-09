@@ -1,4 +1,4 @@
-update=08/03/2018 17:17:31
+update=09/03/2018 11:13:14
 version=1
 last_client=kicad
 [cvpcb]
@@ -23,6 +23,8 @@ SolderMaskMinWidth=0
 DrawSegmentWidth=0.2
 BoardOutlineThickness=0.09999999999999999
 ModuleOutlineThickness=0.15
+[general]
+version=1
 [eeschema]
 version=1
 LibDir=/home/andre/local_software/kicad-library/library;arduino;custom_components;/home/andre/local_software/kicad-library
@@ -60,5 +62,3 @@ LibName30=valves
 LibName31=arduino/arduino
 LibName32=custom_components/flypi_components
 LibName33=template/Arduino_Nano/Arduino_Nano-cache
-[general]
-version=1

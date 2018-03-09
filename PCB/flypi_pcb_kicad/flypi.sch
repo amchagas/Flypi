@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:flypi-rescue
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -852,7 +853,7 @@ Connection ~ 2200 1900
 Wire Wire Line
 	4800 3750 6600 3750
 $Comp
-L USB_A J12
+L USB_A-RESCUE-flypi J12
 U 1 1 59ED406F
 P 4820 1140
 F 0 "J12" H 4620 1590 50  0000 L CNN
