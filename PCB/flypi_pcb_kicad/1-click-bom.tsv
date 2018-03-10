@@ -17,7 +17,7 @@ C6, C5	2	220µF Capacitor 6.3mm	Multicomp	MCGPR16V227M6.3X11	Panasonic	ECA-1CM22
 C2, C1	2	680µF Capacitor	Rubycon	16ZL680MEFC10X16	Panasonic	EEU-FC1A681							1189-3978-ND	667EEUFC1A681	7037258	31M6417	1144691
 C10, C7, C8	3	100nF Capacitor Disc	Multicomp	MCFYU6104Z6	KEMET	C052C104K5R5CA	KEMET	C052K104K5X5CA	KEMET	C052T104K5X5CS	KEMET	C321C104K5R5HA	399-9784-ND	80C321C104K5R5HA		73M2154	2395773
 1k1	1	Resistor 1k 250mW through-hole	Multicomp	MF12 1K	Yageo	MFR-25FBF52-1K	RS Pro	7077666					1.00KXBK-ND	603MFR25FBF521K	7077666	38K5400	9342400
-MCU	1	Arduino Mini	Arduino	A000087									1050-1046-ND	782A000087	7617327		1848691
+MCU	1	Arduino Mini	Arduino	A000087									1050-1001-ND				
 2 pin housing	4	plastic housing for crimped cables 2 pins XH	JST	XHP-2 													1516264
 3 pin housing	3	plastic housing for crimped cables 3 pins XH	JST	XHP-3													1516265
 4 pin housing	1	plastic housing for crimped cables 4 pins XH	JST	XHP-4													1516266
