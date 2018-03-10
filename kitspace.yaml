@@ -1,4 +1,4 @@
 bom: PCB/flypi_pcb_kicad/1-click-bom.tsv
 gerbers: PCB/flypi_pcb_kicad/gerber
 summary: 3D-printable microscope for diagnostics and scientific experiments
-website: https://hackaday.io/project/5059-flypi-cheap-microscopeexperimental-setup
+site: https://hackaday.io/project/5059-flypi-cheap-microscopeexperimental-setup
