@@ -2,3 +2,4 @@
 # Script to start our application
 echo "Starting FlyPi..."
 sudo python3 /home/pi/Desktop/Flypi-master/Python/run.py
+#change something
