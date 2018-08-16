@@ -6,7 +6,7 @@ X_range = 44; // Length(70) - B_X(20) - 2*wall(6) = 44
 Y_range = 35; // Width(70) - C_Y(23) - 4*wall(12) = 38
 Z_range = 30; // C_Topheight(40) - D_Z(12) - 2*Wall(6) = 22
 
-Sliding_Gap = 0.15;
+Sliding_Gap = 0.1;
 
 Separation_of_pieces = 20; // 
 
@@ -14,6 +14,17 @@ Radius_of_holes = 2.1;
 Width_of_boat_slids = 7.4;
 Height_of_boat_slids = 3.2;
 
+AFlag=0;
+BFlag=1;
+
+CFlag=0;
+DFlag=0;
+EFlag=0;
+E1Flag=0;
+KFlag=0;
+K1Flag=0;
+MFlag=0;
+M1Flag=0;
 ///////////////////////// NOT FOR CUSTOMIZER BELOW HERE
 
 module SEPARATION_OF_CUSTOMIZER_VARIABLES(){
@@ -116,8 +127,10 @@ module A_base_beams_holes(){
 	translate([-A_X/2+wall*2.5,-A_Y/2+wall*2.5,-A_Z/2-A_Z_lower+A_beams_Z/2]){cylinder($fn = 50, r = R_main, h = A_beams_Z+1, center = true);} // cornerhole4
 }
 
+if (AFlag==1){
 difference(){A_base();A_basehole();}
 difference(){A_base_beams();A_base_beams_holes();}
+}
 //////////////////////////////
 //// MIDDLE PART (B) /////////
 //////////////////////////////
@@ -140,14 +153,19 @@ module B_basehole(){
 	//translate([0,-B_Y/2+10,sep+B_Z/4]){rotate ([90,0,90]){cylinder($fn = 50, r = R_screw_small, h = B_X+1, center = true);}} // MMount holes
 	translate([0,-B_Y/2+10,sep+B_Z/4]){rotate ([90,0,90]){cylinder($fn = 6, r = R_hex_small, h = B_X+1, center = true);}} // MMount hexholes
 }
-difference(){B_base();B_basehole();}
+
 module B_base_hexslot(){translate([0,0,sep-B_Z/2+B_beam_Z/2]){cube([B_X-2*wall,10,B_beam_Z], center = true);}}
 module B_basehole2(){
 	translate([0,0,sep-B_Z/2+3.25]){rotate ([90,0,90]){cylinder($fn = 50, r = R_main+R_main_extra, h = A_X+1, center = true);}} // lower holes inner
 	translate([-B_X/2+Boatslot_height/2+wall,0,sep-B_Z/2+B_beam_Z/2]){cube([Boatslot_height,Boatslot_width,B_beam_Z], center = true);} //boat1
 	translate([B_X/2-Boatslot_height/1.34-wall,0,sep-B_Z/2+B_beam_Z/2]){cube([Boatslot_height*1.1,Boatslot_width,B_beam_Z], center = true);} //boat2 - 10% wider
 }
+if(BFlag==1){
+
+difference(){B_base();B_basehole();}
+
 difference(){B_base_hexslot();B_basehole2();}
+}
 //////////////////////////////
 // TOP PART (C) ///////////////
 //////////////////////////////
@@ -181,7 +199,9 @@ module C_basehole(){
 	translate([0,0,2*sep+C_Z-C_Z_bottom/2-10]){rotate ([90,0,90]){cylinder($fn = 6, r = R_hex_small, h = B_X+1, center = true);}} // MMount hexholes
 
 }
+if(CFlag==1){
 difference(){C_base();C_basehole();}
+}
 //////////////////////////////
 // TOP DRIVE INSET (D) ///////
 //////////////////////////////
@@ -209,7 +229,10 @@ module D_basehole(){
 
 
 }
+
+if(DFlag==1){
 difference(){D_base();D_basehole();}
+}
 
 //////////////////////////////
 // Electrode holder (E1) ///////
@@ -254,8 +277,10 @@ module E1_basehole(){
 
 	
 }
-difference(){E1_base();E1_basehole();}
 
+if (E1Flag==1){
+difference(){E1_base();E1_basehole();}
+}
 //////////////////////////////
 // Electrode holder (E) ///////
 //////////////////////////////
@@ -294,8 +319,10 @@ module E_link_hole(){
 	translate([2*sep+E_X_link+E_X_side-wall-R_knob_in/2,3.5*sep+D_Y/2+D_Y_holder/2,2*sep+C_Z/2-E_Z_platform/4]){
 		rotate ([90,0,0]){cylinder($fn = 50, r = R_screw_small, h = wall*2, center = true);}} // platform roundhole bottom
 }
-difference(){E_link();E_link_hole();}
 
+if (EFlag==1){
+difference(){E_link();E_link_hole();}
+}
 
 
 
@@ -322,9 +349,11 @@ module knob(){
 
 module knobhole(){
 	translate([-sep-A_X*0.67,-sep-A_Y*0.67,-K_Z/2+K_hole_Z/2-A_Z_lower]){cylinder($fn = 6, r = R_knob_in, h = K_hole_Z, center = true);} // hexgroove in bottom
-} 
-difference(){knob();knobhole();}
+}
 
+if(K1Flag==1){
+difference(){knob();knobhole();}
+}
 /////////////////////////////////////////
 ////// MOTOR KNOB (K1) ////////////////
 ////////////////////////////////////////
@@ -338,9 +367,11 @@ module knobhole2(){
 	translate([-sep-A_X*0.67,-2*sep-A_Y*0.67,-A_Z_lower+K_Z/2-K_groove_depth/2]){cylinder($fn = 50, r = R_knobgroove, h = K_groove_depth, center = true);} // groundgroove in top
 	translate([-sep-A_X*0.67,-2*sep-A_Y*0.67,-A_Z_lower+K_Z/2-K_groove_depth/2]){cube([K_groove_length,K_groove_width,K_groove_depth], center = true);} // groove 1
 	translate([-sep-A_X*0.67,-2*sep-A_Y*0.67,-A_Z_lower+K_Z/2-K_groove_depth/2]){cube([K_groove_width,K_groove_length,K_groove_depth], center = true);} // groove 2
-} 
-difference(){knob2();knobhole2();}
+}
 
+if (KFlag==1){
+difference(){knob2();knobhole2();}
+}
 
 ///////////////////////////////////////
 /// MOTOR MOUNT Bottom (M1) ///////////
@@ -387,7 +418,9 @@ module M1_hole(){
 }
 // M_height-2*M_wall+2*gap
 
+if (MFlag==1){
 difference (){M1_base();M1_hole();}
+}
 ///////////////////////////////////////
 /// MOTOR MOUNT Top (M2) //////////////
 ///////////////////////////////////////
@@ -411,6 +444,8 @@ module M2_hole(){
 	translate([0,-sep+M_linklength+10+gap2+M_depth/2-A_Y,sep+B_Z/4+1]){rotate ([90,0,90]){cylinder($fn = 50, r = R_screw_small, h = 100, center = true);}} // MMount holes
 	translate([0,-sep+M_linklength+10+gap2+M_depth/2-A_Y,sep+B_Z/4-1]){rotate ([90,0,90]){cylinder($fn = 50, r = R_screw_small, h = 100, center = true);}} // MMount holes
 }
+if (M1Flag==1){
 difference (){M2_base();M2_hole();}
+}
 
 
