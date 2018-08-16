@@ -1,2 +1,3 @@
 ./Arduino/servo_test/*.*
-__pycache__/*.*
+./Python/__pycache__/*.pyc
+

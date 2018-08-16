@@ -2,7 +2,10 @@
 import tkinter as tk
 import os
 import time
-
+import subprocess
+from tkinter.filedialog import askopenfilename
+#import warnings
+#warnings.filterwarnings('default', category=DeprecationWarning)
 
 class Camera:
 
@@ -19,6 +22,7 @@ class Camera:
             self.cam.exposure_compensation = 0
             self.cam.brightness = 50
             self.cam.awb_mode = "auto"
+            
         except ImportError:
             #picameraAvail = False
             print ("picamera module not available!")
@@ -35,7 +39,7 @@ class Camera:
         self.zoomVal = 1.0
         self.FPSVar = tk.IntVar()
         self.FPSVal = 15
-
+        self.bitRate = 17000000
         self.binVar = tk.IntVar()
         self.binVal = 0
 
@@ -53,7 +57,7 @@ class Camera:
         self.expVal = 0
         self.rotVar = tk.IntVar()
         self.rotVal = 0
-
+        self.camallcalls = list()
         ###frames for all camera controls
         self.camFrame1 = tk.Frame(master=self.camParent, bd=2)
         self.camFrame1.grid(row=0, column=0,
@@ -87,6 +91,9 @@ class Camera:
         self.camOffButt = self.camButton(parent=self.camFrame1,
                             rowIndx=1, colIndx=1, fill="x",
                             buttText="OFF", color="red", func=self.camOff)
+        self.camConvbutt = self.camButton(parent=self.camFrame1,
+                            rowIndx=1, colIndx=2, fill="x",
+                            buttText="to AVI", color="blue", func=self.camConv)
 
         self.camResLabel = tk.Label(master=self.camFrame1,
                                     text=" Resolution ")
@@ -145,11 +152,11 @@ class Camera:
                                    colSpan=1, from__=15, to__=90,
                                    res=5, set_=15)
 
-        self.camBin = self.camSlider(parent=frame2, label_="Binning",
-                                   var=self.binVar, len=90,
-                                   rowIndx=0, colIndx=2, sticky="",
-                                   orient_="horizontal",
-                                   colSpan=1, from__=0, to__=4, res=2, set_=0)
+        #self.camBin = self.camSlider(parent=frame2, label_="Binning",
+        #                           var=self.binVar, len=90,
+        #                           rowIndx=0, colIndx=2, sticky="",
+        #                           orient_="horizontal",
+        #                           colSpan=1, from__=0, to__=4, res=2, set_=0)
 
         self.camSize = self.camSlider(parent=frame2, label_="Window size",
                                    var=self.sizeVar,
@@ -267,7 +274,7 @@ class Camera:
         #with a minimum interval of 700ms.
         #upon calling it will get the value of three variables
         #white balance, mode and color effect
-        self.camFrame1.after(700, self.camGetMenus)
+        self.camFrame1.after(400, self.camGetMenus)
 
         if self.cam.awb_mode != self.camAWVar.get():
             self.camAWVal = self.camAWVar.get()
@@ -324,6 +331,10 @@ class Camera:
         if self.FPSVal != self.FPSVar.get():
             self.FPSVal = self.FPSVar.get()
             self.cam.framerate = (self.FPSVal)
+            
+        #if self.binVal != self.binVar.get():
+        #    self.binVal = self.binVar.get()
+        #    self.cam. = (self.binVal)
 
         if self.brightVal != self.brightVar.get():
             self.brightVal = self.brightVar.get()
@@ -359,7 +370,7 @@ class Camera:
                 self.cam.framerate = (30)
                 self.FPSVar.set(30)
                 self.binVar.set(0)
-                self.zoomVar.set(3)
+                #self.zoomVar.set(3)
             if self.resVal == "1296x972":
                 self.cam.resolution = (1296, 972)
                 self.cam.framerate = (42)
@@ -375,20 +386,25 @@ class Camera:
                 self.cam.framerate = (90)
                 self.FPSVar.set(90)
                 self.binVar.set(4)
+                #self.zoomVar.set(5)
 
         if self.zoomVal != self.zoomVar.get() or \
-                           self.horVal != self.horVar.get() or \
-                           self.verVal != self.verVar.get():
+           self.horVal != self.horVar.get() or \
+           self.verVal != self.verVar.get() or \
+           self.resVal != self.resVar.get():# or \
+           #self.binVal != self.binVar.get():
             self.zoomVal = self.zoomVar.get()
             self.horVal = self.horVar.get()
             self.verVal = self.verVar.get()
+            self.resVal = self.resVar.get()
+            #self.binVal = self.binVar.get()
             if self.zoomVal == 1:
                 self.cam.zoom = (0, 0, 1, 1)
-                self.horVar.set(0)
-                self.verVar.set(0)
+                self.horVar.set(50)
+                self.verVar.set(50)
             else:
                 zoomSide = 1 / self.zoomVal
-                edge = 1 - zoomSide
+                edge = (1 - zoomSide)#*0.5
                 self.cam.zoom = ((self.horVal / 100.0) * edge,
                                (self.verVal / 100.0) * edge,
                                1 / self.zoomVal,
@@ -404,7 +420,7 @@ class Camera:
                            text=buttText,
                            fg=color, command=func)
         button.pack(fill=fill, side=side)
-
+        return
     #general function for slider
     def camSlider(self, parent="none", label_="empty", len=90,
                    var="", rowIndx=1, colIndx=0,
@@ -417,7 +433,7 @@ class Camera:
                           variable=var, orient=orient_)
         Slider.set(set_)
         Slider.grid(row=rowIndx, column=colIndx, columnspan=colSpan)
-
+        return
     ##################callbacks for buttons
     def camOn(self):
         
@@ -438,13 +454,46 @@ class Camera:
         self.cam.preview.fullscreen = False
         #wait a second so the camera adjusts
         time.sleep(1)
+        return 
         
     def camOff(self):
         print ("cam Off")
         self.cam.stop_preview()
-
-    def camRec(self):
-        dur = self.TLdur.get()
+        return
+        
+    def camConv(self):
+        #tk().withdraw()
+        opts = dict()
+        opts["filetypes"] = [('h264 files','.h264'),('all files','.*')]
+        opts["initialdir"] = [self.basePath]
+        
+        fileName = askopenfilename(**opts)
+        if fileName == '':
+            print ('no files selected')
+            return
+        fps = self.FPSVar.get()
+        fps = "-r" + str(fps)
+#        fps = int(fps)
+        print (fileName)
+        print ("converting video to avi")
+        outname = os.path.splitext(fileName)[0]+".avi"
+        lastInd=fileName.rindex("/")
+        files = os.listdir(fileName[0:lastInd])
+        outCore = outname.rindex("/")
+        print ("out:" + outname[outCore:])
+        if outname[outCore+1:] in files:
+            print ("file is already converted! Skipping...")
+            print("done.")
+            return
+        command = ['avconv', '-i', fileName,"-b",str(self.bitRate) ,"-c:v","copy", outname]
+        subprocess.call(command,shell=False)
+        print("done.")
+        return
+        
+    def camRec(self,dur=None):
+        if dur == None:
+            dur = self.TLdur.get()
+        
         videoPath = self.basePath + '/videos/'
         if not os.path.exists(videoPath):
             #if not, create it:
@@ -453,9 +502,17 @@ class Camera:
         #it seems that the raspi-cam doesn't like shooting videos at full res.
         #so the softw. will automatically use a lower resolution for videos
         if self.resVal == "2592x1944":
+            self.resVar.set ("1920x1080")
             self.cam.resolution = (1920, 1080)
+            if self.FPSVar.get()<30:
+                self.FPSVar.set(30)
+            print ("impossible to record at 2592X1944,")
+            print ("due to camera limitations.")
+            print("dropping to next possible resolution")
             
-        print("recording for: " + dur + " secs")
+            #pass
+        
+        print("recording for: " + str(dur) + " secs")
         self.cam.start_recording(output = videoPath +
                                 'video_' +
                                 time.strftime('%Y-%m-%d-%H-%M-%S') + '.h264',
@@ -467,7 +524,8 @@ class Camera:
         #here we restore the preview resolution if it was the maximal one.
         if self.resVal == "2592x1944":
             self.cam.resolution = (2592, 1944)
-
+        return
+        
     def camTL(self):
         dur = self.TLdur.get()
         interval = self.TLinter.get()
@@ -498,7 +556,7 @@ class Camera:
                 self.cam.capture(tlPath + tlFold + "/TL_" + str(i + 1) + ".jpg")
                 time.sleep(float(interval))
             print("done.")
-
+        return
     def camSnap(self):
         photoPath = self.basePath + '/snaps/'
         #check to see if the snap output folder is present:
@@ -506,11 +564,9 @@ class Camera:
             #if not, create it:
             os.makedirs(photoPath)
             os.chown(photoPath, 1000, 1000)
-
-        #get the present time, down to seconds
-        #print (time.strftime("%Y-%m-%d-%H-%M-%S"))
         
         # Camera warm-up time
         time.sleep(1)
         self.cam.capture(photoPath + 'snap_' +
                         time.strftime("%Y-%m-%d-%H-%M-%S") + '.jpg')
+        return

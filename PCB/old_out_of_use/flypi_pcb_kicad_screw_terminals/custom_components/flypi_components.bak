@@ -1,0 +1,94 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#
+# HighLoadRes
+#
+DEF HighLoadRes R 0 40 Y Y 1 F N
+F0 "R" 0 0 60 H V C CNN
+F1 "HighLoadRes" 50 100 60 H V C CNN
+F2 "" 0 0 60 H V C CNN
+F3 "" 0 0 60 H V C CNN
+DRAW
+S -150 -50 150 -150 0 1 0 N
+X ~ 1 -350 -100 200 R 50 50 1 1 B
+X ~ 2 350 -100 200 L 50 50 1 1 B
+ENDDRAW
+ENDDEF
+#
+# Inductor
+#
+DEF Inductor L 0 40 Y Y 1 F N
+F0 "L" 0 100 60 H V C CNN
+F1 "Inductor" 50 150 60 H V C CNN
+F2 "" 0 0 60 H V C CNN
+F3 "" 0 0 60 H V C CNN
+DRAW
+S -100 50 100 -150 0 1 0 N
+X ~ 1 -50 -350 200 U 50 50 1 1 B
+X ~ 2 50 -350 200 U 50 50 1 1 B
+ENDDRAW
+ENDDEF
+#
+# LM2596
+#
+DEF LM2596 U 0 40 Y Y 1 F N
+F0 "U" 200 0 60 H V C CNN
+F1 "LM2596" -50 0 60 H V C CNN
+F2 "" 200 0 60 H V C CNN
+F3 "" 200 0 60 H V C CNN
+DRAW
+S -200 -100 250 -600 0 1 0 N
+X Power_in 1 -400 -150 200 R 50 50 1 1 I
+X Power_out 2 450 -250 200 L 50 50 1 1 O
+X Ground 3 -400 -350 200 R 50 50 1 1 B
+X Feedback 4 450 -450 200 L 50 50 1 1 I
+X On/Off 5 -400 -550 200 R 50 50 1 1 I
+ENDDRAW
+ENDDEF
+#
+# ScrewTerm2pin
+#
+DEF ScrewTerm2pin sc 0 40 Y Y 1 F N
+F0 "sc" 0 100 60 H V C CNN
+F1 "ScrewTerm2pin" 50 150 60 H V C CNN
+F2 "" 0 0 60 H V C CNN
+F3 "" 0 0 60 H V C CNN
+DRAW
+S -100 50 100 -150 0 1 0 N
+X ~ 1 -50 -350 200 U 50 50 1 1 B
+X ~ 2 50 -350 200 U 50 50 1 1 B
+ENDDRAW
+ENDDEF
+#
+# ScrewTerm3pin
+#
+DEF ScrewTerm3pin sc 0 40 Y Y 1 F N
+F0 "sc" 0 100 60 H V C CNN
+F1 "ScrewTerm3pin" 50 150 60 H V C CNN
+F2 "" 0 0 60 H V C CNN
+F3 "" 0 0 60 H V C CNN
+DRAW
+S -150 -150 150 50 0 1 0 N
+X ~ 1 -100 -350 200 U 50 50 1 1 B
+X ~ 2 0 -350 200 U 50 50 1 1 B
+X ~ 3 100 -350 200 U 50 50 1 1 B
+ENDDRAW
+ENDDEF
+#
+# ScrewTerm4pin
+#
+DEF ScrewTerm4pin sc 0 40 Y Y 1 F N
+F0 "sc" 0 100 60 H V C CNN
+F1 "ScrewTerm4pin" 50 150 60 H V C CNN
+F2 "" 0 0 60 H V C CNN
+F3 "" 0 0 60 H V C CNN
+DRAW
+S -200 -150 200 50 0 1 0 N
+X ~ 1 -150 -350 200 U 50 50 1 1 B
+X ~ 2 -50 -350 200 U 50 50 1 1 B
+X ~ 3 50 -350 200 U 50 50 1 1 B
+X ~ 4 150 -350 200 U 50 50 1 1 B
+ENDDRAW
+ENDDEF
+#
+#End Library

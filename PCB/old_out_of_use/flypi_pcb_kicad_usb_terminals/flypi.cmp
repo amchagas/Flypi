@@ -1,0 +1,379 @@
+Cmp-Mod V01 Created by PcbNew   date = Sa 09 Jul 2016 08:02:49 CEST
+
+BeginCmp
+TimeStamp = 577E8A89
+Path = /577DF0B8
+Reference = C2;
+ValeurCmp = 680µ;
+IdModule  = Capacitors_ThroughHole:C_Radial_D10_L21_P5;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8AC4
+Path = /577DF624
+Reference = C3;
+ValeurCmp = 680µ;
+IdModule  = Capacitors_ThroughHole:C_Radial_D10_L21_P5;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8A4E
+Path = /577E326D
+Reference = C1;
+ValeurCmp = 680µ;
+IdModule  = Capacitors_ThroughHole:C_Radial_D10_L21_P5;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8A13
+Path = /577F0E14
+Reference = R10;
+ValeurCmp = 1k;
+IdModule  = Resistors_ThroughHole:Resistor_Horizontal_RM10mm;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8AF9
+Path = /577DF6C1
+Reference = C4;
+ValeurCmp = 220µ;
+IdModule  = Capacitors_ThroughHole:C_Radial_D8_L13_P3.8;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8B2E
+Path = /577E33E2
+Reference = C5;
+ValeurCmp = 220µ;
+IdModule  = Capacitors_ThroughHole:C_Radial_D8_L13_P3.8;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8B63
+Path = /577DF33D
+Reference = C6;
+ValeurCmp = 220µ;
+IdModule  = Capacitors_ThroughHole:C_Radial_D8_L13_P3.8;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8B6F
+Path = /577E7EFE
+Reference = C7;
+ValeurCmp = 100n;
+IdModule  = Capacitors_ThroughHole:C_Disc_D3_P2.5;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8B7B
+Path = /577F0EB3
+Reference = C8;
+ValeurCmp = 0.1µ;
+IdModule  = Capacitors_ThroughHole:C_Disc_D3_P2.5;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8B87
+Path = /577F601A
+Reference = C9;
+ValeurCmp = 0.1µ;
+IdModule  = Capacitors_ThroughHole:C_Disc_D3_P2.5;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8B93
+Path = /577E79E9
+Reference = C10;
+ValeurCmp = 100n;
+IdModule  = Capacitors_ThroughHole:C_Disc_D3_P2.5;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8B9F
+Path = /577DE532
+Reference = CON1;
+ValeurCmp = BARREL_JACK;
+IdModule  = Connect:BARREL_JACK;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8BAE
+Path = /577DF1F1
+Reference = D1;
+ValeurCmp = Schottky 5A;
+IdModule  = Diodes_ThroughHole:Diode_DO-201AD_Horizontal_RM15;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8BBD
+Path = /577DF7A9
+Reference = D2;
+ValeurCmp = Schottky 5A;
+IdModule  = Diodes_ThroughHole:Diode_DO-201AD_Horizontal_RM15;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8BCC
+Path = /577E34B5
+Reference = D3;
+ValeurCmp = D_Schottky;
+IdModule  = Diodes_ThroughHole:Diode_DO-201AD_Horizontal_RM15;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8BD6
+Path = /577E380E
+Reference = L1;
+ValeurCmp = 33µH;
+IdModule  = Inductors_NEOSID:Neosid_Inductor_MA-Bs75;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8BE0
+Path = /577E530A
+Reference = L2;
+ValeurCmp = 33µH;
+IdModule  = Inductors_NEOSID:Neosid_Inductor_MA-Bs75;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8BEA
+Path = /577E390F
+Reference = L3;
+ValeurCmp = 33µH;
+IdModule  = Inductors_NEOSID:Neosid_Inductor_MA-Bs75;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8BFA
+Path = /577F4FBB
+Reference = P1;
+ValeurCmp = PeltS1S2;
+IdModule  = Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_2pol;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8C0A
+Path = /577F2AAE
+Reference = P2;
+ValeurCmp = Pi+-;
+IdModule  = Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_2pol;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8C1A
+Path = /577F82F4
+Reference = P3;
+ValeurCmp = Fan+-;
+IdModule  = Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_2pol;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8C2C
+Path = /577F06E4
+Reference = P4;
+ValeurCmp = Therm +s-;
+IdModule  = Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_3pol;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8C3C
+Path = /577F29F3
+Reference = P5;
+ValeurCmp = HP1+-;
+IdModule  = Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_2pol;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8C4C
+Path = /577F293A
+Reference = P6;
+ValeurCmp = HP2+-;
+IdModule  = Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_2pol;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8C5E
+Path = /577F2704
+Reference = P7;
+ValeurCmp = servo +s-;
+IdModule  = Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_3pol;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8C70
+Path = /577F19C2
+Reference = P8;
+ValeurCmp = Ring +-s;
+IdModule  = Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_3pol;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8C84
+Path = /577F1F65
+Reference = P9;
+ValeurCmp = matrix +-scsd;
+IdModule  = Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_4pol;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8C98
+Path = /577F3156
+Reference = P10;
+ValeurCmp = RGB RG-B;
+IdModule  = Terminal_Blocks:TerminalBlock_Pheonix_PT-3.5mm_4pol;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8CD0
+Path = /577E5AE1
+Reference = Q4;
+ValeurCmp = 1A_NPN_ECB;
+IdModule  = TO_SOT_Packages_THT:TO-92_Inline_Narrow_Oval;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8CDC
+Path = /577E8665
+Reference = R1;
+ValeurCmp = 1 - 18W;
+IdModule  = footprints:high_load_res;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8CEC
+Path = /577E166B
+Reference = R2;
+ValeurCmp = 270;
+IdModule  = Resistors_ThroughHole:Resistor_Horizontal_RM10mm;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8CFC
+Path = /577EB79F
+Reference = R3;
+ValeurCmp = 270;
+IdModule  = Resistors_ThroughHole:Resistor_Horizontal_RM10mm;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8D0C
+Path = /577E2E07
+Reference = R4;
+ValeurCmp = 270;
+IdModule  = Resistors_ThroughHole:Resistor_Horizontal_RM10mm;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8D1C
+Path = /577E5D84
+Reference = R5;
+ValeurCmp = 270;
+IdModule  = Resistors_ThroughHole:Resistor_Horizontal_RM10mm;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8D2C
+Path = /577F5D30
+Reference = R6;
+ValeurCmp = 150;
+IdModule  = Resistors_ThroughHole:Resistor_Horizontal_RM10mm;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8D3C
+Path = /577E1F76
+Reference = R7;
+ValeurCmp = 220;
+IdModule  = Resistors_ThroughHole:Resistor_Horizontal_RM10mm;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8D4C
+Path = /577E209A
+Reference = R8;
+ValeurCmp = 220;
+IdModule  = Resistors_ThroughHole:Resistor_Horizontal_RM10mm;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8D5C
+Path = /577E210B
+Reference = R9;
+ValeurCmp = 220;
+IdModule  = Resistors_ThroughHole:Resistor_Horizontal_RM10mm;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8D6A
+Path = /577DEF55
+Reference = U1;
+ValeurCmp = LM2596;
+IdModule  = footprints:LM2596;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8D78
+Path = /577E3581
+Reference = U2;
+ValeurCmp = LM2596;
+IdModule  = footprints:LM2596;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8D86
+Path = /577DF744
+Reference = U3;
+ValeurCmp = LM2596;
+IdModule  = footprints:LM2596;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8DB1
+Path = /577E6C96
+Reference = U4;
+ValeurCmp = L298N;
+IdModule  = TO_SOT_Packages_THT:Multiwatt_15_Vertical;
+EndCmp
+
+BeginCmp
+TimeStamp = 577EBB54
+Path = /577F0E14
+Reference = 1k1;
+ValeurCmp = R;
+IdModule  = Resistors_ThroughHole:Resistor_Horizontal_RM10mm;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8DE0
+Path = /577DE666
+Reference = U5;
+ValeurCmp = arduino_mini;
+IdModule  = arduino_nano:DIP-30_W15.24mm_LongPads;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8CB4
+Path = /577E148F
+Reference = Q2;
+ValeurCmp = 1A-NPN-ECB;
+IdModule  = TO_SOT_Packages_THT:TO-92_Inline_Wide;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8CC2
+Path = /577E2D68
+Reference = Q3;
+ValeurCmp = 1A_NPN_ECB;
+IdModule  = TO_SOT_Packages_THT:TO-92_Inline_Wide;
+EndCmp
+
+BeginCmp
+TimeStamp = 577E8CA6
+Path = /577EB1CC
+Reference = Q1;
+ValeurCmp = 1A_NPN_ECB;
+IdModule  = TO_SOT_Packages_THT:TO-92_Inline_Wide;
+EndCmp
+
+EndListe
