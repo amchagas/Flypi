@@ -36,12 +36,11 @@ sudo apt-get install libav-tools
 update pyserial library:
 sudo pip3 install --upgrade serial
 
-## *.h264 conversion to *.avi:
-is done via avconv (which is installed with libav-tools).
 
 ## *.h264 conversion to *.avi:
 
 is done via avconv (which is installed with libav-tools).
+
 
 ## SD Card image containing Raspian image with all things installed:
 https://www.dropbox.com/sh/bibhy2sgadq30dm/AACD2Rdhmad2QdBi9q-pQfd6a?dl=0
