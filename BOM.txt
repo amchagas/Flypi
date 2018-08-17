@@ -1,0 +1,2 @@
+Please find all necessary parts and materials for the FlyPi in: PCB/1-click-bom.csv
+
