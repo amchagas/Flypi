@@ -72,17 +72,8 @@ float lowLimit = 13.0; //in Celsius
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(ring_nPixels, RingPin, NEO_GRBW + NEO_KHZ800);
 
-matrixPattern4[] =
-{ B11111111,
-  B11111111,
-  B11111111,
-  B11111111,
-  B11111111,
-  B11111111,
-  B11111111,
-  B11111111
-};
-*/
+
+
 
 void setup()
 { //start serial port
@@ -178,7 +169,9 @@ void loop() {
     digitalWrite(LED1Pin, HIGH);
     waiting(term2.toInt());
     digitalWrite(LED1Pin, LOW);
+
     Serial.println("<wtd>>");
+
   }
 
 
@@ -186,13 +179,20 @@ void loop() {
   if (term1 == "LD2") {
     if (term2.toInt()==1){digitalWrite(LED2Pin, HIGH);}
     if (term2.toInt() == 0) {digitalWrite(LED2Pin, LOW);}
+
   Serial.println("<wtd>>");}
+
     if (term1 == "LZ2"){
     digitalWrite(LED2Pin, HIGH);
     waiting(term2.toInt());
     digitalWrite(LED2Pin, LOW);
+
+
     Serial.println("<wtd>>");
   }
+
+
+
 
 
 
@@ -218,7 +218,9 @@ void loop() {
     //oldRed = ringRedHue;
     ringRedHue=term2.toInt();
     updateRing(ringRedHue, ringGreenHue, ringBlueHue, ringWhiteHue);
+
     if (ringOn == 1) {
+
       //if the ring is on
       //show the update
       pixels.show();}//end if ringOn==1
@@ -255,15 +257,19 @@ void loop() {
   if (term1=="RZAR") {zapRed = term2.toInt();Serial.println("<wtd>>");}
   if (term1=="RZAG") {zapGreen = term2.toInt();Serial.println("<wtd>>");}
   if (term1=="RZAB") {zapBlue = term2.toInt();Serial.println("<wtd>>");}
+
   if (term1=="RZAT") {
+
     if (ringOn == 1) {
       updateRing(zapRed, zapGreen, zapBlue, zapWhite);
       pixels.show();
       waiting(term2.toInt());
       updateRing(ringRedHue, ringGreenHue, ringBlueHue, ringWhiteHue);
+
       pixels.show();
     }//end if ring on
   Serial.println("<wtd>>");}
+
 
 
 
