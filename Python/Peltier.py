@@ -52,6 +52,12 @@ class Peltier:
 
         self.peltTime.pack(fill="x")
 
+        self.peltTime = tk.Entry(master=frame1, width=10)
+
+        self.peltTime.insert(0, "no func yet")
+
+        self.peltTime.pack(fill="x")
+
         self.peltTempDisLabel = tk.Label(master=frame1, text="temp(C):")
         self.peltTempDisLabel.pack(side="top")
 
@@ -80,6 +86,7 @@ class Peltier:
         #self.peltGetTempArd()
 
 
+
     def peltOn(self):
         print("peltier on")
         output = str(self.onAdd)
@@ -87,11 +94,13 @@ class Peltier:
         self.peltierallcalls.append(output)
         return
 
+
     def peltOff(self):
         print("peltier off")
         output = str(self.offAdd)
         self.peltierallcalls.append(output)
         return
+
 
     def peltGetTempArd(self):
 
@@ -100,4 +109,4 @@ class Peltier:
         return output
     def peltSetTemp(self):
         output = self.tempAdd +"<"+str(self.peltTemp.get())+ ">>"
-        return output
+        return output      

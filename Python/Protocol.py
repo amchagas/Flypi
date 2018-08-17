@@ -7,8 +7,8 @@ import subprocess
 from tkinter.filedialog import askopenfilename
 #os.chdir ("/home/pi/Desktop/flypi/Flypi/Python/")
 #import flypiApp as fp
-class Protocol:
 
+class Protocol:
 
     def __init__(self, parent="none",#ser="",
                  usedClasses = dict(),
@@ -24,6 +24,7 @@ class Protocol:
         self.basePath = basePath
         #create list to store all variables prefixes
         self.varNames = list()
+
         self.timingAdd = timingAdd
         self.protallcalls = list()
         self.camFlag = 0
@@ -315,13 +316,16 @@ class Protocol:
             rows = rows+1
         #self.run_protocol()
         runButt = tk.Button(master=frame1,text="RUN!",fg="green",
+
                             command=self.run_callback,repeatdelay=10000)
         runButt.grid(row=rows-2,column=5)
+
 
         if usedClasses["camera"] != 0:
             convButt = tk.Button(master=frame1,text="to AVI",fg="blue",
                             command=self.usedClasses["camera"].camConv,repeatdelay=10000)
             convButt.grid(row=rows-2,column=4)
+
 
         return
     def run_callback(self):
@@ -349,8 +353,6 @@ class Protocol:
             if self.camV1.get() == "ON":
                 camFlag=1
 
-
-
                 #videoPath = self.basePath + '/videos/'
                 #if not os.path.exists(videoPath):
                 #    #if not, create it:
@@ -359,8 +361,10 @@ class Protocol:
                 #it seems that the raspi-cam doesn't like shooting videos at full res.
                 #so the softw. will automatically use a lower resolution for videos
 
+
                 #if self.usedClasses["camera"].resVal == "2592x1944":
                 #    self.usedClasses["camera"].cam.resolution = (1920, 1080)
+
                 #fileName = videoPath +'video_' + \
                 #           time.strftime('%Y-%m-%d-%H-%M-%S') + \
                 #           '.h264'
@@ -370,10 +374,12 @@ class Protocol:
                                 #resize = (1920,1080))
 
         #loop the number of repetitions
+
         for i in range(0,numReps):
             #get all matrix steps
             for k in range(1,6):#hard coded because there are only 5 periods
                                 #per trial.
+
                 #LED1
                 if "led1V" in self.varNames:
                     com = eval("self.led1V"+str(k)+".get()")
@@ -391,6 +397,8 @@ class Protocol:
                     if com == "OFF":
                         commList.append("LD2<0>>")
 
+
+
                     else:
                         commList.append("LD2<1>>")
 
@@ -404,18 +412,24 @@ class Protocol:
                     else:
                         commList.append("PEL<1>>")
                         commList.append("TEM<"+tem+">>")
+
                 #matrix
+
                 if "matV" in self.varNames:
                     com = eval("self.matV"+str(k)+".get()")
 
                     if com == "OFF":
+
 #                        commList.append(self.usedClasses["matrix"].matrixOff())
+
                         commList.append("MAT<0>>")
 #                        commList=[self.usedClasses["matrix"].matrixOff()]
 
                     elif com == "Patt1":
 #                        commList.append(self.usedClasses["matrix"].matrixPattern1())
+
                         commList.append("MAT<1>>")
+
 
                     elif com == "Patt2":
 #                        commList.append(self.usedClasses["matrix"].matrixPattern2())
@@ -435,6 +449,8 @@ class Protocol:
 
 
 
+
+
                         blue = "RBL<"+eval("self.ringB"+str(k)+".get()")+">>"
                         red = "RRE<"+eval("self.ringR"+str(k)+".get()")+">>"
                         green ="RGR<"+ eval("self.ringG"+str(k)+".get()")+">>"
@@ -442,6 +458,7 @@ class Protocol:
 
                         #commList.append(self.usedClasses["ring"].rgv.set(int(green)))
                         #commList.append(self.usedClasses["ring"].greenUpdate())
+
 
                     else:
                         #commList.append(self.usedClasses["ring"].ringOff())
@@ -457,6 +474,7 @@ class Protocol:
                     commList.append(green)
 
 
+
                 #execute the time of the trial
                 if "timeV"  in self.varNames:
 
@@ -465,6 +483,7 @@ class Protocol:
                     #output = self.usedClasses["app"].waittime(time1=comT)
                     #print(output)
                     output = "TIM<"+str(comT)+">>"
+
 
                     commList.append(output)
 
@@ -482,6 +501,7 @@ class Protocol:
         #    #give extra 2 seconds at the end of the recording
         #    self.usedClasses["camera"].cam.wait_recording(2.0)
         #    self.usedClasses["camera"].cam.stop_recording()
+
 
 
         return  commList,camFlag, recTime#run_protocol

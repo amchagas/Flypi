@@ -336,6 +336,10 @@ class Camera:
         #    self.binVal = self.binVar.get()
         #    self.cam. = (self.binVal)
 
+        #if self.binVal != self.binVar.get():
+        #    self.binVal = self.binVar.get()
+        #    self.cam. = (self.binVal)
+
         if self.brightVal != self.brightVar.get():
             self.brightVal = self.brightVar.get()
             self.cam.brightness = (self.brightVal)
@@ -490,9 +494,11 @@ class Camera:
         print("done.")
         return
 
+
     def camRec(self,dur=None):
         if dur == None:
             dur = self.TLdur.get()
+
 
         videoPath = self.basePath + '/videos/'
         if not os.path.exists(videoPath):
@@ -510,7 +516,6 @@ class Camera:
             print ("due to camera limitations.")
             print("dropping to next possible resolution")
 
-            #pass
 
         print("recording for: " + str(dur) + " secs")
         self.cam.start_recording(output = videoPath +
@@ -525,6 +530,8 @@ class Camera:
         if self.resVal == "2592x1944":
             self.cam.resolution = (2592, 1944)
         return
+
+
 
     def camTL(self):
         dur = self.TLdur.get()
@@ -564,6 +571,8 @@ class Camera:
             #if not, create it:
             os.makedirs(photoPath)
             os.chown(photoPath, 1000, 1000)
+
+
 
         # Camera warm-up time
         time.sleep(1)

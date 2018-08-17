@@ -20,6 +20,7 @@ class Ring:
         self.redAdd = redAdd
         self.blueAdd = blueAdd
 
+
         self.ringallcalls = list()#ringallcalls
 
         ###########variables for ring sliders
@@ -32,11 +33,11 @@ class Ring:
         ringBlueVar = tk.IntVar()
         #self.rbv=ringBlueVar
 
+
         ###########variables for ring zap
         #zapGreenVar = tk.IntVar()
         #zapRedVar = tk.IntVar()
         #zapBlueVar = tk.IntVar()
-
 
         frame1 = tk.Frame(master=parent)
         frame1.grid(row=0, column=0)
@@ -128,8 +129,6 @@ class Ring:
 
 
 
-
-
     def ringButton(self, parent="none", side="top", fill="x",
                    buttText="button", color="black", func="none"):
 
@@ -165,13 +164,16 @@ class Ring:
         zapAdd = self.ringZapAdd
         green = self.ringGZap.get()
 
+
         if int(green) > 255:
             green = str(255)
+
 
         if int(green) < 0:
             green = str(0)
         green = int(green)
         output = zapAdd+"G<"+str(green)+">>"
+
 
         self.ringallcalls.append(output)
 
@@ -209,11 +211,13 @@ class Ring:
         value = self.ringGreen.get()
 
 
+
         dummie1.append(str(self.greenAdd) + "<" + str(value) + ">>")
 
         value = self.ringRed.get()
         dummie1.append(str(self.redAdd) + "<" + str(value) + ">>")
         value = self.ringBlue.get()
         dummie1.append(str(self.blueAdd) + "<" + str(value) + ">>")
+
 
         return dummie1

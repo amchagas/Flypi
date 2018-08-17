@@ -18,8 +18,8 @@ class LED:
         self.ledLabel.pack()
         #self.ser = ser
 
-        self.ledallcalls = list()#ringallcalls
 
+        self.ledallcalls = list()#ringallcalls
 
         self.ledOnButt = tk.Button(master=parent,
                                    text="ON", fg="green",
