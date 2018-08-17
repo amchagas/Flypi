@@ -197,7 +197,7 @@ void loop() {
 
 
 
-*/
+
 
   //RING
   if (term1=="RIN"){
