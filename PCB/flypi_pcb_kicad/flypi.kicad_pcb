@@ -68,7 +68,7 @@
       (usegerberextensions false)
       (excludeedgelayer true)
       (linewidth 0.100000)
-      (plotframeref true)
+      (plotframeref false)
       (viasonmask false)
       (mode 1)
       (useauxorigin false)
