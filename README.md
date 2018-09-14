@@ -1,15 +1,27 @@
-# Flypi
+# Flypi - An open source, modular, affordable tool for imaging experiments.
 
-#### This is the repository for the flypi project
+### Initially developed by [Trend in Africa](www.trendinafrica.org) and published in [Plos Biology](http://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.2002702).
+
+ Version 1.0 was released with the paper and can be found [here](https://github.com/amchagas/Flypi/tree/v1.0.0).
+
+#### The system can be used for optical microscopy, fluorescence, behavioural tracking, optogenetics, calcium imaging and thermogenetics.
+
+
+#### Further development is being done by [Prometheus Science](wwww.prometheus-science.com)
+
+#### Some samples imaged with the device:
+
+
+![Fluorescence ZebraFish GFP expressed in heart tissue](example_samples/PLOS_Paper/Zebrafish heartbeat GFP.gif)  |
+![GCamP_ZebraFish](example_samples/PLOS_Paper/GCamP_ZebraFish.jpg) |  test2
+--|---|--
+4  |  5 |  6
+10         |  11 |  12
 
 
 
 
-### Users interested in the release described in the Plos Biology Paper (http://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.2002702) should follow this link: https://github.com/amchagas/Flypi/tree/v1.0.0
-
-### further development is being done on the following fork: https://github.com/prometheus-science/Flypi/ They will be incorporated as releases here once they are stable.
-
-### We've created a Forum for users to posts questions and suggestions too! Please take a look at http://forum.prometheus-science.com/home/categories/flypi-user-forum
+### We've created a Forum for users to posts questions and suggestions too! Please take a look [here](http://forum.prometheus-science.com/home/categories/flypi-user-forum)
 
 ## Custom PCB
 
