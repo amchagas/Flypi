@@ -435,7 +435,7 @@ class flypiApp:
                             fh = self.create_file(filePath = self.basePath+"log_temp/",
                             fileName = "temp_log_"+time.strftime('%Y-%m-%d')+".txt")
                             fh.write(time.strftime('%Y-%m-%d-%H-%M-%S') + (','))
-                            fh.write(temp[0])
+                            fh.write(temp[0][2:7]+(',\r\n'))
 
 
 
