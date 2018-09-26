@@ -12,7 +12,7 @@
 #### Some samples imaged with the device:
 
 
-![Fluorescence ZebraFish GFP expressed in heart tissue](example_samples/PLOS_Paper/Zebrafish heartbeat GFP.gif)  |
+![Fluorescence ZebraFish GFP expressed in heart tissue](example_samples/PLOS_Paper/Zebrafish_heartbeat_GFP.gif)|
 ![GCamP_ZebraFish](example_samples/PLOS_Paper/GCamP_ZebraFish.jpg) |  test2
 --|---|--
 4  |  5 |  6
