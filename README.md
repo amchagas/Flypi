@@ -1,21 +1,34 @@
-# Flypi
-
-#### This is the repository for the flypi project
+#### Flypi - An open source, modular, affordable tool for imaging experiments.
 
 
+Hi! Thanks for dropping by. This project started during one of the summer courses organized by [Trend in Africa](www.trendinafrica.org). It developed to the current state due to the efforts of many people along the way. In special Tom Baden, Lucia Prieto, and Edwin Cruz. A paper describing the system was published in [Plos Biology](http://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.2002702).
+
+ Version 1.0 was released with the paper and can be found [here](https://github.com/amchagas/Flypi/tree/v1.0.0).
+
+The system can be used for optical microscopy, fluorescence, behavioural tracking, optogenetics, calcium imaging and thermogenetics (see examples recorded with the system below).
 
 
-### Users interested in the release described in the Plos Biology Paper (http://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.2002702) should follow this link: https://github.com/amchagas/Flypi/tree/v1.0.0
+##### Further development is being done by [Prometheus Science](wwww.prometheus-science.com)
 
-### further development is being done on the following fork: https://github.com/prometheus-science/Flypi/ They will be incorporated as releases here once they are stable.
+#### Some samples imaged with the device:
 
-### We've created a Forum for users to posts questions and suggestions too! Please take a look at http://forum.prometheus-science.com/home/categories/flypi-user-forum
 
-## Custom PCB
+![Fluorescence ZebraFish GFP expressed in heart tissue](example_samples/PLOS_Paper/Zebrafish_heartbeat_GFP.gif)|
+![GCamP_ZebraFish](example_samples/PLOS_Paper/Zebrafish_ubiquious_ChRII.gif)|![Zebra Fish Transmission](example_samples/PLOS_Paper/zebrafish_larva_transmission.gif)
+--|---|--
+![C.Elegans behaviour](example_samples/PLOS_Paper/C_elegans_behaviour.gif)|![Drosophila Crimson](example_samples/PLOS_Paper/Drosophila_adult_Crimson_PER.gif) | ![Drosophila walking about](example_samples/PLOS_Paper/drosophila_walking_about.gif)
+
+
+
+
+
+### We've created a Forum for users to posts questions and suggestions too! Please take a look [here](http://forum.prometheus-science.com/home/categories/flypi-user-forum)
+
+### Custom PCB
 
 You can order the PCBs and buy the parts to assemble them through the [Kitspace page](https://kitspace.org/boards/github.com/prometheus-science/FlyPi).
 
-## Necessary Libraries:
+#### Necessary Libraries:
 
 LED Ring from Adafruit:
 https://github.com/adafruit/Adafruit_NeoPixel

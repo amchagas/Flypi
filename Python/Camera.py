@@ -93,7 +93,7 @@ class Camera:
                             buttText="OFF", color="red", func=self.camOff)
         self.camConvbutt = self.camButton(parent=self.camFrame1,
                             rowIndx=1, colIndx=2, fill="x",
-                            buttText="to AVI", color="blue", func=self.camConv)
+                            buttText="to AVI", color="blue", func=self.camConv2)
 
         self.camResLabel = tk.Label(master=self.camFrame1,
                                     text=" Resolution ")
@@ -489,12 +489,44 @@ class Camera:
             print ("file is already converted! Skipping...")
             print("done.")
             return
+        
         command = ['avconv', '-i', fileName,"-b",str(self.bitRate) ,"-c:v","copy", outname]
+        #command = ['ffmpeg', '-i', fileName,"-b",str(self.bitRate) ,"-pix_fmt","nv12","-f:v","-vcodec rawvideo", outname]
         subprocess.call(command,shell=False)
         print("done.")
         return
 
+    def camConv2(self):
+        #tk().withdraw()
+        opts = dict()
+        opts["filetypes"] = [('h264 files','.h264'),('all files','.*')]
+        opts["initialdir"] = [self.basePath]
 
+        fileName = askopenfilename(**opts)
+        if fileName == '':
+            print ('no files selected')
+            return
+        fps = self.FPSVar.get()
+        fps = "-r" + str(fps)
+#        fps = int(fps)
+        print (fileName)
+        print ("converting video to avi")
+        outname = os.path.splitext(fileName)[0]+".avi"
+        lastInd=fileName.rindex("/")
+        files = os.listdir(fileName[0:lastInd])
+        outCore = outname.rindex("/")
+        print ("out:" + outname[outCore:])
+        if outname[outCore+1:] in files:
+            print ("file is already converted! Skipping...")
+            print("done.")
+            return
+        
+        command = ['MP4Box', '-add', fileName, outname]
+        #command = ['ffmpeg', '-i', fileName,"-b",str(self.bitRate) ,"-pix_fmt","nv12","-f:v","-vcodec rawvideo", outname]
+        subprocess.call(command,shell=False)
+        print("done.")
+        return
+    
     def camRec(self,dur=None):
         if dur == None:
             dur = self.TLdur.get()
