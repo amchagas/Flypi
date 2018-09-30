@@ -33,6 +33,13 @@ class flypiApp:
     protocolFlag = 1
     quitFlag = 1
 
+    if (ringFlag == 0 and led1Flag == 0 and led2Flag == 0 and led2Flag == 0 and matrixFlag == 0 and peltierFlag == 0 and autofocusFlag ==0 ):
+        print("no need for arduino")
+        loadSerial = 0
+    else:
+        print("load arduino")
+        loadSerial = 1
+
     #############adresses for all arduino components:
     #timing address
     timeAdd = "TIM"
@@ -104,12 +111,12 @@ class flypiApp:
 
         #####callback for menus
         #self.test_rec()
-
-        if serialAvail == True:
-            # for Arduino Uno from RPi
-            #self.ser = serial.Serial('/dev/ttyACM0', 115200)
-            # for Arduino Nano from RPi
-            self.ser = serial.Serial('/dev/ttyUSB0', 115200)
+        if loadSerial == 1:
+            if serialAvail == True:
+                # for Arduino Uno from RPi
+                #self.ser = serial.Serial('/dev/ttyACM0', 115200)
+                # for Arduino Nano from RPi
+                self.ser = serial.Serial('/dev/ttyUSB0', 115200)
 #            ser = serial.Serial('/dev/ttyUSB0', 4800,timeout=0.05)
         ##show the pieces of the GUI
         ##depending on which flags are on (see above):
@@ -337,6 +344,8 @@ class flypiApp:
         output = list()
         flag=True
         while flag== True:
+            #if loadSerial == 1:
+
             #if there is something to read on the serial port
             test=self.ser.in_waiting
 
