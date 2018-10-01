@@ -208,7 +208,7 @@ void loop() {
     if (term2.toInt() == 0) { //ring off
       incomingData = 0;
       ringOn = 0;
-      updateRing(0, 0, 0, 0);
+      updateRing(0, 0, 0);
       pixels.show();}
   Serial.println("<wtd>>");}//end if "RIN"
 
@@ -261,7 +261,7 @@ void loop() {
   if (term1=="RZAT") {
 
     if (ringOn == 1) {
-      updateRing(zapRed, zapGreen, zapBlue, zapWhite);
+      updateRing(zapRed, zapGreen, zapBlue);
       pixels.show();
       waiting(term2.toInt());
       updateRing(ringRedHue, ringGreenHue, ringBlueHue);
@@ -372,9 +372,9 @@ float HoldTemp(float finalTemp, int tempSensorPin,
 
 }
 
-void updateRing(int hue1, int hue2, int hue3, int hue4) {
+void updateRing(int hue1, int hue2, int hue3) {
   for (int i = 0; i < ring_nPixels; i++) {
-    pixels.setPixelColor(i, pixels.Color(hue1, hue2, hue3, hue4));
+    pixels.setPixelColor(i, pixels.Color(hue1, hue2, hue3));
   }
 }
 
