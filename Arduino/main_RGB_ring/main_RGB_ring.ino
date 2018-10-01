@@ -70,7 +70,7 @@ float lowLimit = 13.0; //in Celsius
 
 //create function to control LED ring
 
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel(ring_nPixels, RingPin, NEO_GRBW + NEO_KHZ800);
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(ring_nPixels, RingPin, NEO_GRB + NEO_KHZ800);
 
 
 
