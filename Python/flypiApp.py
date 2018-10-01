@@ -21,12 +21,12 @@ class flypiApp:
     #use these flags to make whole pieces of the GUI disappear
 
     cameraFlag = 1
-    ringFlag = 1
-    led1Flag = 1
+    ringFlag = 0
+    led1Flag = 0
     led2Flag = 0
     matrixFlag = 0
 
-    peltierFlag = 1
+    peltierFlag = 0
     autofocusFlag = 0
 
     mockupFlag = 0
@@ -83,7 +83,7 @@ class flypiApp:
 
     allCalls = list()
     #row4Frame = tk.Frame()
-    def __init__(self, master, ser=""):
+    def __init__(self, master, ser="",loadSerial=loadSerial):
 
 
         #create base path for storing files, temperature curves, etc:
@@ -111,7 +111,7 @@ class flypiApp:
 
         #####callback for menus
         #self.test_rec()
-        if loadSerial == 1:
+        if self.loadSerial == 1:
             if serialAvail == True:
                 # for Arduino Uno from RPi
                 #self.ser = serial.Serial('/dev/ttyACM0', 115200)
@@ -151,7 +151,8 @@ class flypiApp:
                           #protFrame=self.frameProt,
                           )
             led1Off = self.led1OffAdd
-            self.ser.write(led1Off.encode('utf-8'))
+            if self.loadSerial == 1:
+                self.ser.write(led1Off.encode('utf-8'))
 
 #            usedClasses["led1"] = self.LED1
             usedClasses["led1"] = 1
@@ -170,7 +171,8 @@ class flypiApp:
                           #prot=self.prot, protFrame=self.frameProt,
                           )
             led2Off = self.led2OffAdd
-            self.ser.write(led2Off.encode('utf-8'))
+            if self.loadSerial == 1:
+                self.ser.write(led2Off.encode('utf-8'))
 #            usedClasses["led2"] = self.LED2
             usedClasses["led2"] = 1
         else:
@@ -190,7 +192,8 @@ class flypiApp:
                                #ser=self.ser
                                )
             matOff = self.matOffAdd
-            self.ser.write(matOff.encode('utf-8'))
+            if self.loadSerial == 1:
+                self.ser.write(matOff.encode('utf-8'))
             usedClasses["matrix"] = 1
 
         else:
@@ -217,7 +220,8 @@ class flypiApp:
                              )
 
             ringOff=self.ringOffAdd
-            self.ser.write(ringOff.encode('utf-8'))
+            if self.loadSerial == 1:
+                self.ser.write(ringOff.encode('utf-8'))
 
             usedClasses["ring"] = self.Ring
         else:
@@ -238,7 +242,8 @@ class flypiApp:
                                            #ser=self.ser
                                            )
             peltOff = self.peltOffAdd
-            self.ser.write(peltOff.encode('utf-8'))
+            if self.loadSerial == 1:
+                self.ser.write(peltOff.encode('utf-8'))
             usedClasses["peltier"] = 1#self.Peltier
 
         else:
@@ -256,7 +261,8 @@ class flypiApp:
                                            ser=self.ser)
 
             autoFocusOffAdd = self.autoFocusOffAdd
-            self.ser.write(autoFocusOffAdd.encode('utf-8'))
+            if self.loadSerial == 1:
+                self.ser.write(autoFocusOffAdd.encode('utf-8'))
 
         else:
 
@@ -286,9 +292,8 @@ class flypiApp:
             self.frameMock.pack(side="left")
             self.Mockup= Mock_up.Mock_up(parent=self.frameMock,
                                            label="mock_up",
-
-
-                                           ser=self.ser)
+                                         ser=self.ser
+                                         )
 
         ####
         ###QUIT###
@@ -318,7 +323,8 @@ class flypiApp:
 
                 #self.ser.flush()
                 #self.ser.readline()
-                self.ser.close()
+                if self.loadSerial == 1:
+                    self.ser.close()
             #print(self.Matrix.ser.isOpen())
             self.quit.quit()
         self.qLabel=tk.Label(master=parent,text="exit program")
@@ -333,7 +339,8 @@ class flypiApp:
     def waittime(self,time1=100):
         output = str(self.timeAdd)+"<"+str(time1)+">>"
         print("wait time " + str(time1))
-        self.ser.write(output.encode("utf-8"))
+        if self.loadSerial == 1:
+            self.ser.write(output.encode("utf-8"))
         self.lockwait()
         #self.allcalls.append(output.encode("utf-8"))
 
@@ -344,26 +351,28 @@ class flypiApp:
         output = list()
         flag=True
         while flag== True:
-            #if loadSerial == 1:
-
             #if there is something to read on the serial port
-            test=self.ser.in_waiting
+            if self.loadSerial == 1:
+                test=self.ser.in_waiting
+            
+
+                if test>0:
+                    #read line
+                    dummie=self.ser.readline()
+                    dummie = str(dummie)#.decode("utf-8")
+
+                    #if the line is "waited" get out of the waiting while loop
+
+                    if waitString in str(dummie):
+                        flag = False
+                    else:
+                        output.append(dummie)
 
 
-            if test>0:
-                #read line
-                dummie=self.ser.readline()
-                dummie = str(dummie)#.decode("utf-8")
+                return output
+            else:
+                return
 
-                #if the line is "waited" get out of the waiting while loop
-
-                if waitString in str(dummie):
-                    flag = False
-                else:
-                    output.append(dummie)
-
-
-        return output
 
 
     def test_rec(self):
@@ -479,3 +488,4 @@ class flypiApp:
 
 
         return fh
+
