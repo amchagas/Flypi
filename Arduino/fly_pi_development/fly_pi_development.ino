@@ -193,12 +193,6 @@ void loop() {
 
 
 
-
-
-
-
-*/
-
   //RING
   if (term1=="RIN"){
     if (term2.toInt() == 1) { //ring on
