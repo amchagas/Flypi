@@ -16,7 +16,7 @@ The system can be used for optical microscopy, fluorescence, behavioural trackin
 ![Fluorescence ZebraFish GFP expressed in heart tissue](example_samples/PLOS_Paper/Zebrafish_heartbeat_GFP.gif)|
 ![GCamP_ZebraFish](example_samples/PLOS_Paper/Zebrafish_ubiquious_ChRII.gif)|![Zebra Fish Transmission](example_samples/PLOS_Paper/zebrafish_larva_transmission.gif)
 --|---|--
-![C.Elegans behaviour](example_samples/PLOS_Paper/C_elegans_behaviour.gif)|![Drosophila Crimson](example_samples/PLOS_Paper/Drosophila_adult_Crimson_PER.gif) | ![Drosophila walking about](example_samples/PLOS_Paper/drosophila_walking_about.gif)
+![C.Elegans behaviour](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/C_elegans_behaviour.gif)|![Drosophila Crimson](example_samples/PLOS_Paper/Drosophila_adult_Crimson_PER.gif) | ![Drosophila walking about](example_samples/PLOS_Paper/drosophila_walking_about.gif)
 
 
 
