@@ -41,18 +41,9 @@ gpac library:
 sudo apt-get update
 sudo apt-get install gpac
 
-libav library:
-sudo apt-get update
-sudo apt-get install libav-tools
-
-
-update pyserial library:
-sudo pip3 install --upgrade serial
-
 
 ## *.h264 conversion to *.avi:
-
-is done via avconv (which is installed with libav-tools).
+Done via gpac. MP4BOX.
 
 
 ## SD Card image containing Raspian image with all things installed:
