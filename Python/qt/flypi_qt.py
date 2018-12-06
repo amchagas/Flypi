@@ -244,12 +244,34 @@ class WidgetGallery(QDialog):
 
         self.topLeftGroupBox.setLayout(layout)
 
-        def btnstate(self):
+        def onUpdate(self):
             if onButton.isChecked():
                 print("ON")
             else:
                 print("OFF")
-        onButton.clicked.connect(btnstate)
+
+        onButton.clicked.connect(onUpdate)
+
+        def resUpdate(self):
+            print("here")
+            print(resolutionMenu.currentText())
+
+        def wbUpdate(self):
+            print("here")
+            print(wbMenu.currentText())
+
+        def modeUpdate(self):
+            print("here")
+            print(modeMenu.currentText())
+
+        def colourUpdate(self):
+            print("here")
+            print(colourMenu.currentText())
+
+        modeMenu.activated.connect(modeUpdate)
+        wbMenu.activated.connect(wbUpdate)
+        colourMenu.activated.connect(colourUpdate)
+        resolutionMenu.activated.connect(resUpdate)
     # def createTopRightGroupBox(self):
     #     self.topRightGroupBox = QGroupBox("Group 2")
     #
@@ -346,7 +368,7 @@ class WidgetGallery(QDialog):
 
     #callback functions
 
-    
+
 if __name__ == '__main__':
 
     import sys
