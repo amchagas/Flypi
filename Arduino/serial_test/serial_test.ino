@@ -58,43 +58,45 @@ SerialCommand sCmd;     // The demo SerialCommand object
 void setup() {
   pinMode(LED1Pin, OUTPUT);
   pinMode(LED2Pin, OUTPUT);
-  
+
   pinMode(RedGBPin, OUTPUT);
   pinMode(RGreenBPin, OUTPUT);
   pinMode(RGBluePin, OUTPUT);
-  
+
   pinMode(servoOnPin, OUTPUT);
-  
+
   pinMode(peltierEnablePin, OUTPUT);
   pinMode(peltierHeatPin1, OUTPUT);
   pinMode(peltierCoolPin1, OUTPUT);
-  
+
   focusServo.attach(servoPin);
   // start ring
   pixels.begin();
 
-  
-  
+
+
 
   Serial.begin(115200);
 
   // Setup callbacks for SerialCommand commands
   sCmd.addCommand("L11",    LED1_on);          // Turns LED1 on
+  //sCmd.addCommand("L12",    LED1_PWM);         // Set intensity LED1
   sCmd.addCommand("L10",    LED1_off);         // Turns LED1 off
   sCmd.addCommand("L21",    LED2_on);          // Turns LED2 on
+  //sCmd.addCommand("L22",    LED2_PWM);         // Set intensity LED2
   sCmd.addCommand("L20",    LED2_off);         // Turns LED2 off
   sCmd.addCommand("R1",     RING_on);          // Turns RING on
   sCmd.addCommand("R0",     RING_off);         // Turns RING off
   sCmd.addCommand("RR",     RED);              // change RED intensity
-  //sCmd.addCommand("RG",     GREEN);            // change GREEN intensity
-  //sCmd.addCommand("RB",     BLUE);             // change BLUE intensity
-  //sCmd.addCommand("P1",     PELT_on);          // Turns PELTIER on
-  //sCmd.addCommand("P0",     PELT_off);         // Turns PELTIER off
-  //sCmd.addCommand("PT",     PELT_stemp);       // Change PELTIER temperature
-  //sCmd.addCommand("TR",     TEMP_read);        // reads temperature sensor
+  sCmd.addCommand("RG",     GREEN);            // change GREEN intensity
+  sCmd.addCommand("RB",     BLUE);             // change BLUE intensity
+  sCmd.addCommand("P1",     PELT_on);          // Turns PELTIER on
+  sCmd.addCommand("P0",     PELT_off);         // Turns PELTIER off
+  sCmd.addCommand("PT",     PELT_stemp);       // Change PELTIER temperature
+  sCmd.addCommand("TR",     TEMP_read);        // reads temperature sensor
   sCmd.addCommand("TW",     TIME_wait);        // sets time to wait
-  
-  
+
+
   sCmd.addCommand("HELLO", sayHello);        // Echos the string argument back
   sCmd.addCommand("P",     processCommand);  // Converts two arguments to integers and echos them back
   sCmd.setDefaultHandler(unrecognized);      // Handler for command that isn't matched  (says "What?")
@@ -150,10 +152,50 @@ void RED(){
   if (arg != NULL) {
      aNumber = atoi(arg);
      updateRing(aNumber, ringGreenHue, ringBlueHue);
-  
+
   }//if
 
 }//red
+
+void GREEN(){
+  int aNumber;
+  char *arg;
+  arg = sCmd.next();
+  if (arg != NULL) {
+     aNumber = atoi(arg);
+     updateRing(ringRedHue, aNumber, ringBlueHue);
+
+  }//if
+
+}//red
+
+void BLUE(){
+  int aNumber;
+  char *arg;
+  arg = sCmd.next();
+  if (arg != NULL) {
+     aNumber = atoi(arg);
+     updateRing(ringRedHue, ringGreenHue, aNumber);
+
+  }//if
+
+}//red
+
+void PELT_on(){
+  Serial.println("pelton")
+}
+void PELT_off(){
+  Serial.println("peltoff")
+}
+
+void PELT_stemp(){
+  Serial.println("set temp")
+}
+
+void TEMP_read(){
+  Serial.println("read temp")
+}
+
 
 void TIME_wait(){
   int aNumber;
@@ -162,10 +204,10 @@ void TIME_wait(){
   char *arg;
   long int time1=0;
   long int time2=0;
- 
+
   time1 = millis();
   time2 = time1;
-  
+
   arg = sCmd.next();
   if (arg != NULL) {
     aNumber = atoi(arg);
@@ -174,13 +216,13 @@ void TIME_wait(){
     time1 = millis();
      } //done waiting
     Serial.println("done");
-    
+
   }//if
-  
+
   }//time_wait
 
 void sayHello() {
-  
+
   char *arg;
   arg = sCmd.next();    // Get the next argument from the SerialCommand object buffer
   if (arg != NULL) {    // As long as it existed, take it
