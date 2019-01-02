@@ -172,47 +172,68 @@ class WidgetGallery(QDialog):
         def L1onUpdate(self):
             if L1onButton.isChecked():
                 if loadSerial == 1:
-                    ser.println("L11")
+                    output="L11"
+                    ser.write(output.encode("utf-8"))
+
                 print("ON")
             else:
                 if loadSerial == 1:
-                    ser.println("L10")
+                    output="L10"
+                    ser.write(output.encode("utf-8"))
                 print("OFF")
 
         def L2onUpdate(self):
             if L2onButton.isChecked():
                 if loadSerial == 1:
-                    ser.println("L21")
+                    output="L21"
+                    ser.write(output.encode("utf-8"))
+
                 print("ON")
             else:
                 if loadSerial == 1:
-                    ser.println("L20")
+                    output="L20"
+                    ser.write(output.encode("utf-8"))
+
                 print("OFF")
 
         def L1SliUpdate(self):
             print(L1Slider.value())
             if loadSerial == 1:
-                ser.println("L12")
-                ser.println(L1Slider.value())
+
+
+                output="L12"
+                ser.write(output.encode("utf-8"))
+
+                output=L1Slider.value()
+                ser.write(output.encode("utf-8"))
 
         def L2SliUpdate(self):
             print(L2Slider.value())
             if loadSerial == 1:
-                ser.println("L22")
-                ser.println(L2Slider.value())
+                output="L22"
+                ser.write(output.encode("utf-8"))
+                output=L2Slider.value()
+                output=str(output)
+                ser.write(output.encode("utf-8"))
 
         def zap1Update(self):
             if zap1Button.isChecked():
+                #print("this")
+                print(L1ZapSlider.value())
                 if L1onButton.isChecked():
                     if loadSerial == 1:
 
                         ser.println("zap1test")
 
         def zap2Update(self):
-            if zap2Button.isChecked():
-                if L2onButton.isChecked():
-                    if loadSerial == 1:
-                        ser.println("zap2test")
+            #print(L2ZapSlider.value())
+            if L2onButton.isChecked():
+                if loadSerial == 1:
+                    ser.println("zap2test")
+                    #print(L2ZapSlider.value())
+                    #ser.println()
+                    ser.println(L2ZapSlider.value())
+
 
         L1onButton.clicked.connect(L1onUpdate)
         L1Slider.valueChanged.connect(L1SliUpdate)
