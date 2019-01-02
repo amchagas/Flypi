@@ -222,6 +222,13 @@ class WidgetGallery(QDialog):
                 print(L1ZapSlider.value())
                 if L1onButton.isChecked():
                     if loadSerial == 1:
+                        output = "L22"
+                        ser.write(output.encode("utf-8"))
+                        output = L1ZapSlider.value()
+                        ser.write(output.encode("utf-8"))
+                        output = "TW"
+                        ser.write(output.encode("utf-8"))
+                        
 
                         ser.println("zap1test")
 
