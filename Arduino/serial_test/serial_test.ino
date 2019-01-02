@@ -79,12 +79,10 @@ void setup() {
   Serial.begin(115200);
 
   // Setup callbacks for SerialCommand commands
-  sCmd.addCommand("L11",    LED1_on);          // Turns LED1 on
-<<<<<<< Updated upstream
+  sCmd.addCommand("L11",    LED1_on);          // Turns LED1 on and sets intensity
+
   //sCmd.addCommand("L12",    LED1_PWM);         // Set intensity LED1
-=======
-  sCmd.addCommand("L12",    LED1_PWM);         // Set intensity LED1
->>>>>>> Stashed changes
+
   sCmd.addCommand("L10",    LED1_off);         // Turns LED1 off
   sCmd.addCommand("L21",    LED2_on);          // Turns LED2 on
   //sCmd.addCommand("L22",    LED2_PWM);         // Set intensity LED2
@@ -119,13 +117,20 @@ void updateRing(int hue1, int hue2, int hue3) {
 
 
 void LED1_on() {
-  Serial.println("LED1 on");
-  digitalWrite(LED1Pin, HIGH);
-}
+  int aNumber;
+  char *arg;
+  arg = sCmd.next();
+  if (arg != NULL) {
+     aNumber = atoi(arg);
+     analogWrite(LED1Pin, 10);
+
+  }//if
+  
+}//led1_on
 
 void LED1_off() {
-  Serial.println("LED1 off");
-  digitalWrite(LED1Pin, LOW);
+  //Serial.println("LED1 off");
+  analogWrite(LED1Pin, 0);
 }
 
 void LED2_on() {
@@ -186,18 +191,18 @@ void BLUE(){
 }//red
 
 void PELT_on(){
-  Serial.println("pelton")
+  Serial.println("pelton");
 }
 void PELT_off(){
-  Serial.println("peltoff")
+  Serial.println("peltoff");
 }
 
 void PELT_stemp(){
-  Serial.println("set temp")
+  Serial.println("set temp");
 }
 
 void TEMP_read(){
-  Serial.println("read temp")
+  Serial.println("read temp");
 }
 
 
