@@ -48,16 +48,20 @@ class WidgetGallery(QDialog):
         self.createCamera()
         self.createRing()
         self.createLEDs()
+        self.createPeltier()
+        self.createProtocol()
         #self.createTopRightGroupBox()
         #self.createBottomLeftTabWidget()
         #self.createBottomRightGroupBox()
         #self.createProgressBar()
 
         #styleComboBox.activated[str].connect(self.changeStyle)
-
+        #self.Peltier = QGroupBox("Peltier")
+        #self.Leds = QGroupBox("LEDs")
+        
         #self.useStylePaletteCheckBox.toggled.connect(self.changePalette)
-        disableWidgetsCheckBox.toggled.connect(self.topLeftGroupBox.setDisabled)
-        #disableWidgetsCheckBox.toggled.connect(self.midLeftGroupBox.setDisabled)
+        disableWidgetsCheckBox.toggled.connect(self.Camera.setDisabled)
+        disableWidgetsCheckBox.toggled.connect(self.Peltier.setDisabled)
         #disableWidgetsCheckBox.toggled.connect(self.bottomLeftTabWidget.setDisabled)
         #disableWidgetsCheckBox.toggled.connect(self.bottomRightGroupBox.setDisabled)
 
@@ -70,9 +74,11 @@ class WidgetGallery(QDialog):
 
         mainLayout = QGridLayout()
         mainLayout.addLayout(topLayout, 0, 0, 1, 2)
-        mainLayout.addWidget(self.topLeftGroupBox, 1, 0)
-        mainLayout.addWidget(self.topRightGroupBox, 2, 0)
-        mainLayout.addWidget(self.bottomLeftGroupBox, 3, 0)
+        mainLayout.addWidget(self.Camera, 1, 0)
+        mainLayout.addWidget(self.Ring, 1, 1)
+        mainLayout.addWidget(self.Leds, 3, 0)
+        mainLayout.addWidget(self.Peltier, 4, 0)
+        mainLayout.addWidget(self.Protocol,3, 1)
         #mainLayout.addWidget(self.bottomRightGroupBox, 2, 1)
         #mainLayout.addWidget(self.progressBar, 3, 0, 1, 2)
         mainLayout.setRowStretch(1, 1)
@@ -98,9 +104,53 @@ class WidgetGallery(QDialog):
     #    curVal = self.progressBar.value()
     #    maxVal = self.progressBar.maximum()
     #    self.progressBar.setValue(curVal + (maxVal - curVal) / 100)
+    def createProtocol(self):
+        self.Protocol = QGroupBox("Protocol")
+        return
+    
+    def createPeltier(self):
+        #self.bottomRightGroupBox = QGroupBox("Peltier")
+        self.Peltier = QGroupBox("Peltier")
+        PeltieronButton = QPushButton("Peltier ON")
+        PeltieronButton.setCheckable(True)
+        PeltieronButton.setChecked(False)
+        
+        setTempLabel  = QLabel("Desired temperature:")
+        setTempBox = QLineEdit(self)
+        
+        getTempLabel  = QLabel("current temperature:")
+        tempLabel  = QLabel("35 " + "C")
+        
+        logTempCheckBox = QCheckBox("&log temperature:")
+        
+        layout = QGridLayout()
+        layout.addWidget(PeltieronButton , 0, 0)
+        layout.addWidget(setTempLabel,0,1)
+        layout.addWidget(setTempBox,1,1)
+        layout.addWidget(getTempLabel,0,2)
+        layout.addWidget(tempLabel,1,2)
+        
+        layout.addWidget(logTempCheckBox,1,3 )
+        
+        self.Peltier.setLayout(layout)
+        
+        def peltOnUpdate(self):
+            if PeltieronButton.isChecked():
+                if loadSerial == 1:
+                    output="P1"
+                    ser.write(output.encode("utf-8"))
 
+                print("ON")
+            else:
+                if loadSerial == 1:
+                    output="P0"
+                    ser.write(output.encode("utf-8"))
+                print("OFF")
+
+        PeltieronButton.clicked.connect(peltOnUpdate)
+        
     def createLEDs(self):
-        self.bottomLeftGroupBox = QGroupBox("LEDs")
+        self.Leds = QGroupBox("LEDs")
 
         L1onButton = QPushButton("LED1 ON")
         L1onButton.setCheckable(True)
@@ -111,7 +161,7 @@ class WidgetGallery(QDialog):
         zap1Button.setChecked(False)
 
         L1Label = QLabel("Brightness:")
-        L1Slider = QSlider(Qt.Horizontal,self.bottomLeftGroupBox)
+        L1Slider = QSlider(Qt.Horizontal,self.Leds)
         L1Slider.setMinimum(0)
         L1Slider.setMaximum(100)
         L1Slider.setValue(10)
@@ -119,7 +169,7 @@ class WidgetGallery(QDialog):
         L1Slider.setTickInterval(1)
 
         L1ZapLabel = QLabel("L1 Zap Brightness:")
-        L1ZapSlider = QSlider(Qt.Horizontal,self.bottomLeftGroupBox)
+        L1ZapSlider = QSlider(Qt.Horizontal,self.Leds)
         L1ZapSlider.setMinimum(0)
         L1ZapSlider.setMaximum(100)
         L1ZapSlider.setValue(10)
@@ -135,7 +185,7 @@ class WidgetGallery(QDialog):
         zap2Button.setChecked(False)
 
         L2Label = QLabel("Brightness:")
-        L2Slider = QSlider(Qt.Horizontal,self.bottomLeftGroupBox)
+        L2Slider = QSlider(Qt.Horizontal,self.Leds)
         L2Slider.setMinimum(0)
         L2Slider.setMaximum(100)
         L2Slider.setValue(10)
@@ -143,7 +193,7 @@ class WidgetGallery(QDialog):
         L2Slider.setTickInterval(1)
 
         L2ZapLabel = QLabel("L2 Zap Brightness:")
-        L2ZapSlider = QSlider(Qt.Horizontal,self.bottomLeftGroupBox)
+        L2ZapSlider = QSlider(Qt.Horizontal,self.Leds)
         L2ZapSlider.setMinimum(0)
         L2ZapSlider.setMaximum(100)
         L2ZapSlider.setValue(10)
@@ -166,14 +216,14 @@ class WidgetGallery(QDialog):
         layout.addWidget(L2ZapLabel, 5, 1)
         layout.addWidget(L2ZapSlider, 6, 1)
         #layout.addWidget(zapButton, 1, 1)
-        self.bottomLeftGroupBox.setLayout(layout)
+        self.Leds.setLayout(layout)
 
 
         def L1onUpdate(self):
-            if L1onButton.isChecked():
-                if loadSerial == 1:
-                    output="L11"
-                    ser.write(output.encode("utf-8"))
+            #if L1onButton.isChecked():
+            if loadSerial == 1:
+                output="L11"
+                ser.write(output.encode("utf-8"))
 
                 print("ON")
             else:
@@ -201,19 +251,18 @@ class WidgetGallery(QDialog):
             if loadSerial == 1:
 
 
-                output="L12"
+                output="L10"
                 ser.write(output.encode("utf-8"))
 
-                output=L1Slider.value()
+                output=str(L1Slider.value())
                 ser.write(output.encode("utf-8"))
 
         def L2SliUpdate(self):
             print(L2Slider.value())
             if loadSerial == 1:
-                output="L22"
+                output="L20"
                 ser.write(output.encode("utf-8"))
-                output=L2Slider.value()
-                output=str(output)
+                output=str(L2Slider.value())
                 ser.write(output.encode("utf-8"))
 
         def zap1Update(self):
@@ -222,24 +271,38 @@ class WidgetGallery(QDialog):
                 print(L1ZapSlider.value())
                 if L1onButton.isChecked():
                     if loadSerial == 1:
-                        output = "L22"
+                        output = "L11"
                         ser.write(output.encode("utf-8"))
                         output = L1ZapSlider.value()
                         ser.write(output.encode("utf-8"))
                         output = "TW"
                         ser.write(output.encode("utf-8"))
-                        
+                        output = "L11"
+                        ser.write(output.encode("utf-8"))
+                        output = L1Slider.value()
+                        ser.write(output.encode("utf-8"))
 
-                        ser.println("zap1test")
+                        #ser.println("zap1test")
 
         def zap2Update(self):
             #print(L2ZapSlider.value())
             if L2onButton.isChecked():
                 if loadSerial == 1:
-                    ser.println("zap2test")
+                    output = "L21"
+                    ser.write(output.encode("utf-8"))
+                    output = L2ZapSlider.value()
+                    ser.write(output.encode("utf-8"))
+                    output = "TW"
+                    ser.write(output.encode("utf-8"))
+                    output = "L21"
+                    ser.write(output.encode("utf-8"))
+                    output = L2Slider.value()
+                    ser.write(output.encode("utf-8"))
+                    #ser.println("zap2test")
+                    
                     #print(L2ZapSlider.value())
                     #ser.println()
-                    ser.println(L2ZapSlider.value())
+                    #ser.println(L2ZapSlider.value())
 
 
         L1onButton.clicked.connect(L1onUpdate)
@@ -257,7 +320,7 @@ class WidgetGallery(QDialog):
         return
 
     def createRing(self):
-        self.topRightGroupBox = QGroupBox("Ring")
+        self.Ring = QGroupBox("Ring")
 
         onButton = QPushButton("Ring ON")
         onButton.setCheckable(True)
@@ -268,7 +331,7 @@ class WidgetGallery(QDialog):
         zapButton.setChecked(False)
 
         redLabel = QLabel("RED:")
-        redSlider = QSlider(Qt.Horizontal,self.topRightGroupBox)
+        redSlider = QSlider(Qt.Horizontal,self.Ring)
         redSlider.setMinimum(0)
         redSlider.setMaximum(100)
         redSlider.setValue(10)
@@ -277,7 +340,7 @@ class WidgetGallery(QDialog):
 
 
         greenLabel = QLabel("GREEN:")
-        greenSlider = QSlider(Qt.Horizontal,self.topRightGroupBox)
+        greenSlider = QSlider(Qt.Horizontal,self.Ring)
         greenSlider.setMinimum(0)
         greenSlider.setMaximum(100)
         greenSlider.setValue(10)
@@ -286,7 +349,7 @@ class WidgetGallery(QDialog):
 
 
         blueLabel = QLabel("BLUE:")
-        blueSlider = QSlider(Qt.Horizontal,self.topRightGroupBox)
+        blueSlider = QSlider(Qt.Horizontal,self.Ring)
         blueSlider.setMinimum(0)
         blueSlider.setMaximum(100)
         blueSlider.setValue(10)
@@ -294,7 +357,7 @@ class WidgetGallery(QDialog):
         blueSlider.setTickInterval(1)
 
         allLabel = QLabel("ALL:")
-        allSlider = QSlider(Qt.Horizontal,self.topRightGroupBox)
+        allSlider = QSlider(Qt.Horizontal,self.Ring)
         allSlider.setMinimum(0)
         allSlider.setMaximum(100)
         allSlider.setValue(10)
@@ -342,36 +405,56 @@ class WidgetGallery(QDialog):
         layout.addWidget(durZapLabel, 4,3)
         layout.addWidget(durZapBox, 5, 3)
 
-        self.topRightGroupBox.setLayout(layout)
+        self.Ring.setLayout(layout)
 
         def redUpdate(self):
             print(redSlider.value())
             if loadSerial == 1:
-                ser.println("RR")
-                ser.println(redSlider.value())
+                output = "RR"
+                ser.write(output.encode("utf-8"))
+                    
+                ouput = redSlider.value()
+                ser.write(output.encode("utf-8"))
+                
 
         def greenUpdate(self):
             print(greenSlider.value())
             if loadSerial == 1:
-                ser.println("RG")
-                ser.println(greenSlider.value())
+                
+                output = "RG"
+                ser.write(output.encode("utf-8"))
+                    
+                ouput = greenSlider.value()
+                ser.write(output.encode("utf-8"))
 
         def blueUpdate(self):
             print(blueSlider.value())
             if loadSerial == 1:
-                ser.println("RB")
-                ser.println(blueSlider.value())
-
+                output = "RB"
+                ser.write(output.encode("utf-8"))
+                ouput = blueSlider.value()
+                ser.write(output.encode("utf-8"))
+                
         def allUpdate(self):
-            print(allSlider.value())
-            redSlider.setValue(allSlider.value())
-            greenSlider.setValue(allSlider.value())
-            blueSlider.setValue(allSlider.value())
+            value = str(allSlider.value())
+            
+            redSlider.setValue(value)
+            greenSlider.setValue(value)
+            blueSlider.setValue(value)
             if loadSerial == 1:
-                ser.println(redSlider.value())
-                ser.println(greenSlider.value())
-                ser.println(blueSlider.value())
-
+                
+                output = "RR"
+                ser.write(output.encode("utf-8"))  
+                ser.write(value.encode("utf-8"))
+                
+                output = "RG"
+                ser.write(output.encode("utf-8"))  
+                ser.write(value.encode("utf-8"))
+                
+                output = "RB"
+                ser.write(output.encode("utf-8"))  
+                ser.write(value.encode("utf-8"))
+                
         def zapUpdate(self):
             print("zap")
             if onButton.isChecked():
@@ -396,11 +479,13 @@ class WidgetGallery(QDialog):
         def onUpdate(self):
             if onButton.isChecked():
                 if loadSerial == 1:
-                    ser.println("R1")
+                    output = "R1"
+                    ser.write(output.encode("utf-8")) 
                 print("ring ON")
             else:
                 if loadSerial == 1:
-                    ser.println("R0")
+                    output = "R0"
+                    ser.write(output.encode("utf-8")) 
                 print("ring OFF")
 
         #redZapBox.valueChanged.connect(redZapUpdate)
@@ -414,7 +499,7 @@ class WidgetGallery(QDialog):
 
     def createCamera(self):
 
-        self.topLeftGroupBox = QGroupBox("Camera")
+        self.Camera = QGroupBox("Camera")
 
 
         onButton = QPushButton("ON")
@@ -452,7 +537,7 @@ class WidgetGallery(QDialog):
         colourMenu.addItems(["None", "Red", "Green", "Blue"])
 
         zoomLabel = QLabel("Zoom:")
-        zoomSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        zoomSlider = QSlider(Qt.Horizontal,self.Camera)
         zoomSlider.setMinimum(0)
         zoomSlider.setMaximum(10)
         zoomSlider.setValue(0)
@@ -460,7 +545,7 @@ class WidgetGallery(QDialog):
         zoomSlider.setTickInterval(1)
 
         binLabel = QLabel("Binning:")
-        binSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        binSlider = QSlider(Qt.Horizontal,self.Camera)
         binSlider.setMinimum(0)
         binSlider.setMaximum(4)
         binSlider.setValue(0)
@@ -468,7 +553,7 @@ class WidgetGallery(QDialog):
         binSlider.setTickInterval(1)
 
         windowLabel = QLabel("Window Size:")
-        windowSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        windowSlider = QSlider(Qt.Horizontal,self.Camera)
         windowSlider.setMinimum(10)
         windowSlider.setMaximum(800)
         windowSlider.setValue(240)
@@ -476,7 +561,7 @@ class WidgetGallery(QDialog):
         windowSlider.setTickInterval(5)
 
         fpsLabel = QLabel("Frames p/ second:")
-        fpsSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        fpsSlider = QSlider(Qt.Horizontal,self.Camera)
         fpsSlider.setMinimum(15)
         fpsSlider.setMaximum(90)
         fpsSlider.setValue(15)
@@ -484,7 +569,7 @@ class WidgetGallery(QDialog):
         fpsSlider.setTickInterval(5)
 
         exposureLabel = QLabel("Exposure:")
-        exposureSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        exposureSlider = QSlider(Qt.Horizontal,self.Camera)
         exposureSlider.setValue(0)
         exposureSlider.setMinimum(-10)
         exposureSlider.setMaximum(10)
@@ -492,7 +577,7 @@ class WidgetGallery(QDialog):
         exposureSlider.setTickInterval(1)
 
         horLabel = QLabel("Horizontal offset:")
-        horSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        horSlider = QSlider(Qt.Horizontal,self.Camera)
         horSlider.setValue(0)
         horSlider.setMinimum(-10)
         horSlider.setMaximum(10)
@@ -500,7 +585,7 @@ class WidgetGallery(QDialog):
         horSlider.setTickInterval(1)
 
         verLabel = QLabel("Vertical offset:")
-        verSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        verSlider = QSlider(Qt.Horizontal,self.Camera)
         verSlider.setValue(0)
         verSlider.setMinimum(-10)
         verSlider.setMaximum(10)
@@ -508,7 +593,7 @@ class WidgetGallery(QDialog):
         verSlider.setTickInterval(1)
 
         rotationLabel = QLabel("Rotation:")
-        rotationSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        rotationSlider = QSlider(Qt.Horizontal,self.Camera)
         rotationSlider.setValue(0)
         rotationSlider.setMinimum(0)
         rotationSlider.setMaximum(3)
@@ -516,7 +601,7 @@ class WidgetGallery(QDialog):
         rotationSlider.setTickInterval(1)
 
         brightnessLabel = QLabel("Brightness:")
-        brightnessSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        brightnessSlider = QSlider(Qt.Horizontal,self.Camera)
         brightnessSlider.setValue(50)
         brightnessSlider.setMinimum(0)
         brightnessSlider.setMaximum(100)
@@ -524,7 +609,7 @@ class WidgetGallery(QDialog):
         brightnessSlider.setTickInterval(5)
 
         contrastLabel = QLabel("Contrast:")
-        contrastSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        contrastSlider = QSlider(Qt.Horizontal,self.Camera)
         contrastSlider.setValue(50)
         contrastSlider.setMinimum(0)
         contrastSlider.setMaximum(100)
@@ -578,7 +663,7 @@ class WidgetGallery(QDialog):
         layout.addWidget(contrastLabel,4, 4)
         layout.addWidget(contrastSlider,5, 4)
 
-        self.topLeftGroupBox.setLayout(layout)
+        self.Camera.setLayout(layout)
 
         def onUpdate(self):
             if onButton.isChecked():
@@ -664,102 +749,9 @@ class WidgetGallery(QDialog):
         colourMenu.activated.connect(colourUpdate)
         resolutionMenu.activated.connect(resUpdate)
 
-    # def createTopRightGroupBox(self):
-    #     self.topRightGroupBox = QGroupBox("Group 2")
-    #
-    #     defaultPushButton = QPushButton("Default Push Button")
-    #     defaultPushButton.setDefault(True)
-    #
-    #     togglePushButton = QPushButton("Toggle Push Button")
-    #     togglePushButton.setCheckable(True)
-    #     togglePushButton.setChecked(True)
-    #
-    #     flatPushButton = QPushButton("Flat Push Button")
-    #     flatPushButton.setFlat(True)
-    #
-    #     layout = QVBoxLayout()
-    #     layout.addWidget(defaultPushButton)
-    #     layout.addWidget(togglePushButton)
-    #     layout.addWidget(flatPushButton)
-    #     layout.addStretch(1)
-    #     self.topRightGroupBox.setLayout(layout)
 
-    # def createBottomLeftTabWidget(self):
-    #     self.bottomLeftTabWidget = QTabWidget()
-    #     self.bottomLeftTabWidget.setSizePolicy(QSizePolicy.Preferred,
-    #             QSizePolicy.Ignored)
-    #
-    #     tab1 = QWidget()
-    #     tableWidget = QTableWidget(10, 10)
-    #
-    #     tab1hbox = QHBoxLayout()
-    #     tab1hbox.setContentsMargins(5, 5, 5, 5)
-    #     tab1hbox.addWidget(tableWidget)
-    #     tab1.setLayout(tab1hbox)
-    #
-    #     tab2 = QWidget()
-    #     textEdit = QTextEdit()
-    #
-    #     textEdit.setPlainText("Twinkle, twinkle, little star,\n"
-    #                           "How I wonder what you are.\n"
-    #                           "Up above the world so high,\n"
-    #                           "Like a diamond in the sky.\n"
-    #                           "Twinkle, twinkle, little star,\n"
-    #                           "How I wonder what you are!\n")
-    #
-    #     tab2hbox = QHBoxLayout()
-    #     tab2hbox.setContentsMargins(5, 5, 5, 5)
-    #     tab2hbox.addWidget(textEdit)
-    #     tab2.setLayout(tab2hbox)
-    #
-    #     self.bottomLeftTabWidget.addTab(tab1, "&Table")
-    #     self.bottomLeftTabWidget.addTab(tab2, "Text &Edit")
 
-    # def createBottomRightGroupBox(self):
-    #     self.bottomRightGroupBox = QGroupBox("Group 3")
-    #     self.bottomRightGroupBox.setCheckable(True)
-    #     self.bottomRightGroupBox.setChecked(True)
-    #
-    #     lineEdit = QLineEdit('s3cRe7')
-    #     lineEdit.setEchoMode(QLineEdit.Password)
-    #
-    #     spinBox = QSpinBox(self.bottomRightGroupBox)
-    #     spinBox.setValue(50)
-    #
-    #     dateTimeEdit = QDateTimeEdit(self.bottomRightGroupBox)
-    #     dateTimeEdit.setDateTime(QDateTime.currentDateTime())
-    #
-    #     slider = QSlider(Qt.Horizontal, self.bottomRightGroupBox)
-    #     slider.setValue(40)
-    #
-    #     scrollBar = QScrollBar(Qt.Horizontal, self.bottomRightGroupBox)
-    #     scrollBar.setValue(60)
-    #
-    #     dial = QDial(self.bottomRightGroupBox)
-    #     dial.setValue(30)
-    #     dial.setNotchesVisible(True)
-    #
-    #     layout = QGridLayout()
-    #     layout.addWidget(lineEdit, 0, 0, 1, 2)
-    #     layout.addWidget(spinBox, 1, 0, 1, 2)
-    #     layout.addWidget(dateTimeEdit, 2, 0, 1, 2)
-    #     layout.addWidget(slider, 3, 0)
-    #     layout.addWidget(scrollBar, 4, 0)
-    #     layout.addWidget(dial, 3, 1, 2, 1)
-    #     layout.setRowStretch(5, 1)
-    #     self.bottomRightGroupBox.setLayout(layout)
-    #
-    # def createProgressBar(self):
-    #     self.progressBar = QProgressBar()
-    #     self.progressBar.setRange(0, 10000)
-    #     self.progressBar.setValue(0)
-    #
-    #     timer = QTimer(self)
-    #     timer.timeout.connect(self.advanceProgressBar)
-    #     timer.start(1000)
-
-    #callback functions
-
+    
 
 if __name__ == '__main__':
 
