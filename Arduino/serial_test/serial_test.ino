@@ -80,7 +80,11 @@ void setup() {
 
   // Setup callbacks for SerialCommand commands
   sCmd.addCommand("L11",    LED1_on);          // Turns LED1 on
+<<<<<<< Updated upstream
   //sCmd.addCommand("L12",    LED1_PWM);         // Set intensity LED1
+=======
+  sCmd.addCommand("L12",    LED1_PWM);         // Set intensity LED1
+>>>>>>> Stashed changes
   sCmd.addCommand("L10",    LED1_off);         // Turns LED1 off
   sCmd.addCommand("L21",    LED2_on);          // Turns LED2 on
   //sCmd.addCommand("L22",    LED2_PWM);         // Set intensity LED2
