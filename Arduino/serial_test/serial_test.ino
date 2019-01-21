@@ -10,21 +10,19 @@
 #include <Servo.h> //servo motor controlling the autofocus
 #include <SerialCommand.h>
 
+#include "peltier.h"
+
 //#define arduinoLED 13   // Arduino LED on board
 
 // define ports
 #define LED1Pin 10
 #define LED2Pin 11 // NOT CONFIGURED
-#define RedGBPin 6
-#define RGreenBPin 4
-#define RGBluePin 5
 #define RingPin 7
 #define servoPin 8
 #define servoOnPin 9
-#define peltierEnablePin 13
-#define peltierHeatPin1 3
-#define peltierCoolPin1 2
-#define tempSensorPin A7
+//#define peltierEnablePin 13
+
+
 
 //Timing Variables////////////////////////
 long int millistowait;
@@ -43,6 +41,7 @@ int zapGreen = 0;
 int zapBlue = 0;
 int zapWhite = 0;
 int ringBright = 0;
+
 
 //create function to control LED ring/////////
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(ring_nPixels, RingPin, NEO_GRB + NEO_KHZ800);
@@ -72,10 +71,7 @@ void setup() {
   focusServo.attach(servoPin);
   // start ring
   pixels.begin();
-
-
-
-
+  
   Serial.begin(115200);
 
   // Setup callbacks for SerialCommand commands
@@ -94,7 +90,7 @@ void setup() {
   sCmd.addCommand("RB",     BLUE);             // change BLUE intensity
   sCmd.addCommand("P1",     PELT_on);          // Turns PELTIER on
   sCmd.addCommand("P0",     PELT_off);         // Turns PELTIER off
-  sCmd.addCommand("PT",     PELT_stemp);       // Change PELTIER temperature
+  sCmd.addCommand("ST",     PELT_stemp);       // Change PELTIER temperature
   sCmd.addCommand("TR",     TEMP_read);        // reads temperature sensor
   sCmd.addCommand("TW",     TIME_wait);        // sets time to wait
 
@@ -103,18 +99,110 @@ void setup() {
   sCmd.addCommand("P",     processCommand);  // Converts two arguments to integers and echos them back
   sCmd.setDefaultHandler(unrecognized);      // Handler for command that isn't matched  (says "What?")
   Serial.println("Ready");
+  newTemp = checkTemp(tempSensorPin);
+
+
+  pixels.setPixelColor(0, pixels.Color(0,0,0));
+  pixels.show();
 }
 
 void loop() {
+  if (peltOn==1){
+  HoldTemp(newTemp, tempSensorPin,
+               peltierCoolPin1, peltierHeatPin1);
+  
+  Serial.print("target: " );
+  Serial.println(newTemp);
+  Serial.print("current: ");
+  Serial.println(checkTemp(tempSensorPin));
+  }//if
+               
   sCmd.readSerial();     // We don't do much, just process serial commands
+  
 }// void loop
 
-void updateRing(int hue1, int hue2, int hue3) {
-  for (int i = 0; i < ring_nPixels; i++) {
-    pixels.setPixelColor(i, pixels.Color(hue1, hue2, hue3));
-  }
+//peltier func (requiring scmd)
+void PELT_stemp(){
+   int aNumber;
+   char *arg;
+   arg = sCmd.next();
+   if (arg != NULL) {
+      newTemp = atoi(arg);
+   }
+
 }
 
+
+
+
+/////////ring functions //////////////////////////////
+void updateRing(int hue1, int hue2, int hue3, int ringOn) {
+  for (int i = 0; i < ring_nPixels; i++) {
+    pixels.setPixelColor(i, pixels.Color(hue1, hue2, hue3));
+    
+  }//for
+  if (ringOn==1){
+    pixels.show();
+    }//if
+}//void
+
+/////////////////////////////////////////////////////
+
+
+
+void RING_on() {
+  //Serial.println("ring on");
+  ringOn = 1;
+  updateRing(ringRedHue, ringGreenHue, ringBlueHue,ringOn);  
+}
+
+void RING_off() {
+  //Serial.println("ring off");
+  
+  updateRing(0, 0, 0, ringOn);
+  ringOn=0;
+  //pixels.show();
+  
+  }
+
+
+void RED(){
+  int aNumber;
+  char *arg;
+  arg = sCmd.next();
+  if (arg != NULL) {
+     ringRedHue = atoi(arg);
+     updateRing(ringRedHue, ringGreenHue, ringBlueHue,ringOn);
+     
+  }//if
+
+}//red
+
+void GREEN(){
+  int aNumber;
+  char *arg;
+  arg = sCmd.next();
+  if (arg != NULL) {
+     ringGreenHue = atoi(arg);
+     updateRing(ringRedHue, ringGreenHue, ringBlueHue,ringOn);
+  }//if
+
+}//red
+
+void BLUE(){
+  int aNumber;
+  char *arg;
+  arg = sCmd.next();
+  if (arg != NULL) {
+     //Serial.println("here");
+     ringBlueHue = atoi(arg);
+     updateRing(ringRedHue, ringGreenHue, ringBlueHue,ringOn);
+  }//if
+
+}//red
+
+
+////// LED functions ////////////////////////////////
 
 void LED1_on() {
   int aNumber;
@@ -143,68 +231,11 @@ void LED2_off() {
   digitalWrite(LED2Pin, LOW);
 }
 
-void RING_on() {
-  Serial.println("ring on");
-  pixels.show();
-}
 
-void RING_off() {
-  Serial.println("ring off");
-  updateRing(0, 0, 0);
-  pixels.show();}
+////////////////////////
 
 
-void RED(){
-  int aNumber;
-  char *arg;
-  arg = sCmd.next();
-  if (arg != NULL) {
-     aNumber = atoi(arg);
-     updateRing(aNumber, ringGreenHue, ringBlueHue);
-
-  }//if
-
-}//red
-
-void GREEN(){
-  int aNumber;
-  char *arg;
-  arg = sCmd.next();
-  if (arg != NULL) {
-     aNumber = atoi(arg);
-     updateRing(ringRedHue, aNumber, ringBlueHue);
-
-  }//if
-
-}//red
-
-void BLUE(){
-  int aNumber;
-  char *arg;
-  arg = sCmd.next();
-  if (arg != NULL) {
-     aNumber = atoi(arg);
-     updateRing(ringRedHue, ringGreenHue, aNumber);
-
-  }//if
-
-}//red
-
-void PELT_on(){
-  Serial.println("pelton");
-}
-void PELT_off(){
-  Serial.println("peltoff");
-}
-
-void PELT_stemp(){
-  Serial.println("set temp");
-}
-
-void TEMP_read(){
-  Serial.println("read temp");
-}
-
+// timing functions /////////////////
 
 void TIME_wait(){
   int aNumber;
@@ -229,6 +260,11 @@ void TIME_wait(){
   }//if
 
   }//time_wait
+
+
+/////////////////////////////////////////
+
+
 
 void sayHello() {
 
