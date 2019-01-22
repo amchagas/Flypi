@@ -1,5 +1,5 @@
 
-/*
+
 #include <Adafruit_NeoPixel.h> // LED Ring
 #include <Wire.h> // LED Matrix
 #include <Adafruit_LEDBackpack.h> // LED Matrix
@@ -38,4 +38,4 @@ void updateRing(int hue1, int hue2, int hue3, int ringOn) {
     }//if
 }//void
 
-*/
+

@@ -1,4 +1,4 @@
-#include <SerialCommand.h>
+//#include <SerialCommand.h>
 
 
 #define RedGBPin 6
@@ -51,34 +51,6 @@ float checkTemp(int pinToRead) {
 
 
 
-void PELT_on(){
-  peltOn=1;
-  digitalWrite(peltierEnablePin,HIGH);
-  Serial.println("pelton");
-}//pelt on
-
-
-void PELT_off(){
-  peltOn=0;
-  digitalWrite(peltierEnablePin,LOW);
-  digitalWrite(peltierHeatPin1, LOW);
-  digitalWrite(peltierCoolPin1, LOW);
-  analogWrite(RedGBPin, 0);
-  analogWrite(RGreenBPin, 0);
-  analogWrite(RGBluePin, 0);
-  //Serial.println("peltoff");
-}//pelt off
-
-
-    
-
-
-
-void TEMP_read(){
-  currTemp = checkTemp(tempSensorPin);
-  Serial.print("temp: ");
-  Serial.println(currTemp);
-}//temp read
 
 
 
