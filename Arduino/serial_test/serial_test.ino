@@ -103,13 +103,13 @@ void loop() {
 
 
 void RING_on() {
-  Serial.println("ring on");
+  //Serial.println("ring on");
   ringOn = 1;
   updateRing(ringRedHue, ringGreenHue, ringBlueHue,ringOn);  
 }
 
 void RING_off() {
-  Serial.println("ring off");
+  //Serial.println("ring off");
   
   updateRing(0, 0, 0, ringOn);
   ringOn=0;
@@ -192,7 +192,7 @@ void LED2_off() {
 void PELT_on(){
   peltOn=1;
   digitalWrite(peltierEnablePin,HIGH);
-  Serial.println("pelton");
+  //Serial.println("pelton");
 }//pelt on
 
 

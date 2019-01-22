@@ -5,17 +5,23 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateTimeEdit,
         QSlider, QSpinBox, QStyleFactory, QTableWidget, QTabWidget, QTextEdit,
         QVBoxLayout, QWidget)
 
-class camera():
 
+class Camera():
+
+    #def __init__(self):
+    #    self.createCamera = createCamera()
+    #    return
+
+    
     def createCamera(self):
 
-        self.topLeftGroupBox = QGroupBox("Camera")
+        self.Camera = QGroupBox("Camera")
 
 
         onButton = QPushButton("ON")
         onButton.setCheckable(True)
         onButton.setChecked(False)
-        onButton.clicked.connect(self.btnstate)
+
 
 
         resolutionLabel = QLabel("Resolution:")
@@ -47,7 +53,7 @@ class camera():
         colourMenu.addItems(["None", "Red", "Green", "Blue"])
 
         zoomLabel = QLabel("Zoom:")
-        zoomSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        zoomSlider = QSlider(Qt.Horizontal,self.Camera)
         zoomSlider.setMinimum(0)
         zoomSlider.setMaximum(10)
         zoomSlider.setValue(0)
@@ -55,7 +61,7 @@ class camera():
         zoomSlider.setTickInterval(1)
 
         binLabel = QLabel("Binning:")
-        binSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        binSlider = QSlider(Qt.Horizontal,self.Camera)
         binSlider.setMinimum(0)
         binSlider.setMaximum(4)
         binSlider.setValue(0)
@@ -63,7 +69,7 @@ class camera():
         binSlider.setTickInterval(1)
 
         windowLabel = QLabel("Window Size:")
-        windowSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        windowSlider = QSlider(Qt.Horizontal,self.Camera)
         windowSlider.setMinimum(10)
         windowSlider.setMaximum(800)
         windowSlider.setValue(240)
@@ -71,7 +77,7 @@ class camera():
         windowSlider.setTickInterval(5)
 
         fpsLabel = QLabel("Frames p/ second:")
-        fpsSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        fpsSlider = QSlider(Qt.Horizontal,self.Camera)
         fpsSlider.setMinimum(15)
         fpsSlider.setMaximum(90)
         fpsSlider.setValue(15)
@@ -79,7 +85,7 @@ class camera():
         fpsSlider.setTickInterval(5)
 
         exposureLabel = QLabel("Exposure:")
-        exposureSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        exposureSlider = QSlider(Qt.Horizontal,self.Camera)
         exposureSlider.setValue(0)
         exposureSlider.setMinimum(-10)
         exposureSlider.setMaximum(10)
@@ -87,7 +93,7 @@ class camera():
         exposureSlider.setTickInterval(1)
 
         horLabel = QLabel("Horizontal offset:")
-        horSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        horSlider = QSlider(Qt.Horizontal,self.Camera)
         horSlider.setValue(0)
         horSlider.setMinimum(-10)
         horSlider.setMaximum(10)
@@ -95,7 +101,7 @@ class camera():
         horSlider.setTickInterval(1)
 
         verLabel = QLabel("Vertical offset:")
-        verSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        verSlider = QSlider(Qt.Horizontal,self.Camera)
         verSlider.setValue(0)
         verSlider.setMinimum(-10)
         verSlider.setMaximum(10)
@@ -103,15 +109,15 @@ class camera():
         verSlider.setTickInterval(1)
 
         rotationLabel = QLabel("Rotation:")
-        rotationSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        rotationSlider = QSlider(Qt.Horizontal,self.Camera)
         rotationSlider.setValue(0)
         rotationSlider.setMinimum(0)
-        rotationSlider.setMaximum(270)
+        rotationSlider.setMaximum(3)
         rotationSlider.setTickPosition(QSlider.TicksBelow)
-        rotationSlider.setTickInterval(90)
+        rotationSlider.setTickInterval(1)
 
         brightnessLabel = QLabel("Brightness:")
-        brightnessSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        brightnessSlider = QSlider(Qt.Horizontal,self.Camera)
         brightnessSlider.setValue(50)
         brightnessSlider.setMinimum(0)
         brightnessSlider.setMaximum(100)
@@ -119,7 +125,7 @@ class camera():
         brightnessSlider.setTickInterval(5)
 
         contrastLabel = QLabel("Contrast:")
-        contrastSlider = QSlider(Qt.Horizontal,self.topLeftGroupBox)
+        contrastSlider = QSlider(Qt.Horizontal,self.Camera)
         contrastSlider.setValue(50)
         contrastSlider.setMinimum(0)
         contrastSlider.setMaximum(100)
@@ -173,9 +179,94 @@ class camera():
         layout.addWidget(contrastLabel,4, 4)
         layout.addWidget(contrastSlider,5, 4)
 
-        self.topLeftGroupBox.setLayout(layout)
+        self.Camera.setLayout(layout)
+
+        def onUpdate(self):
+            if onButton.isChecked():
+                print("ON")
+            else:
+                print("OFF")
+
+        onButton.clicked.connect(onUpdate)
+
+        def resUpdate(self):
+            print("here")
+            print(resolutionMenu.currentText())
+
+        def wbUpdate(self):
+            print("here")
+            print(wbMenu.currentText())
+
+        def modeUpdate(self):
+            print("here")
+            print(modeMenu.currentText())
+
+        def colourUpdate(self):
+            print("here")
+            print(colourMenu.currentText())
+
+
+        def rotationUpdate(self):
+            print("here")
+            print(rotationSlider.value())
+
+        def zoomUpdate(self):
+            print("here")
+            print(zoomSlider.value())
+
+        def verUpdate(self):
+            print("here")
+            print(verSlider.value())
+
+        def horUpdate(self):
+            print("here")
+            print(horSlider.value())
+
+        def windowUpdate(self):
+            print("here")
+            print(windowSlider.value())
+
+        def binUpdate(self):
+            print("here")
+            print(binSlider.value())
+
+        def exposureUpdate(self):
+            print("here")
+            print(exposureSlider.value())
+
+        def brightnessUpdate(self):
+            print("here")
+            print(brightnessSlider.value())
+
+        def contrastUpdate(self):
+            print("here")
+            print(contrastSlider.value())
+
+        def fpsUpdate(self):
+            print("here")
+            print(fpsSlider.value())
+
+
+        rotationSlider.valueChanged.connect(rotationUpdate)
+        fpsSlider.valueChanged.connect(fpsUpdate)
+        zoomSlider.valueChanged.connect(zoomUpdate)
+        verSlider.valueChanged.connect(verUpdate)
+        horSlider.valueChanged.connect(horUpdate)
+        windowSlider.valueChanged.connect(windowUpdate)
+        binSlider.valueChanged.connect(binUpdate)
+        exposureSlider.valueChanged.connect(exposureUpdate)
+        brightnessSlider.valueChanged.connect(brightnessUpdate)
+        contrastSlider.valueChanged.connect(contrastUpdate)
+
+
+
+        modeMenu.activated.connect(modeUpdate)
+        wbMenu.activated.connect(wbUpdate)
+        colourMenu.activated.connect(colourUpdate)
+        resolutionMenu.activated.connect(resUpdate)
+
+        
+        return self.Camera
     #callback functions
 
-    def btnstate(self):
-        print("HERE")
-        print(self.onButton.isChecked())
+    
