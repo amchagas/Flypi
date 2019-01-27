@@ -83,15 +83,15 @@ void setup() {
 }
 
 void loop() {
-  if (peltOn==1){
-  HoldTemp(newTemp, tempSensorPin,
-               peltierCoolPin1, peltierHeatPin1);
+  //if (peltOn==1){
+  //HoldTemp(newTemp, tempSensorPin,
+  //             peltierCoolPin1, peltierHeatPin1);
   
   //Serial.print("target: " );
   //Serial.println(newTemp);
   //Serial.print("current: ");
-  Serial.println(checkTemp(tempSensorPin));
-  }//if
+  //Serial.println(checkTemp(tempSensorPin));
+  //}//if
                
   sCmd.readSerial();     // We don't do much, just process serial commands
   
@@ -192,6 +192,7 @@ void LED2_off() {
 void PELT_on(){
   peltOn=1;
   digitalWrite(peltierEnablePin,HIGH);
+  waited();
   //Serial.println("pelton");
 }//pelt on
 
@@ -205,6 +206,7 @@ void PELT_off(){
   analogWrite(RGreenBPin, 0);
   analogWrite(RGBluePin, 0);
   //Serial.println("peltoff");
+  waited();
 }//pelt off
 
 //peltier func (requiring scmd)
@@ -215,6 +217,7 @@ void PELT_stemp(){
    if (arg != NULL) {
       newTemp = atoi(arg);
    }
+   waited();
 
 }
 
@@ -222,6 +225,7 @@ void TEMP_read(){
   currTemp = checkTemp(tempSensorPin);
   Serial.print("temp: ");
   Serial.println(currTemp);
+  waited();
 }//temp read
 
 
@@ -248,10 +252,10 @@ void TIME_wait(){
     while ((time1 - time2) < aNumber) {
     time1 = millis();
      } //done waiting
-    //Serial.println("done");
+    
 
   }//if
-
+  waited();
   }//time_wait
 
 
@@ -303,3 +307,7 @@ void processCommand() {
 void unrecognized(const char *command) {
   Serial.println("What?");
 }
+
+void waited(){
+  Serial.println("d");
+  }
