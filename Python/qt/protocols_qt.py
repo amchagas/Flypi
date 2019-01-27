@@ -7,7 +7,8 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateTimeEdit,
 
 from camera_qt import Camera
 #from ring_qt import Ring
-import struct
+import time
+import os
 try:
     import serial
     serialAvail = True
@@ -33,7 +34,10 @@ if loadSerial == 1:
 
 class WidgetGallery(QDialog):
 
+
     def __init__(self, parent=None):
+
+
         super(WidgetGallery, self).__init__(parent)
 
         self.originalPalette = QApplication.palette()
@@ -73,6 +77,8 @@ class WidgetGallery(QDialog):
         self.setLayout(mainLayout)
 
         self.setWindowTitle("Protocols app")
+        return
+
 
     def serwrite(self,msg):
         #primer = "TW 1;"
@@ -233,81 +239,107 @@ class WidgetGallery(QDialog):
 
 
         def runUpdate(self):
-			#print("here")
+            totalDur = 0
+            basePath = '/home/andre/flypi_test/videos/'
+            folderName = "protocols"
+            timenow = time.strftime('%Y-%m-%d-%H-%M-%S')
+            recFileName = 'video_'+ timenow + '.h264'
+            #print(self.basePath)
+            if not os.path.exists(basePath+folderName+'/'):
+                #if not, create it:
+                os.makedirs(basePath+folderName+'/')
+                os.chown(basePath+folderName+'/', 1000, 1000)
 
             if runButton.isChecked():
                 print("run")
                 allcom = list()
-                if ringButton.isChecked:
+                if ringButton.isChecked():
                     allcom.append('R1')
                     allcom.append(str('RR '+ str(redBox1.text())))
                     allcom.append(str('RG '+ str(greenBox1.text())))
                     allcom.append(str('RB '+ str(blueBox1.text())))
 
-                if peltierButton.isChecked:
+                if peltierButton.isChecked():
                     allcom.append('P1')
                     allcom.append(str('ST '+str(peltBox1.text())))
                     allcom.append(str('GT'))
 
                 allcom.append(str('TW '+str(durBox1.text())))
+                totalDur = totalDur + int(durBox1.text())
 
-                if ringButton.isChecked:
+                if ringButton.isChecked():
                     allcom.append('R1')
                     allcom.append(str('RR '+ str(redBox2.text())))
                     allcom.append(str('RG '+ str(greenBox2.text())))
                     allcom.append(str('RB '+ str(blueBox2.text())))
 
-                if peltierButton.isChecked:
+                if peltierButton.isChecked():
                     allcom.append('P1')
                     allcom.append(str('ST '+str(peltBox2.text())))
                     allcom.append(str('GT'))
 
                 allcom.append(str('TW '+str(durBox2.text())))
+                totalDur = totalDur + int(durBox2.text())
 
-                if ringButton.isChecked:
+                if ringButton.isChecked():
                     allcom.append('R1')
                     allcom.append(str('RR '+ str(redBox3.text())))
                     allcom.append(str('RG '+ str(greenBox3.text())))
                     allcom.append(str('RB '+ str(blueBox3.text())))
 
-                if peltierButton.isChecked:
+                if peltierButton.isChecked():
                     allcom.append('P1')
                     allcom.append(str('ST '+str(peltBox3.text())))
                     allcom.append(str('GT'))
 
                 allcom.append(str('TW '+str(durBox3.text())))
+                totalDur = totalDur + int(durBox3.text())
 
-                if ringButton.isChecked:
+                if ringButton.isChecked():
                     allcom.append('R1')
                     allcom.append(str('RR '+ str(redBox4.text())))
                     allcom.append(str('RG '+ str(greenBox4.text())))
                     allcom.append(str('RB '+ str(blueBox4.text())))
 
-                if peltierButton.isChecked:
+                if peltierButton.isChecked():
                     allcom.append('P1')
                     allcom.append(str('ST '+str(peltBox4.text())))
                     allcom.append(str('GT'))
 
                 allcom.append(str('TW '+str(durBox4.text())))
+                totalDur = totalDur + int(durBox4.text())
 
 
 
-                if ringButton.isChecked:
+                if ringButton.isChecked():
                     allcom.append('R1')
                     allcom.append(str('RR '+ str(redBox5.text())))
                     allcom.append(str('RG '+ str(greenBox5.text())))
                     allcom.append(str('RB '+ str(blueBox5.text())))
-
-                if peltierButton.isChecked:
+                print(peltierButton.isChecked())
+                if peltierButton.isChecked():
                     allcom.append('P1')
                     allcom.append(str('ST '+str(peltBox5.text())))
                     allcom.append(str('GT'))
 
                 allcom.append(str('TW '+str(durBox5.text())))
+                totalDur = totalDur + int(durBox5.text())
                 allcom.append(str('TW '+str(itiBox1.text())))
+                totalDur = totalDur + int(itiBox1.text())
 
                 reps = int(rep1Box.text())
+                totalDur = totalDur*reps
+
+                #add 1 sec buffer
+                totalDur=totalDur+1000
+                #convert milliseconds to seconds
+                totalDur = totalDur/1000.0
+                if totalDur<2.:
+                    totalDur = 2
+
+
                 x=1
+                print(allcom)
                 for i in range(reps):
                     if i+1==reps:
                         allcom.append('R0')
@@ -325,6 +357,9 @@ class WidgetGallery(QDialog):
                             test=ser.readline()
                             if test[0:-2]=='d'.encode('utf-8'):
                                 haltFlag=0
+                            else:
+                                print(test)
+
 
             return
 

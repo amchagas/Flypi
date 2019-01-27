@@ -12,8 +12,24 @@ class Camera():
     #    self.createCamera = createCamera()
     #    return
 
-    
+
     def createCamera(self):
+        try:
+            # picamera module
+            import picamera
+            cam1=1
+            self.cam = picamera.PiCamera()
+            self.cam.led = False
+            self.cam.exposure_mode = "fixedfps"
+            self.cam.exposure_compensation = 0
+            self.cam.brightness = 50
+            self.cam.awb_mode = "auto"
+            self.bitRate = 17000000
+
+        except ImportError:
+            cam1=0
+            #picameraAvail = False
+            print ("picamera module not available!")
 
         self.Camera = QGroupBox("Camera")
 
@@ -183,19 +199,56 @@ class Camera():
 
         def onUpdate(self):
             if onButton.isChecked():
-                print("ON")
+
+                print ("cam on")
+                if cam1==1:
+                    res = self.resVar.get()
+                    size = self.sizeVar.get()
+                    self.cam.resolution = (2592, 1944)
+                    self.cam.preview_window = (0, 0, size, size)
+                    self.zoomVar.set(1)
+                    self.horVar.set(0)
+                    self.verVar.set(0)
+                    self.cam.zoom = (self.horVar.get(),
+                               self.verVar.get(),
+                               self.zoomVar.get(),
+                               self.zoomVar.get())
+                    self.cam.start_preview()
+
+                    self.cam.preview.fullscreen = False
+                    #wait a second so the camera adjusts
+                    time.sleep(1)
             else:
                 print("OFF")
+                if cam1==1:
+                    self.cam.stop_preview()
 
         onButton.clicked.connect(onUpdate)
 
         def resUpdate(self):
-            print("here")
             print(resolutionMenu.currentText())
+            text = resolutionMenu.currentText()
+            index = text.find('x')
+            if cam1==1:
+                self.cam.resolution = (int(text[0:index]),int(text[index+1:]))
 
         def wbUpdate(self):
-            print("here")
             print(wbMenu.currentText())
+            if cam1==1:
+                if wbMenu.currentText() == "green":
+                    self.cam.awb_mode = "off"
+                    self.cam.awb_gains = (1, 1)
+                elif wbMenu.currentText() == "red":
+                    self.cam.awb_mode = "off"
+                    self.cam.awb_gains = (8.0, 0.9)
+                elif wbMenu.currentText() == "blue":
+                    self.cam.awb_mode = "off"
+                    self.cam.awb_gains = (0.9, 8.0)
+                elif wbMenu.currentText() == "off":
+                    self.cam.awb_mode = "off"
+                else:
+                    self.cam.awb_mode = wbMenu.currentText()
+
 
         def modeUpdate(self):
             print("here")
@@ -207,51 +260,71 @@ class Camera():
 
 
         def rotationUpdate(self):
-            print("here")
             print(rotationSlider.value())
+            if cam1==1:
+                self.cam.rotation = (rotationSlider.value())
+
 
         def zoomUpdate(self):
-            print("here")
             print(zoomSlider.value())
+            if zoomSlider.value()==1:
+                horSlider.setValue(5)
+                verSlider.setValue(5)
+            if cam1==1:
+                if ZoomSlider.value()==1:
+                    self.cam.zoom = (0, 0, 1, 1)
+                    horSlider.setValue(0)
+                    verSlider.setValue(0)
+                else:
+                    zoomSide = 1 / zoomSlider.Value()
+                    edge = (1 - zoomSide)#*0.5
+                    self.cam.zoom = ((horSlider.value() / 100.0) * edge,
+                                   ( verSlider.value() / 100.0) * edge,
+                                   1 / zoomSlider.Value(),
+                                   1 / zoomSlider.Value())
 
-        def verUpdate(self):
-            print("here")
-            print(verSlider.value())
+        #def verUpdate(self):
+        #    print(verSlider.value())
 
-        def horUpdate(self):
-            print("here")
-            print(horSlider.value())
+        #def horUpdate(self):
+        #    print(horSlider.value())
 
         def windowUpdate(self):
-            print("here")
             print(windowSlider.value())
+            if cam1==1:
+                self.cam.preview_window = (0, 0, windowSlider.value(), windowSlider.value())
 
         def binUpdate(self):
             print("here")
             print(binSlider.value())
 
         def exposureUpdate(self):
-            print("here")
             print(exposureSlider.value())
+            if cam1==1:
+                self.cam.exposure_compensation = (exposureSlider.value())
 
         def brightnessUpdate(self):
-            print("here")
             print(brightnessSlider.value())
+            if cam1==1:
+                self.cam.brightness = (brightnessSlider.value())
 
         def contrastUpdate(self):
-            print("here")
             print(contrastSlider.value())
+            if cam1==1:
+                self.cam.contrast = (contrastSlider.value())
 
         def fpsUpdate(self):
-            print("here")
             print(fpsSlider.value())
+            if cam1==1:
+                self.cam.framerate = (fpsSlider.value())
+
 
 
         rotationSlider.valueChanged.connect(rotationUpdate)
         fpsSlider.valueChanged.connect(fpsUpdate)
         zoomSlider.valueChanged.connect(zoomUpdate)
-        verSlider.valueChanged.connect(verUpdate)
-        horSlider.valueChanged.connect(horUpdate)
+        #verSlider.valueChanged.connect(verUpdate)
+        #horSlider.valueChanged.connect(horUpdate)
         windowSlider.valueChanged.connect(windowUpdate)
         binSlider.valueChanged.connect(binUpdate)
         exposureSlider.valueChanged.connect(exposureUpdate)
@@ -265,8 +338,6 @@ class Camera():
         colourMenu.activated.connect(colourUpdate)
         resolutionMenu.activated.connect(resUpdate)
 
-        
+
         return self.Camera
     #callback functions
-
-    
