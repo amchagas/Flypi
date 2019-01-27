@@ -307,14 +307,24 @@ class WidgetGallery(QDialog):
                 allcom.append(str('TW '+str(itiBox1.text())))
 
                 reps = int(rep1Box.text())
+                x=1
                 for i in range(reps):
-                    for command in allcom:
-                        
-                        print(command)
+                    if i+1==reps:
+                        allcom.append('R0')
+                        allcom.append('P0')
 
-                offCom = ['R0','P0']
-                for command in offCom:
-                    print(command)
+                    for command in allcom:
+
+                        haltFlag=1
+                        ser.write(str(command+'\n').encode('utf-8'))
+                        ser.flush()
+                        x=x+1
+                        while ser.in_waiting==0:
+                            x=x
+                        while haltFlag==1:
+                            test=ser.readline()
+                            if test[0:-2]=='d'.encode('utf-8'):
+                                haltFlag=0
 
             return
 

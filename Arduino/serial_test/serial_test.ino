@@ -66,8 +66,8 @@ void setup() {
   sCmd.addCommand("RB",     BLUE);             // change BLUE intensity
   sCmd.addCommand("P1",     PELT_on);          // Turns PELTIER on
   sCmd.addCommand("P0",     PELT_off);         // Turns PELTIER off
-  sCmd.addCommand("ST",     PELT_stemp);       // Change PELTIER temperature
-  sCmd.addCommand("TR",     TEMP_read);        // reads temperature sensor
+  sCmd.addCommand("ST",     PELT_stemp);       // set PELTIER temperature
+  sCmd.addCommand("GT",     TEMP_read);        // get PELTIER temperature
   sCmd.addCommand("TW",     TIME_wait);        // sets time to wait
 
 
@@ -106,6 +106,7 @@ void RING_on() {
   //Serial.println("ring on");
   ringOn = 1;
   updateRing(ringRedHue, ringGreenHue, ringBlueHue,ringOn);  
+  waited();
 }
 
 void RING_off() {
@@ -113,6 +114,7 @@ void RING_off() {
   
   updateRing(0, 0, 0, ringOn);
   ringOn=0;
+  waited();
   //pixels.show();
   
   }
@@ -125,7 +127,7 @@ void RED(){
   if (arg != NULL) {
      ringRedHue = atoi(arg);
      updateRing(ringRedHue, ringGreenHue, ringBlueHue,ringOn);
-     
+     waited();
   }//if
 
 }//red
@@ -137,6 +139,7 @@ void GREEN(){
   if (arg != NULL) {
      ringGreenHue = atoi(arg);
      updateRing(ringRedHue, ringGreenHue, ringBlueHue,ringOn);
+     waited();
   }//if
 
 }//red
@@ -149,6 +152,7 @@ void BLUE(){
      //Serial.println("here");
      ringBlueHue = atoi(arg);
      updateRing(ringRedHue, ringGreenHue, ringBlueHue,ringOn);
+     waited();
   }//if
 
 }//red
@@ -162,8 +166,8 @@ void LED1_on() {
   arg = sCmd.next();
   if (arg != NULL) {
      aNumber = atoi(arg);
-     analogWrite(LED1Pin, 10);
-
+     analogWrite(LED1Pin, aNumber);
+     waited();
   }//if
   
 }//led1_on
@@ -171,16 +175,19 @@ void LED1_on() {
 void LED1_off() {
   //Serial.println("LED1 off");
   analogWrite(LED1Pin, 0);
+  waited();
 }
 
 void LED2_on() {
   Serial.println("LED2 on");
   digitalWrite(LED2Pin, HIGH);
+  waited();
 }
 
 void LED2_off() {
   Serial.println("LED2 off");
   digitalWrite(LED2Pin, LOW);
+  waited();
 }
 
 
@@ -205,7 +212,7 @@ void PELT_off(){
   analogWrite(RedGBPin, 0);
   analogWrite(RGreenBPin, 0);
   analogWrite(RGBluePin, 0);
-  //Serial.println("peltoff");
+  //Serial.println("waited()peltoff");
   waited();
 }//pelt off
 
@@ -223,7 +230,7 @@ void PELT_stemp(){
 
 void TEMP_read(){
   currTemp = checkTemp(tempSensorPin);
-  Serial.print("temp: ");
+  //Serial.print("temp: ");
   Serial.println(currTemp);
   waited();
 }//temp read
