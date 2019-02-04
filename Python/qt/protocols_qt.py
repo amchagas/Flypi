@@ -27,6 +27,9 @@ if loadSerial == 1:
         #self.ser = serial.Serial('/dev/ttyACM0', 115200)
         # for Arduino Nano from RPi
         ser = serial.Serial('/dev/ttyUSB0', 115200)
+        while ser.in_waiting==0:
+            print("init")
+        print(ser.readline())
         primer = "TW 1;"
 
 
@@ -240,7 +243,7 @@ class WidgetGallery(QDialog):
 
         def runUpdate(self):
             totalDur = 0
-            basePath = '/home/andre/flypi_test/videos/'
+            basePath = '/home/pi/flypi_test/videos/'
             folderName = "protocols"
             timenow = time.strftime('%Y-%m-%d-%H-%M-%S')
             recFileName = 'video_'+ timenow + '.h264'
@@ -355,7 +358,8 @@ class WidgetGallery(QDialog):
                             x=x
                         while haltFlag==1:
                             test=ser.readline()
-                            if test[0:-2]=='d'.encode('utf-8'):
+                            #print(test[0:-2])
+                            if test[0:-2]=='d'.encode('utf-8') or test[0:-2]=='Ready'.encode('utf-8'):
                                 haltFlag=0
                             else:
                                 print(test)
