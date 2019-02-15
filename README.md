@@ -8,7 +8,7 @@ Hi! Thanks for dropping by. This project started during one of the summer course
 The system can be used for optical microscopy, fluorescence, behavioural tracking, optogenetics, calcium imaging and thermogenetics (see examples recorded with the system below).
 
 
-##### Further development is being done by [Prometheus Science](wwww.prometheus-science.com)
+##### Further development is being done by [Prometheus Science](https://wwww.prometheus-science.com)
 
 #### Some samples imaged with the device:
 
