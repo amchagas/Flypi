@@ -66,7 +66,7 @@ class Camera():
 
         colourLabel = QLabel("Colour Effect:")
         colourMenu = QComboBox()
-        colourMenu.addItems(["None", "Red", "Green", "Blue"])
+        colourMenu.addItems(["None","BW", "Red", "Green", "Blue"])
 
         zoomLabel = QLabel("Zoom:")
         zoomSlider = QSlider(Qt.Horizontal,self.Camera)
@@ -253,9 +253,24 @@ class Camera():
         def modeUpdate(self):
             print("here")
             print(modeMenu.currentText())
+            if cam1==1:
+                if self.cam.image_effect != modeMenu.currentText():
+                    self.cam.image_effect = modeMenu.currentText()
 
         def colourUpdate(self):
-            print("here")
+            if cam1==1:
+                if self.camColEffVal != "":
+                    if self.colourMenu.currentText() == "BW":
+                        self.cam.color_effects = (128, 128)
+                    elif self.colourMenu.currentText() == "RED":
+                        self.cam.color_effects = (0, 255)
+                    elif self.colourMenu.currentText() == "BLUE":
+                        self.cam.color_effects = (255, 0)
+                    elif self.colourMenu.currentText() == "GREEN":
+                        self.cam.color_effects = (0, 0)
+                    else:
+                        self.cam.color_effects = None
+            #print("here")
             print(colourMenu.currentText())
 
 
