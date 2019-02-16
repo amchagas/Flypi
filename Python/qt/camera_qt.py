@@ -3,8 +3,11 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateTimeEdit,
         QDial, QDialog, QGridLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit,
         QProgressBar, QPushButton, QRadioButton, QScrollBar, QSizePolicy,
         QSlider, QSpinBox, QStyleFactory, QTableWidget, QTabWidget, QTextEdit,
-        QVBoxLayout, QWidget)
+        QVBoxLayout, QWidget,QApplication, QWidget, QInputDialog, QLineEdit, QFileDialog)
 
+import time
+import os
+import subprocess
 
 class Camera():
 
@@ -18,13 +21,14 @@ class Camera():
             # picamera module
             import picamera
             cam1=1
-            self.cam = picamera.PiCamera()
-            self.cam.led = False
-            self.cam.exposure_mode = "fixedfps"
-            self.cam.exposure_compensation = 0
-            self.cam.brightness = 50
-            self.cam.awb_mode = "auto"
-            self.bitRate = 17000000
+            cam = picamera.PiCamera()
+            cam.led = False
+            cam.exposure_mode = "fixedfps"
+            cam.exposure_compensation = 0
+            cam.brightness = 50
+            cam.awb_mode = "auto"
+            bitRate = 17000000
+            basePath = '/home/pi/Desktop/flypi_output/'
 
         except ImportError:
             cam1=0
@@ -37,9 +41,23 @@ class Camera():
         onButton = QPushButton("ON")
         onButton.setCheckable(True)
         onButton.setChecked(False)
+        
+        convButton = QPushButton("to AVI")
+        convButton.setCheckable(False)
+        convButton.setChecked(False)
+        
+        tlButton = QPushButton("Time Lapse")
+        tlButton.setCheckable(False)
+        tlButton.setChecked(False)
 
-
-
+        snapButton = QPushButton("Photo")
+        snapButton.setCheckable(False)
+        snapButton.setChecked(False)
+        
+        recButton = QPushButton("REC video")
+        recButton.setCheckable(False)
+        recButton.setChecked(False)
+        
         resolutionLabel = QLabel("Resolution:")
 
         resolutionMenu = QComboBox()
@@ -70,7 +88,7 @@ class Camera():
 
         zoomLabel = QLabel("Zoom:")
         zoomSlider = QSlider(Qt.Horizontal,self.Camera)
-        zoomSlider.setMinimum(0)
+        zoomSlider.setMinimum(1)
         zoomSlider.setMaximum(10)
         zoomSlider.setValue(0)
         zoomSlider.setTickPosition(QSlider.TicksBelow)
@@ -148,6 +166,20 @@ class Camera():
         contrastSlider.setTickPosition(QSlider.TicksBelow)
         contrastSlider.setTickInterval(5)
 
+        recDurLabel  = QLabel("record Duration (sec)")
+        recDurBox = QLineEdit(self)
+        recDurBox.setText("1")
+
+        tlDurLabel  = QLabel("TL Duration (sec)")
+        tlDurBox = QLineEdit(self)
+        tlDurBox.setText("1")
+        
+        tlIntLabel  = QLabel("interval between images (sec)")
+        tlIntBox = QLineEdit(self)
+        tlIntBox.setText("1")
+        
+        
+        
         # add all widgets to a grid
         layout = QGridLayout()
         layout.addWidget(onButton, 1, 0)
@@ -194,60 +226,76 @@ class Camera():
 
         layout.addWidget(contrastLabel,4, 4)
         layout.addWidget(contrastSlider,5, 4)
-
+        layout.addWidget(convButton,6,0)
+        layout.addWidget(tlButton,6,1)
+        layout.addWidget(snapButton,7,1)
+        layout.addWidget(recButton,8,1)
+        
+        layout.addWidget(recDurBox, 8,2)
+        layout.addWidget(recDurLabel, 8, 3)
+        layout.addWidget(tlDurBox, 6,2)
+        layout.addWidget(tlDurLabel, 6, 3)
+        layout.addWidget(tlIntBox, 7,2)
+        layout.addWidget(tlIntLabel, 7, 3)
+        
         self.Camera.setLayout(layout)
+        
 
-        def onUpdate(self):
+        def onUpdate():
             if onButton.isChecked():
 
                 print ("cam on")
                 if cam1==1:
-                    res = self.resVar.get()
-                    size = self.sizeVar.get()
-                    self.cam.resolution = (2592, 1944)
-                    self.cam.preview_window = (0, 0, size, size)
-                    self.zoomVar.set(1)
-                    self.horVar.set(0)
-                    self.verVar.set(0)
-                    self.cam.zoom = (self.horVar.get(),
-                               self.verVar.get(),
-                               self.zoomVar.get(),
-                               self.zoomVar.get())
-                    self.cam.start_preview()
+                    res = resUpdate()
+                    size = windowSlider.value()
+                    cam.resolution = (res[0],res[1])
+                    cam.preview_window = (0, 0, size, size)
+                    zoomSlider.setValue(1)
+                    horSlider.setValue(0)
+                    verSlider.setValue(0)
+                    cam.zoom = (horSlider.value(),
+                                verSlider.value(),
+                                zoomSlider.value(),
+                                zoomSlider.value())
+                    cam.start_preview()
 
-                    self.cam.preview.fullscreen = False
+                    cam.preview.fullscreen = False
                     #wait a second so the camera adjusts
                     time.sleep(1)
             else:
                 print("OFF")
                 if cam1==1:
-                    self.cam.stop_preview()
+                    cam.stop_preview()
 
-        onButton.clicked.connect(onUpdate)
+        
 
-        def resUpdate(self):
-            print(resolutionMenu.currentText())
+        def resUpdate():
+            
             text = resolutionMenu.currentText()
             index = text.find('x')
+            values = [int(text[0:index]),int(text[index+1:])]
             if cam1==1:
-                self.cam.resolution = (int(text[0:index]),int(text[index+1:]))
+                cam.resolution = (int(text[0:index]),int(text[index+1:]))
+            
+            print(values)
+            return values
 
-        def wbUpdate(self):
+        def wbUpdate():
             print(wbMenu.currentText())
             if cam1==1:
                 if wbMenu.currentText() == "green":
-                    self.cam.awb_mode = "off"
-                    self.cam.awb_gains = (1, 1)
+                    cam.awb_mode = "off"
+                    cam.awb_gains = (1, 1)
                 elif wbMenu.currentText() == "red":
-                    self.cam.awb_mode = "off"
-                    self.cam.awb_gains = (8.0, 0.9)
+                    cam.awb_mode = "off"
+                    cam.awb_gains = (8.0, 0.9)
                 elif wbMenu.currentText() == "blue":
-                    self.cam.awb_mode = "off"
-                    self.cam.awb_gains = (0.9, 8.0)
+                    cam.awb_mode = "off"
+                    cam.awb_gains = (0.9, 8.0)
                 elif wbMenu.currentText() == "off":
-                    self.cam.awb_mode = "off"
+                    cam.awb_mode = "off"
                 else:
-                    self.cam.awb_mode = wbMenu.currentText()
+                    cam.awb_mode = wbMenu.currentText()
 
 
         def modeUpdate(self):
@@ -277,7 +325,7 @@ class Camera():
         def rotationUpdate(self):
             print(rotationSlider.value())
             if cam1==1:
-                self.cam.rotation = (rotationSlider.value())
+                cam.rotation = (rotationSlider.value())
 
 
         def zoomUpdate(self):
@@ -286,28 +334,28 @@ class Camera():
                 horSlider.setValue(5)
                 verSlider.setValue(5)
             if cam1==1:
-                if ZoomSlider.value()==1:
-                    self.cam.zoom = (0, 0, 1, 1)
+                if zoomSlider.value()==1:
+                    cam.zoom = (0, 0, 1, 1)
                     horSlider.setValue(0)
                     verSlider.setValue(0)
-                else:
-                    zoomSide = 1 / zoomSlider.Value()
+                elif zoomSlider.value()!=0:                        
+                    zoomSide = 1 / zoomSlider.value()
                     edge = (1 - zoomSide)#*0.5
-                    self.cam.zoom = ((horSlider.value() / 100.0) * edge,
+                    cam.zoom = ((horSlider.value() / 100.0) * edge,
                                    ( verSlider.value() / 100.0) * edge,
-                                   1 / zoomSlider.Value(),
-                                   1 / zoomSlider.Value())
+                                   1 / zoomSlider.value(),
+                                   1 / zoomSlider.value())
 
-        #def verUpdate(self):
-        #    print(verSlider.value())
+        def verUpdate(self):
+            print(verSlider.value())
 
-        #def horUpdate(self):
-        #    print(horSlider.value())
+        def horUpdate(self):
+            print(horSlider.value())
 
         def windowUpdate(self):
             print(windowSlider.value())
             if cam1==1:
-                self.cam.preview_window = (0, 0, windowSlider.value(), windowSlider.value())
+                cam.preview_window = (0, 0, windowSlider.value(), windowSlider.value())
 
         def binUpdate(self):
             print("here")
@@ -316,22 +364,22 @@ class Camera():
         def exposureUpdate(self):
             print(exposureSlider.value())
             if cam1==1:
-                self.cam.exposure_compensation = (exposureSlider.value())
+                cam.exposure_compensation = (exposureSlider.value())
 
         def brightnessUpdate(self):
             print(brightnessSlider.value())
             if cam1==1:
-                self.cam.brightness = (brightnessSlider.value())
+                cam.brightness = (brightnessSlider.value())
 
         def contrastUpdate(self):
             print(contrastSlider.value())
             if cam1==1:
-                self.cam.contrast = (contrastSlider.value())
+                cam.contrast = (contrastSlider.value())
 
         def fpsUpdate(self):
             print(fpsSlider.value())
             if cam1==1:
-                self.cam.framerate = (fpsSlider.value())
+                cam.framerate = (fpsSlider.value())
 
 
 
@@ -348,11 +396,139 @@ class Camera():
 
 
 
+        
+        
+        def camConv2():
+
+            #opts = dict()
+            #opts["filetypes"] = [('h264 files','*.h264'),('all files','.*')]
+            #opts["initialdir"] = [self.basePath]
+
+            #fileName = QFileDialog.getOpenFileName()
+            options = QFileDialog.Options()
+            fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","h264 Files (.h264);;Python Files (*.py)", options=options)
+            
+            if fileName == '':
+                print ('no files selected')
+                return
+            fps = fpsSlider.value()
+            fps = "-r" + str(fps)
+
+            print (fileName)
+            print ("converting video to avi")
+            outname = os.path.splitext(fileName)[0]+".avi"
+            lastInd=fileName.rindex("/")
+            files = os.listdir(fileName[0:lastInd])
+            outCore = outname.rindex("/")
+            print ("out:" + outname[outCore:])
+            if outname[outCore+1:] in files:
+                print ("file is already converted! Skipping...")
+                print("done.")
+                return
+            command = ['MP4Box', '-add', fileName, outname]
+            #command = ['ffmpeg', '-i', fileName,"-b",str(self.bitRate) ,"-pix_fmt","nv12","-f:v","-vcodec rawvideo", outname]
+            subprocess.call(command,shell=False)
+            print("done.")
+            return
+        
+        
+        
+        
+        def camRec(self,dur=None):
+            if dur == None:
+                dur = self.recDurBox.text()
+
+
+            videoPath = self.basePath + '/videos/'
+            if not os.path.exists(videoPath):
+                #if not, create it:
+                os.makedirs(videoPath)
+                os.chown(videoPath, 1000, 1000)
+            #it seems that the raspi-cam doesn't like shooting videos at full res.
+            #so the softw. will automatically use a lower resolution for videos
+            if resVal == "2592x1944":
+                resVar.set ("1920x1080")
+                cam.resolution = (1920, 1080)
+                if FPSVar.get()<30:
+                    FPSVar.set(30)
+                print ("impossible to record at 2592X1944,")
+                print ("due to camera limitations.")
+                print("dropping to next possible resolution")
+
+
+            print("recording for: " + str(dur) + " secs")
+            cam.start_recording(output = videoPath +
+                                'video_' +
+                                time.strftime('%Y-%m-%d-%H-%M-%S') + '.h264',
+                                format = "h264",)
+                                #resize = (1920,1080))
+            cam.wait_recording(float(dur))
+            cam.stop_recording()
+            print("done.")
+            #here we restore the preview resolution if it was the maximal one.
+            if resVal == "2592x1944":
+                cam.resolution = (2592, 1944)
+            return
+
+
+
+        def camTL(self):
+                
+            dur = tlDurBox.text()
+            interval = tlIntBox.text()
+            tlPath = basePath + '/time_lapse/'
+
+            #check to see if the time lapse output folder is present:
+            if not os.path.exists(tlPath):
+                #if not, create it:
+                os.makedirs(tlPath)
+                os.chown(tlPath, 1000, 1000)
+
+            #get the present time, down to seconds
+            tlFold = time.strftime("%Y-%m-%d-%H-%M-%S")
+
+            #make a new folder to store all time lapse photos
+            os.makedirs(tlPath + tlFold)
+            os.chown(tlPath + tlFold, 1000, 1000)
+            #os.chdir(tlPath+tlFold)
+
+            shots = int(int(dur) / int(interval))
+            if shots <= 0:
+                print("something wrong with time specifications!")
+            else:
+                print('time lapse:')
+                print('number of shots: ' + str(shots))
+                for i in range(0, shots):
+                    print("TL " + str(i + 1) + "/" + str(shots))
+                    self.cam.capture(tlPath + tlFold + "/TL_" + str(i + 1) + ".jpg")
+                    time.sleep(float(interval))
+                print("done.")
+            return
+    
+        def camSnap(self):
+            photoPath = self.basePath + '/snaps/'
+            #check to see if the snap output folder is present:
+            if not os.path.exists(photoPath):
+                #if not, create it:
+                os.makedirs(photoPath)
+                os.chown(photoPath, 1000, 1000)
+
+
+
+            # Camera warm-up time
+            time.sleep(1)
+            self.cam.capture(photoPath + 'snap_' +
+                        time.strftime("%Y-%m-%d-%H-%M-%S") + '.jpg')
+            return        
+        
+        onButton.clicked.connect(onUpdate)
+        convButton.clicked.connect(camConv2)
+        tlButton.clicked.connect(camTL)
         modeMenu.activated.connect(modeUpdate)
         wbMenu.activated.connect(wbUpdate)
         colourMenu.activated.connect(colourUpdate)
         resolutionMenu.activated.connect(resUpdate)
-
+        
 
         return self.Camera
-    #callback functions
+    
