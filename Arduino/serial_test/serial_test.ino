@@ -83,15 +83,15 @@ void setup() {
 }
 
 void loop() {
-  //if (peltOn==1){
-  //HoldTemp(newTemp, tempSensorPin,
-  //             peltierCoolPin1, peltierHeatPin1);
+  if (peltOn==1){
+  HoldTemp(newTemp, tempSensorPin,
+               peltierCoolPin1, peltierHeatPin1);
   
   //Serial.print("target: " );
   //Serial.println(newTemp);
   //Serial.print("current: ");
   //Serial.println(checkTemp(tempSensorPin));
-  //}//if
+  }//if
                
   sCmd.readSerial();     // We don't do much, just process serial commands
   

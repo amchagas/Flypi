@@ -1,11 +1,14 @@
 from PyQt5.QtCore import QDateTime, Qt, QTimer
+from PyQt5 import QtGui
 from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateTimeEdit,
         QDial, QDialog, QGridLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit,
         QProgressBar, QPushButton, QRadioButton, QScrollBar, QSizePolicy,
         QSlider, QSpinBox, QStyleFactory, QTableWidget, QTabWidget, QTextEdit,
-        QVBoxLayout, QWidget)
+        QVBoxLayout, QWidget,QLCDNumber,QVBoxLayout)
+
 
 from camera_qt import Camera
+from datetime import datetime
 #from ring_qt import Ring
 import time
 import os
@@ -81,6 +84,7 @@ class WidgetGallery(QDialog):
 
         self.setWindowTitle("Protocols app")
         return
+    
 
 
     def serwrite(self,msg):
@@ -90,6 +94,12 @@ class WidgetGallery(QDialog):
 
 
     def createProtocol(self):
+        #from stackoverflow - easy way to add item in between every item on the list
+        def intersperse(lst, item):
+            result = [item] * (len(lst) * 2 - 1)
+            result[0::2] = lst
+            return result
+        
         self.Protocol = QGroupBox("Protocol")
         layout = QGridLayout()
 
@@ -232,10 +242,15 @@ class WidgetGallery(QDialog):
         rep1Box.setText('2')
         layout.addWidget(rep1Box,7,3)
 
-
+		
         layout.addWidget(runButton,8,0)
-
-
+		
+        lcd = QLCDNumber()
+        lcd.setGeometry(30, 30, 800, 600)
+        lcd.setWindowTitle('Time')
+        lcd.setSegmentStyle(QLCDNumber.Flat)
+     
+        layout.addWidget(lcd,9,0)
 
         self.Protocol.setLayout(layout)
 
@@ -340,9 +355,14 @@ class WidgetGallery(QDialog):
                 if totalDur<2.:
                     totalDur = 2
 
-
+                if peltierButton.isChecked():
+                    allcom = intersperse(allcom, "GT")
+                    
                 x=1
                 print(allcom)
+                temperature = -999.
+                allTemps = list()
+                allTimes = list()
                 for i in range(reps):
                     if i+1==reps:
                         allcom.append('R0')
@@ -353,17 +373,29 @@ class WidgetGallery(QDialog):
                         haltFlag=1
                         ser.write(str(command+'\n').encode('utf-8'))
                         ser.flush()
+                        
                         x=x+1
                         while ser.in_waiting==0:
                             x=x
                         while haltFlag==1:
+							
                             test=ser.readline()
+                            #lcd.display(x)
                             #print(test[0:-2])
                             if test[0:-2]=='d'.encode('utf-8') or test[0:-2]=='Ready'.encode('utf-8'):
                                 haltFlag=0
+                                lcd.display(temperature)
                             else:
-                                print(test)
-
+								
+                                temperature = float(test[0:-2]) 
+                                allTimes.append(datetime.now())
+                                allTemps.append(temperature)
+                                
+                                
+                            
+                print("done")
+                 
+                runButton.setChecked(False)
 
             return
 

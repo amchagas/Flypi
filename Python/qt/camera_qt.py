@@ -486,8 +486,8 @@ class Camera():
             cam.stop_recording()
             print("done.")
             #here we restore the preview resolution if it was the maximal one.
-            if resVal == "2592x1944":
-                cam.resolution = (2592, 1944)
+            #if resVal == "2592x1944":
+            #    cam.resolution = (2592, 1944)
             return
 
 
