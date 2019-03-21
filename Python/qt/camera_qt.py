@@ -37,7 +37,7 @@ class Camera():
 
         self.Camera = QGroupBox("Camera")
         self.edge=0
-
+        self.camOnFlag=0
 
         onButton = QPushButton("ON")
         onButton.setCheckable(True)
@@ -240,13 +240,14 @@ class Camera():
         layout.addWidget(tlIntLabel, 7, 3)
         
         self.Camera.setLayout(layout)
-        
+        return "test"
 
         def onUpdate():
             if onButton.isChecked():
-
+                self.camOnFlag=1
                 print ("cam on")
                 if cam1==1:
+                    camFlag=1
                     res = resUpdate()
                     size = windowSlider.value()
                     cam.resolution = (res[0],res[1])
@@ -265,7 +266,9 @@ class Camera():
                     time.sleep(1)
             else:
                 print("OFF")
+                self.camOnFlag=0
                 if cam1==1:
+                    camFlag=0
                     cam.stop_preview()
 
         
