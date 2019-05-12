@@ -36,7 +36,8 @@ class Camera():
             print ("picamera module not available!")
 
         self.Camera = QGroupBox("Camera")
-
+        self.edge=0
+        self.camOnFlag=0
 
         onButton = QPushButton("ON")
         onButton.setCheckable(True)
@@ -239,13 +240,18 @@ class Camera():
         layout.addWidget(tlIntLabel, 7, 3)
 
         self.Camera.setLayout(layout)
+<<<<<<< HEAD
 
+=======
+        return "test"
+>>>>>>> 120ce8ad85599604e249a00eddda077fe48f4398
 
         def onUpdate():
             if onButton.isChecked():
-
+                self.camOnFlag=1
                 print ("cam on")
                 if cam1==1:
+                    camFlag=1
                     res = resUpdate()
                     size = windowSlider.value()
                     cam.resolution = (res[0],res[1])
@@ -264,7 +270,9 @@ class Camera():
                     time.sleep(1)
             else:
                 print("OFF")
+                self.camOnFlag=0
                 if cam1==1:
+                    camFlag=0
                     cam.stop_preview()
 
 
@@ -302,22 +310,22 @@ class Camera():
             print("here")
             print(modeMenu.currentText())
             if cam1==1:
-                if self.cam.image_effect != modeMenu.currentText():
-                    self.cam.image_effect = modeMenu.currentText()
+                if cam.image_effect != modeMenu.currentText():
+                    cam.image_effect = modeMenu.currentText()
 
         def colourUpdate(self):
             if cam1==1:
-                if self.camColEffVal != "":
-                    if self.colourMenu.currentText() == "BW":
-                        self.cam.color_effects = (128, 128)
-                    elif self.colourMenu.currentText() == "RED":
-                        self.cam.color_effects = (0, 255)
-                    elif self.colourMenu.currentText() == "BLUE":
-                        self.cam.color_effects = (255, 0)
-                    elif self.colourMenu.currentText() == "GREEN":
-                        self.cam.color_effects = (0, 0)
+                if colourMenu.currentText() != "":
+                    if colourMenu.currentText() == "BW":
+                        cam.color_effects = (128, 128)
+                    elif colourMenu.currentText() == "Red":
+                        cam.color_effects = (0, 255)
+                    elif colourMenu.currentText() == "Blue":
+                        cam.color_effects = (255, 0)
+                    elif colourMenu.currentText() == "Green":
+                        cam.color_effects = (0, 0)
                     else:
-                        self.cam.color_effects = None
+                        cam.color_effects = None
             #print("here")
             print(colourMenu.currentText())
 
@@ -325,7 +333,7 @@ class Camera():
         def rotationUpdate(self):
             print(rotationSlider.value())
             if cam1==1:
-                cam.rotation = (rotationSlider.value())
+                cam.rotation = (rotationSlider.value()*90)
 
 
         def zoomUpdate(self):
@@ -338,6 +346,7 @@ class Camera():
                     cam.zoom = (0, 0, 1, 1)
                     horSlider.setValue(0)
                     verSlider.setValue(0)
+<<<<<<< HEAD
                 elif zoomSlider.value()!=0:
                     zoomSide = 1 / zoomSlider.value()
                     edge = (1 - zoomSide)#*0.5
@@ -345,12 +354,38 @@ class Camera():
                                    ( verSlider.value() / 100.0) * edge,
                                    1 / zoomSlider.value(),
                                    1 / zoomSlider.value())
+=======
+                #elif zoomSlider.value()!=0:    
+                #    zoomSide = 1 / zoomSlider.value()
+                #    edge = (1 - zoomSide)#*0.5
+                #    cam.zoom = (((horSlider.value()*10)/ 100.0) * edge,
+                #                   (verSlider.value() / 100.0) * edge,
+                #                   1 / zoomSlider.value(),
+                #                   1 / zoomSlider.value())
+                    
+>>>>>>> 120ce8ad85599604e249a00eddda077fe48f4398
 
         def verUpdate(self):
-            print(verSlider.value())
+            if cam1==1 and cam.zoom!=0:
+                #print("here12")
+                zoomSide = 1 / zoomSlider.value()
+                edge = (1 - zoomSide)#*0.5
+                cam.zoom = (((horSlider.value()*10)/ 100.0) * edge,
+                            ((verSlider.value()*10) / 100.0) * edge,
+                            1 / zoomSlider.value(),
+                            1 / zoomSlider.value())
+                
+            
 
         def horUpdate(self):
-            print(horSlider.value())
+            if cam1==1 and cam.zoom!=0:
+                #print("here12")
+                zoomSide = 1 / zoomSlider.value()
+                edge = (1 - zoomSide)#*0.5
+                cam.zoom = (((horSlider.value()*10)/ 100.0) * edge,
+                            ((verSlider.value()*10) / 100.0) * edge,
+                            1 / zoomSlider.value(),
+                            1 / zoomSlider.value())
 
         def windowUpdate(self):
             print(windowSlider.value())
@@ -386,8 +421,8 @@ class Camera():
         rotationSlider.valueChanged.connect(rotationUpdate)
         fpsSlider.valueChanged.connect(fpsUpdate)
         zoomSlider.valueChanged.connect(zoomUpdate)
-        #verSlider.valueChanged.connect(verUpdate)
-        #horSlider.valueChanged.connect(horUpdate)
+        verSlider.valueChanged.connect(verUpdate)
+        horSlider.valueChanged.connect(horUpdate)
         windowSlider.valueChanged.connect(windowUpdate)
         binSlider.valueChanged.connect(binUpdate)
         exposureSlider.valueChanged.connect(exposureUpdate)
@@ -430,22 +465,32 @@ class Camera():
             subprocess.call(command,shell=False)
             print("done.")
             return
+<<<<<<< HEAD
 
 
 
 
         def camRec(self,dur=None):
+=======
+        
+        
+        
+        
+        def camRec(self,dur=5):
+>>>>>>> 120ce8ad85599604e249a00eddda077fe48f4398
             if dur == None:
-                dur = self.recDurBox.text()
+                
+                dur = int(self.recDurBox.text())
 
 
-            videoPath = self.basePath + '/videos/'
+            videoPath = basePath + 'videos/'
             if not os.path.exists(videoPath):
                 #if not, create it:
                 os.makedirs(videoPath)
                 os.chown(videoPath, 1000, 1000)
             #it seems that the raspi-cam doesn't like shooting videos at full res.
             #so the softw. will automatically use a lower resolution for videos
+<<<<<<< HEAD
             if resVal == "2592x1944":
                 resVar.set ("1920x1080")
                 if cam1==1:
@@ -453,25 +498,44 @@ class Camera():
                 
                 if FPSVar.get()<30:
                     FPSVar.set(30)
+=======
+            
+            if  resolutionMenu.currentText() == "2592x1944":
+                if cam1==1:
+                    cam.resolution = (1920, 1080)
+                if fpsSlider.value()<30:
+                    fpsSlider.setValue(30)
+>>>>>>> 120ce8ad85599604e249a00eddda077fe48f4398
                 print ("impossible to record at 2592X1944,")
                 print ("due to camera limitations.")
                 print("dropping to next possible resolution")
 
 
             print("recording for: " + str(dur) + " secs")
+<<<<<<< HEAD
             if cam1==1:
                 cam.start_recording(output = videoPath +
                                 'video_' +
                                 time.strftime('%Y-%m-%d-%H-%M-%S') + '.h264',
+=======
+            output1 = videoPath +'video_' +time.strftime('%Y-%m-%d-%H-%M-%S') + '.h264'
+            print(output1)
+            cam.start_recording(output = output1,
+>>>>>>> 120ce8ad85599604e249a00eddda077fe48f4398
                                 format = "h264",)
                                 #resize = (1920,1080))
                 cam.wait_recording(float(dur))
                 cam.stop_recording()
                 print("done.")
             #here we restore the preview resolution if it was the maximal one.
+<<<<<<< HEAD
             if resVal == "2592x1944":
                 if cam1==1:
                     cam.resolution = (2592, 1944)
+=======
+            #if resVal == "2592x1944":
+            #    cam.resolution = (2592, 1944)
+>>>>>>> 120ce8ad85599604e249a00eddda077fe48f4398
             return
 
 
@@ -504,13 +568,13 @@ class Camera():
                 print('number of shots: ' + str(shots))
                 for i in range(0, shots):
                     print("TL " + str(i + 1) + "/" + str(shots))
-                    self.cam.capture(tlPath + tlFold + "/TL_" + str(i + 1) + ".jpg")
+                    cam.capture(tlPath + tlFold + "/TL_" + str(i + 1) + ".jpg")
                     time.sleep(float(interval))
                 print("done.")
             return
 
         def camSnap(self):
-            photoPath = self.basePath + '/snaps/'
+            photoPath = basePath + 'snaps/'
             #check to see if the snap output folder is present:
             if not os.path.exists(photoPath):
                 #if not, create it:
@@ -521,13 +585,15 @@ class Camera():
 
             # Camera warm-up time
             time.sleep(1)
-            self.cam.capture(photoPath + 'snap_' +
+            cam.capture(photoPath + 'snap_' +
                         time.strftime("%Y-%m-%d-%H-%M-%S") + '.jpg')
             return
 
         onButton.clicked.connect(onUpdate)
         convButton.clicked.connect(camConv2)
         tlButton.clicked.connect(camTL)
+        snapButton.clicked.connect(camSnap)
+        recButton.clicked.connect(camRec)
         modeMenu.activated.connect(modeUpdate)
         wbMenu.activated.connect(wbUpdate)
         colourMenu.activated.connect(colourUpdate)

@@ -54,10 +54,6 @@ float checkTemp(int pinToRead) {
 
 
 
-
-
-
-
 float HoldTemp(float finalTemp, int tempSensorPin,
                int peltierCoolPin2, int peltierHeatPin2) {
   float temperature, temps;
