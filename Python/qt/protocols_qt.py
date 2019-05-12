@@ -19,7 +19,7 @@ except ImportError:
     print ("user interface will not control flypi!")
 
 
-loadSerial = 1
+loadSerial = 0
 
 if loadSerial == 1:
     if serialAvail == True:

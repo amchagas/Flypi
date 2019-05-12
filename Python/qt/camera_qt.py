@@ -41,11 +41,11 @@ class Camera():
         onButton = QPushButton("ON")
         onButton.setCheckable(True)
         onButton.setChecked(False)
-        
+
         convButton = QPushButton("to AVI")
         convButton.setCheckable(False)
         convButton.setChecked(False)
-        
+
         tlButton = QPushButton("Time Lapse")
         tlButton.setCheckable(False)
         tlButton.setChecked(False)
@@ -53,11 +53,11 @@ class Camera():
         snapButton = QPushButton("Photo")
         snapButton.setCheckable(False)
         snapButton.setChecked(False)
-        
+
         recButton = QPushButton("REC video")
         recButton.setCheckable(False)
         recButton.setChecked(False)
-        
+
         resolutionLabel = QLabel("Resolution:")
 
         resolutionMenu = QComboBox()
@@ -173,13 +173,13 @@ class Camera():
         tlDurLabel  = QLabel("TL Duration (sec)")
         tlDurBox = QLineEdit(self)
         tlDurBox.setText("1")
-        
+
         tlIntLabel  = QLabel("interval between images (sec)")
         tlIntBox = QLineEdit(self)
         tlIntBox.setText("1")
-        
-        
-        
+
+
+
         # add all widgets to a grid
         layout = QGridLayout()
         layout.addWidget(onButton, 1, 0)
@@ -230,16 +230,16 @@ class Camera():
         layout.addWidget(tlButton,6,1)
         layout.addWidget(snapButton,7,1)
         layout.addWidget(recButton,8,1)
-        
+
         layout.addWidget(recDurBox, 8,2)
         layout.addWidget(recDurLabel, 8, 3)
         layout.addWidget(tlDurBox, 6,2)
         layout.addWidget(tlDurLabel, 6, 3)
         layout.addWidget(tlIntBox, 7,2)
         layout.addWidget(tlIntLabel, 7, 3)
-        
+
         self.Camera.setLayout(layout)
-        
+
 
         def onUpdate():
             if onButton.isChecked():
@@ -267,16 +267,16 @@ class Camera():
                 if cam1==1:
                     cam.stop_preview()
 
-        
+
 
         def resUpdate():
-            
+
             text = resolutionMenu.currentText()
             index = text.find('x')
             values = [int(text[0:index]),int(text[index+1:])]
             if cam1==1:
                 cam.resolution = (int(text[0:index]),int(text[index+1:]))
-            
+
             print(values)
             return values
 
@@ -338,7 +338,7 @@ class Camera():
                     cam.zoom = (0, 0, 1, 1)
                     horSlider.setValue(0)
                     verSlider.setValue(0)
-                elif zoomSlider.value()!=0:                        
+                elif zoomSlider.value()!=0:
                     zoomSide = 1 / zoomSlider.value()
                     edge = (1 - zoomSide)#*0.5
                     cam.zoom = ((horSlider.value() / 100.0) * edge,
@@ -396,8 +396,8 @@ class Camera():
 
 
 
-        
-        
+
+
         def camConv2():
 
             #opts = dict()
@@ -407,7 +407,7 @@ class Camera():
             #fileName = QFileDialog.getOpenFileName()
             options = QFileDialog.Options()
             fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","h264 Files (.h264);;Python Files (*.py)", options=options)
-            
+
             if fileName == '':
                 print ('no files selected')
                 return
@@ -430,10 +430,10 @@ class Camera():
             subprocess.call(command,shell=False)
             print("done.")
             return
-        
-        
-        
-        
+
+
+
+
         def camRec(self,dur=None):
             if dur == None:
                 dur = self.recDurBox.text()
@@ -448,7 +448,9 @@ class Camera():
             #so the softw. will automatically use a lower resolution for videos
             if resVal == "2592x1944":
                 resVar.set ("1920x1080")
-                cam.resolution = (1920, 1080)
+                if cam1==1:
+                    cam.resolution = (1920, 1080)
+                
                 if FPSVar.get()<30:
                     FPSVar.set(30)
                 print ("impossible to record at 2592X1944,")
@@ -457,23 +459,25 @@ class Camera():
 
 
             print("recording for: " + str(dur) + " secs")
-            cam.start_recording(output = videoPath +
+            if cam1==1:
+                cam.start_recording(output = videoPath +
                                 'video_' +
                                 time.strftime('%Y-%m-%d-%H-%M-%S') + '.h264',
                                 format = "h264",)
                                 #resize = (1920,1080))
-            cam.wait_recording(float(dur))
-            cam.stop_recording()
-            print("done.")
+                cam.wait_recording(float(dur))
+                cam.stop_recording()
+                print("done.")
             #here we restore the preview resolution if it was the maximal one.
             if resVal == "2592x1944":
-                cam.resolution = (2592, 1944)
+                if cam1==1:
+                    cam.resolution = (2592, 1944)
             return
 
 
 
         def camTL(self):
-                
+
             dur = tlDurBox.text()
             interval = tlIntBox.text()
             tlPath = basePath + '/time_lapse/'
@@ -504,7 +508,7 @@ class Camera():
                     time.sleep(float(interval))
                 print("done.")
             return
-    
+
         def camSnap(self):
             photoPath = self.basePath + '/snaps/'
             #check to see if the snap output folder is present:
@@ -519,8 +523,8 @@ class Camera():
             time.sleep(1)
             self.cam.capture(photoPath + 'snap_' +
                         time.strftime("%Y-%m-%d-%H-%M-%S") + '.jpg')
-            return        
-        
+            return
+
         onButton.clicked.connect(onUpdate)
         convButton.clicked.connect(camConv2)
         tlButton.clicked.connect(camTL)
@@ -528,7 +532,6 @@ class Camera():
         wbMenu.activated.connect(wbUpdate)
         colourMenu.activated.connect(colourUpdate)
         resolutionMenu.activated.connect(resUpdate)
-        
+
 
         return self.Camera
-    
