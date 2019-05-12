@@ -47,7 +47,7 @@ void setup() {
   focusServo.attach(servoPin);
   // start ring
   pixels.begin();
-  
+
   Serial.begin(115200);
 
   // Setup callbacks for SerialCommand commands
@@ -86,15 +86,15 @@ void loop() {
   //if (peltOn==1){
   //HoldTemp(newTemp, tempSensorPin,
   //             peltierCoolPin1, peltierHeatPin1);
-  
+
   //Serial.print("target: " );
   //Serial.println(newTemp);
   //Serial.print("current: ");
   //Serial.println(checkTemp(tempSensorPin));
   //}//if
-               
+
   sCmd.readSerial();     // We don't do much, just process serial commands
-  
+
 }// void loop
 
 
@@ -105,18 +105,18 @@ void loop() {
 void RING_on() {
   //Serial.println("ring on");
   ringOn = 1;
-  updateRing(ringRedHue, ringGreenHue, ringBlueHue,ringOn);  
+  updateRing(ringRedHue, ringGreenHue, ringBlueHue,ringOn);
   waited();
 }
 
 void RING_off() {
   //Serial.println("ring off");
-  
+
   updateRing(0, 0, 0, ringOn);
   ringOn=0;
   waited();
   //pixels.show();
-  
+
   }
 
 
@@ -169,7 +169,7 @@ void LED1_on() {
      analogWrite(LED1Pin, aNumber);
      waited();
   }//if
-  
+
 }//led1_on
 
 void LED1_off() {
@@ -231,7 +231,7 @@ void PELT_stemp(){
 void TEMP_read(){
   currTemp = checkTemp(tempSensorPin);
   //Serial.print("temp: ");
-  Serial.println(currTemp);
+  Serial.println(\currTemp);
   waited();
 }//temp read
 
@@ -240,7 +240,7 @@ void TEMP_read(){
 // timing functions /////////////////
 
 void TIME_wait(){
-  
+
   int aNumber;
   //int time1;
   //int time2;
@@ -259,7 +259,7 @@ void TIME_wait(){
     while ((time1 - time2) < aNumber) {
     time1 = millis();
      } //done waiting
-    
+
 
   }//if
   waited();
