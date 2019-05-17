@@ -3,29 +3,27 @@
 // May 2011
 
 // Import libraries
-#include <Servo.h> //servo motor controlling the autofocus
-#include <SerialCommand.h>
+
 
 #include "peltier.h"
 #include "ring.h"
+#include "matrix.h"
+#include "servo.h"
 
-//#define arduinoLED 13   // Arduino LED on board
 
 // define ports
 #define LED1Pin 10
-#define LED2Pin 11 // NOT CONFIGURED
+#define LED2Pin 11 
 
-#define servoPin 8
-#define servoOnPin 9
-//#define peltierEnablePin 13
+
+
 
 
 
 //Timing Variables////////////////////////
 long int millistowait;
 
-//create servo object ****************//
-Servo focusServo;
+
 ////////////////////////////////////////
 
 SerialCommand sCmd;     // The demo SerialCommand object
@@ -51,13 +49,25 @@ void setup() {
   Serial.begin(115200);
 
   // Setup callbacks for SerialCommand commands
+
+  sCmd.addCommand("S1",    SERVO_on);
+  sCmd.addCommand("S0",    SERVO_off);
+  sCmd.addCommand("M1",    MATRIX_on);
+  sCmd.addCommand("M0",    MATRIX_off);
+  sCmd.addCommand("M11",    MATRIX_pat1);
+  sCmd.addCommand("M12",    MATRIX_pat2);
+  sCmd.addCommand("M13",    MATRIX_pat3);
+
+  
   sCmd.addCommand("L11",    LED1_on);          // Turns LED1 on and sets intensity
 
   //sCmd.addCommand("L12",    LED1_PWM);         // Set intensity LED1
 
   sCmd.addCommand("L10",    LED1_off);         // Turns LED1 off
   sCmd.addCommand("L21",    LED2_on);          // Turns LED2 on
+  
   //sCmd.addCommand("L22",    LED2_PWM);         // Set intensity LED2
+  
   sCmd.addCommand("L20",    LED2_off);         // Turns LED2 off
   sCmd.addCommand("R1",     RING_on);          // Turns RING on
   sCmd.addCommand("R0",     RING_off);         // Turns RING off
@@ -83,20 +93,52 @@ void setup() {
 }
 
 void loop() {
-  //if (peltOn==1){
-  //HoldTemp(newTemp, tempSensorPin,
-  //             peltierCoolPin1, peltierHeatPin1);
-
-  //Serial.print("target: " );
-  //Serial.println(newTemp);
-  //Serial.print("current: ");
-  //Serial.println(checkTemp(tempSensorPin));
-  //}//if
-
   sCmd.readSerial();     // We don't do much, just process serial commands
 
 }// void loop
 
+///////// servo callbacks ////////////////////////////
+void SERVO_on(){
+  servoOn = 1;
+  int aNumber;
+  char *arg;
+  arg = sCmd.next();
+  digitalWrite(servoOnPin, HIGH);
+  if (arg != NULL) {
+    focusServo.write(atoi(arg)); //because this is a cont. servo,
+    //this will set the velocity, not the pos.
+    delay(15);
+      
+    }// if arg!=NULL
+  waited();
+  
+  }//servo_on
+  
+void SERVO_off(){
+  servoOn = 0;
+  digitalWrite(servoOnPin, LOW);
+  waited();
+  }
+
+/////////matrix callbacks ////////////////////////////
+void MATRIX_on(){
+  matrixOn = 1;
+  }
+  
+void MATRIX_off(){
+  matrixOn = 0;
+  waited();
+  }
+  
+void MATRIX_pat1(){
+  waited();
+  }
+void MATRIX_pat2(){
+  waited();
+  }
+void MATRIX_pat3(){
+  waited();
+  }
 
 /////////ring callbacks //////////////////////////////
 
@@ -115,7 +157,7 @@ void RING_off() {
   updateRing(0, 0, 0, ringOn);
   ringOn=0;
   waited();
-  //pixels.show();
+  pixels.show();
 
   }
 
@@ -179,14 +221,19 @@ void LED1_off() {
 }
 
 void LED2_on() {
-  Serial.println("LED2 on");
-  digitalWrite(LED2Pin, HIGH);
-  waited();
+  int aNumber;
+  char *arg;
+  arg = sCmd.next();
+  if (arg != NULL) {
+     aNumber = atoi(arg);
+     analogWrite(LED2Pin, aNumber);
+     waited();
+  }//if
 }
 
 void LED2_off() {
   Serial.println("LED2 off");
-  digitalWrite(LED2Pin, LOW);
+  analogWrite(LED2Pin, 0;
   waited();
 }
 
@@ -231,7 +278,7 @@ void PELT_stemp(){
 void TEMP_read(){
   currTemp = checkTemp(tempSensorPin);
   //Serial.print("temp: ");
-  Serial.println(\currTemp);
+  Serial.println(currTemp);
   waited();
 }//temp read
 
