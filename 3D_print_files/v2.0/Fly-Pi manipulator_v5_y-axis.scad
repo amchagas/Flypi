@@ -18,9 +18,9 @@ Height_of_boat_slids = 3.2;
 
 
 AFlag=0;
-BFlag=1;
+BFlag=0;
 
-CFlag=0;
+CFlag=1;
 DFlag=0;
 EFlag=0;
 E1Flag=0;
@@ -71,7 +71,7 @@ Airhole_R2 = 4;
 Airhole_spacing = 13;
 Groud_clearance = ((A_Base_Z - Airhole_R*2)/2)/2;
 
-
+/*
 module A_base(){
 	translate([0,0,-A_Z_lower])cube([A_X+A_extrawall*2,A_Y+A_extrawall*2,A_Z], center = true);
 	translate([0,A_Y/2+A_extrawall+Cam_link/2,-A_Z_lower+Groud_clearance/2])cube([A_X+A_extrawall*2,Cam_link,A_Z+Groud_clearance], center = true);
@@ -136,6 +136,7 @@ difference(){A_base();A_basehole();}
 difference(){A_base_beams();A_base_beams_holes();}
 }
 
+*/
 //////////////////////////////
 //// MIDDLE PART (B) /////////
 //////////////////////////////
@@ -143,6 +144,7 @@ B_Y = A_Y -2*wall-2*gap;
 B_X = 20;
 B_Z = 23;
 B_beam_Z = 6; 
+/*
 module B_base(){
 	translate([0,0,sep]){cube([B_X,B_Y,B_Z], center = true);}
 	translate([0,A_Y/2-wall,sep-B_Z/2+8+gap]){rotate([90,-15,90]){cylinder($fn = 3, r = wall, h = B_X, center = true);}} // slope1
@@ -172,7 +174,7 @@ difference(){B_base();B_basehole();}
 
 difference(){B_base_hexslot();B_basehole2();}
 }
-
+*/
 //////////////////////////////
 // TOP PART (C) ///////////////
 //////////////////////////////
@@ -183,6 +185,7 @@ D_Z = 10;
 D_Z_extra = 5;
 C_Z_top = Z_range + 2*wall + D_Z + D_Z_extra;
 C_Z = C_Z_bottom + C_Z_top;
+
 
 module C_base(){
 	translate([0,0,2*sep+C_Z/2]){cube([B_X,C_Y,C_Z_top], center = true);} // upper
@@ -214,7 +217,7 @@ difference(){C_base();C_basehole();}
 //////////////////////////////
 // TOP DRIVE INSET (D) ///////
 //////////////////////////////
-
+/*
 D_X = C_X; 
 D_Y = C_Y;
 D_X_holder = 20;
@@ -467,5 +470,5 @@ if (M1Flag==1){
 difference (){M2_base();M2_hole();}
 }
 
-
+*/
 
