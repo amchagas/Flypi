@@ -57,6 +57,8 @@ void setup() {
   sCmd.addCommand("M11",    MATRIX_pat1);
   sCmd.addCommand("M12",    MATRIX_pat2);
   sCmd.addCommand("M13",    MATRIX_pat3);
+  sCmd.addCommand("M14",    MATRIX_bright);
+  
 
   
   sCmd.addCommand("L11",    LED1_on);          // Turns LED1 on and sets intensity
@@ -123,20 +125,62 @@ void SERVO_off(){
 /////////matrix callbacks ////////////////////////////
 void MATRIX_on(){
   matrixOn = 1;
+  
+  waited();
   }
   
 void MATRIX_off(){
   matrixOn = 0;
+  matrix.clear();
+  matrix.writeDisplay(); 
   waited();
   }
+
+void MATRIX_bright(){
+  matrix.setBrightness(matrix_brightness);
   
-void MATRIX_pat1(){
+  if (matrixOn==1){
+    matrix.writeDisplay();
+  }
   waited();
+  }  
+void MATRIX_pat1(){
+  
+   matrix.clear();
+   matrix.drawBitmap(0, 0, matrix_pattern1, 8, 8, LED_ON);
+   if (matrixOn == 1){
+    matrix.writeDisplay(); // write changes to the display
+   }
+   waited();
   }
 void MATRIX_pat2(){
+   
+   matrix.clear();
+   matrix.drawBitmap(0, 0, matrix_pattern2, 8, 8, LED_ON);
+   if (matrixOn == 1){
+    matrix.writeDisplay(); // write changes to the display
+   }//if
   waited();
   }
 void MATRIX_pat3(){
+  for (int i = 0; i < 4; i = i+1) {
+     matrix.clear();
+     if (i==0) { 
+        matrix.drawLine(0,0, 0,7, LED_ON);  matrix.drawLine(1,0, 1,7, LED_ON);
+        matrix.drawLine(4,0, 4,7, LED_ON);  matrix.drawLine(5,0, 5,7, LED_ON); }          
+     if (i==1) { 
+        matrix.drawLine(1,0, 1,7, LED_ON);  matrix.drawLine(2,0, 2,7, LED_ON);
+        matrix.drawLine(5,0, 5,7, LED_ON);  matrix.drawLine(6,0, 6,7, LED_ON); }          
+     if (i==2) { 
+        matrix.drawLine(2,0, 2,7, LED_ON);  matrix.drawLine(3,0, 3,7, LED_ON);
+        matrix.drawLine(6,0, 6,7, LED_ON);  matrix.drawLine(7,0, 7,7, LED_ON); }          
+      if (i==3) { 
+        matrix.drawLine(3,0, 3,7, LED_ON);  matrix.drawLine(4,0, 4,7, LED_ON);
+        matrix.drawLine(7,0, 7,7, LED_ON);  matrix.drawLine(0,0, 0,7, LED_ON); }          
+     if (matrixOn==1){
+      matrix.writeDisplay(); // write changes to the display
+     }//if matrix on
+     delay(100); }
   waited();
   }
 
@@ -232,8 +276,8 @@ void LED2_on() {
 }
 
 void LED2_off() {
-  Serial.println("LED2 off");
-  analogWrite(LED2Pin, 0;
+  //Serial.println("LED2 off");
+  analogWrite(LED2Pin, 0);
   waited();
 }
 

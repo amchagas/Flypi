@@ -2,8 +2,7 @@
 
 #include <Adafruit_NeoPixel.h> // LED Ring
 #include <Wire.h> // LED Matrix
-#include <Adafruit_LEDBackpack.h> // LED Matrix
-#include <Adafruit_GFX.h> // LED Matrix
+
 
 
 #define RingPin 7
@@ -37,5 +36,3 @@ void updateRing(int hue1, int hue2, int hue3, int ringOn) {
     pixels.show();
     }//if
 }//void
-
-
