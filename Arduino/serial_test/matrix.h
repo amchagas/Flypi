@@ -1,10 +1,8 @@
-
+/*
 //#define matrix1pin A4
 //#define matrix2pin A5
 
-#include <Wire.h> // LED Matrix
-#include <Adafruit_LEDBackpack.h> // LED Matrix
-#include <Adafruit_GFX.h> // LED Matrix
+
 
 Adafruit_8x8matrix matrix = Adafruit_8x8matrix();
 
@@ -40,3 +38,5 @@ void updateMatrix(int brightness, int matOn){
     matrix.writeDisplay();
     }//if
   }
+  
+  */
