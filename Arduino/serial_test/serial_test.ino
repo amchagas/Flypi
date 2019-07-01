@@ -3,11 +3,19 @@
 // May 2011
 
 // Import libraries
+#include <Adafruit_NeoPixel.h> // LED Ring
+#include <Wire.h> // LED Matrix
 
+#include <Servo.h> //servo motor controlling the autofocus
+#include <SerialCommand.h>
+
+
+//#include <Adafruit_LEDBackpack.h> // LED Matrix
+//#include <Adafruit_GFX.h> // LED Matrix
 
 #include "peltier.h"
 #include "ring.h"
-#include "matrix.h"
+//#include "matrix.h"
 #include "servo.h"
 
 
@@ -52,12 +60,12 @@ void setup() {
 
   sCmd.addCommand("S1",    SERVO_on);
   sCmd.addCommand("S0",    SERVO_off);
-  sCmd.addCommand("M1",    MATRIX_on);
-  sCmd.addCommand("M0",    MATRIX_off);
-  sCmd.addCommand("M11",    MATRIX_pat1);
-  sCmd.addCommand("M12",    MATRIX_pat2);
-  sCmd.addCommand("M13",    MATRIX_pat3);
-  sCmd.addCommand("M14",    MATRIX_bright);
+  //sCmd.addCommand("M1",    MATRIX_on);
+  //sCmd.addCommand("M0",    MATRIX_off);
+  //sCmd.addCommand("M11",    MATRIX_pat1);
+  //sCmd.addCommand("M12",    MATRIX_pat2);
+  //sCmd.addCommand("M13",    MATRIX_pat3);
+  //sCmd.addCommand("M14",    MATRIX_bright);
   
 
   
@@ -122,6 +130,7 @@ void SERVO_off(){
   waited();
   }
 
+/*
 /////////matrix callbacks ////////////////////////////
 void MATRIX_on(){
   matrixOn = 1;
@@ -183,7 +192,7 @@ void MATRIX_pat3(){
      delay(100); }
   waited();
   }
-
+*/
 /////////ring callbacks //////////////////////////////
 
 

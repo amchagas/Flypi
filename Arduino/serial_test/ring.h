@@ -1,7 +1,7 @@
 
 
-#include <Adafruit_NeoPixel.h> // LED Ring
-#include <Wire.h> // LED Matrix
+
+
 
 
 
