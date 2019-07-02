@@ -1,28 +1,40 @@
-// Demo Code for SerialCommand Library
-// Steven Cogswell
-// May 2011
+// FlyPi Arduino control code    //
+// Dev. by AM Chagas             //
+// 20190702 CC BY SA 4.0         //
+
+// dependencies:
+// Adafruit libraries for 
+//  - LED Matrix
+//  - LED Ring
+// SerialCommand Library by Steven Cogswell
+
+
+
 
 // Import libraries
 #include <Adafruit_NeoPixel.h> // LED Ring
+
 #include <Wire.h> // LED Matrix
+#include <Adafruit_LEDBackpack.h> // LED Matrix
+#include <Adafruit_GFX.h> // LED Matrix
 
 #include <Servo.h> //servo motor controlling the autofocus
 #include <SerialCommand.h>
 
 
-//#include <Adafruit_LEDBackpack.h> // LED Matrix
-//#include <Adafruit_GFX.h> // LED Matrix
+
 
 #include "peltier.h"
 #include "ring.h"
-//#include "matrix.h"
+#include "matrix.h"
 #include "servo.h"
 
 
 // define ports
 #define LED1Pin 10
 #define LED2Pin 11 
-
+#define servoPin 8
+#define servoOnPin 9
 
 
 
@@ -37,8 +49,9 @@ long int millistowait;
 SerialCommand sCmd;     // The demo SerialCommand object
 
 void setup() {
-  pinMode(LED1Pin, OUTPUT);
-  pinMode(LED2Pin, OUTPUT);
+  // for analog ports they cannot be defined as OUTPUT
+  //pinMode(LED1Pin, OUTPUT);
+  //pinMode(LED2Pin, OUTPUT);
 
   pinMode(RedGBPin, OUTPUT);
   pinMode(RGreenBPin, OUTPUT);
@@ -56,11 +69,12 @@ void setup() {
 
   Serial.begin(115200);
 
-  // Setup callbacks for SerialCommand commands
+  // Setup callbacks for SerialCommand commands //////
 
   sCmd.addCommand("S1",    SERVO_on);
   sCmd.addCommand("S0",    SERVO_off);
-  //sCmd.addCommand("M1",    MATRIX_on);
+  
+  sCmd.addCommand("M1",    MATRIX_on);
   //sCmd.addCommand("M0",    MATRIX_off);
   //sCmd.addCommand("M11",    MATRIX_pat1);
   //sCmd.addCommand("M12",    MATRIX_pat2);
@@ -70,20 +84,17 @@ void setup() {
 
   
   sCmd.addCommand("L11",    LED1_on);          // Turns LED1 on and sets intensity
-
-  //sCmd.addCommand("L12",    LED1_PWM);         // Set intensity LED1
-
   sCmd.addCommand("L10",    LED1_off);         // Turns LED1 off
-  sCmd.addCommand("L21",    LED2_on);          // Turns LED2 on
   
-  //sCmd.addCommand("L22",    LED2_PWM);         // Set intensity LED2
-  
+  sCmd.addCommand("L21",    LED2_on);          // Turns LED2 on  
   sCmd.addCommand("L20",    LED2_off);         // Turns LED2 off
+  
   sCmd.addCommand("R1",     RING_on);          // Turns RING on
   sCmd.addCommand("R0",     RING_off);         // Turns RING off
   sCmd.addCommand("RR",     RED);              // change RED intensity
   sCmd.addCommand("RG",     GREEN);            // change GREEN intensity
   sCmd.addCommand("RB",     BLUE);             // change BLUE intensity
+  
   sCmd.addCommand("P1",     PELT_on);          // Turns PELTIER on
   sCmd.addCommand("P0",     PELT_off);         // Turns PELTIER off
   sCmd.addCommand("ST",     PELT_stemp);       // set PELTIER temperature
@@ -94,7 +105,20 @@ void setup() {
   sCmd.addCommand("HELLO", sayHello);        // Echos the string argument back
   sCmd.addCommand("P",     processCommand);  // Converts two arguments to integers and echos them back
   sCmd.setDefaultHandler(unrecognized);      // Handler for command that isn't matched  (says "What?")
+
+  // turn everything off
+  digitalWrite(servoOnPin, LOW);
+  //matrix.clear();
+  //matrix.writeDisplay();
+  updateRing(0, 0, 0, 0);
+  pixels.show();
+  analogWrite(LED1Pin, 0);
+  analogWrite(LED2Pin, 0);
   Serial.println("Ready");
+  digitalWrite(peltierEnablePin,LOW);
+  digitalWrite(peltierHeatPin1, LOW);
+  digitalWrite(peltierCoolPin1, LOW);
+  
   newTemp = checkTemp(tempSensorPin);
 
 
@@ -113,12 +137,19 @@ void SERVO_on(){
   int aNumber;
   char *arg;
   arg = sCmd.next();
-  digitalWrite(servoOnPin, HIGH);
+
   if (arg != NULL) {
+    
+    if (atoi(arg) == 90){
+      digitalWrite(servoOnPin, LOW);
+      }//end if arg==90
+    
+    else {
+    digitalWrite(servoOnPin, HIGH); 
     focusServo.write(atoi(arg)); //because this is a cont. servo,
     //this will set the velocity, not the pos.
     delay(15);
-      
+    }//end else
     }// if arg!=NULL
   waited();
   
@@ -130,11 +161,11 @@ void SERVO_off(){
   waited();
   }
 
-/*
+
 /////////matrix callbacks ////////////////////////////
 void MATRIX_on(){
   matrixOn = 1;
-  
+  matrix.writeDisplay();
   waited();
   }
   
@@ -144,8 +175,9 @@ void MATRIX_off(){
   matrix.writeDisplay(); 
   waited();
   }
-
+/*
 void MATRIX_bright(){
+  updateMatrix()
   matrix.setBrightness(matrix_brightness);
   
   if (matrixOn==1){
@@ -325,7 +357,8 @@ void PELT_stemp(){
       newTemp = atoi(arg);
    }
    waited();
-
+  HoldTemp(newTemp, tempSensorPin,
+               peltierCoolPin1, peltierHeatPin1);
 }
 
 void TEMP_read(){

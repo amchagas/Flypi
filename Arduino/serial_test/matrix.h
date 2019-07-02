@@ -1,6 +1,6 @@
-/*
-//#define matrix1pin A4
-//#define matrix2pin A5
+
+#define matrix1pin A4
+#define matrix2pin A5
 
 
 
@@ -39,4 +39,4 @@ void updateMatrix(int brightness, int matOn){
     }//if
   }
   
-  */
+  
