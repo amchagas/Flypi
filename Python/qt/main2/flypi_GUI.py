@@ -7,6 +7,8 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import pyqtgraph as pg
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -1049,7 +1051,8 @@ class Ui_MainWindow(object):
         self.actualtempbar.setTextDirection(QtWidgets.QProgressBar.BottomToTop)
         self.actualtempbar.setObjectName("actualtempbar")
         self.verticalLayout_15.addWidget(self.actualtempbar)
-        self.tempgraph = QtWidgets.QGraphicsView(self.horizontalLayoutWidget)
+        self.tempgraph = pg.PlotWidget(self.horizontalLayoutWidget)
+        #self.tempgraph = QtWidgets.QGraphicsView(self.horizontalLayoutWidget)
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.NoBrush)
         self.tempgraph.setForegroundBrush(brush)

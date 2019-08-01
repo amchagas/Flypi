@@ -6,23 +6,16 @@ Created on Mon May 13 13:53:17 2019
 @author: andre
 """
 
-from PyQt5 import QtCore, QtGui, QtWidgets, QtChart
+from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QTimer
 import time
 import subprocess
 import os
 from flypi_GUI import Ui_MainWindow
 import pyqtgraph as pg
-import pyqtgraph.exporters
-import numpy as np
-# define the data
-theTitle = "pyqtgraph plot"
-y = [2,4,6,8,10,12,14,16,18,20]
-x = range(0,10)
+#import pyqtgraph.exporters
+#import numpy as np
 
-# create plot
-plt = pg.plot(x, y, title=theTitle, pen='r')
-plt.showGrid(x=True,y=True)
 
 
 try:
@@ -138,7 +131,8 @@ class allcallbacks(Ui_MainWindow):
         #peltier callbacks
         self.peltonbutton.clicked.connect(self.peltieroncallback)
         self.tempslider.valueChanged.connect(self.peltierslidercallback)
-        self.tempclosedloop.toggled.connect(self.peltiergettempcallback)
+        #self.tempclosedloop.toggled.connect(self.peltiergettempcallback)
+        self.logtempcheck.clicked.connect(self.peltierlogtemp)
         
 
         #matrix callbacks
@@ -156,18 +150,25 @@ class allcallbacks(Ui_MainWindow):
 
     ################## peltier functions ######################################
     def peltieroncallback(self):
-        print("here")
+        #print("here")
+        self.tempgraph.clear()
         flag = 1
         output = list()
         if self.peltonbutton.isChecked() and flag==1:
             self.peltonflag = 1
             flag = 0
-            value = self.tempslider.value()
+            temp = float(self.peltiergettempcallback())
+            self.y = [temp for i in range(10)]
+            self.x = list(range(0,10))
+
+            theTitle = "pyqtgraph plot"
+            self.plot = self.tempgraph.plot(self.x, self.y)
+            
             print ("pelt on")
-            self.timer.timeout.connect(self.peltiergettempcallback)
-            self.timer.start(500)   # ms
+            
+            self.timer.timeout.connect(self.peltierloop)
+            self.timer.start(250)   # ms
             output.append("P1 ")
-            #output.append("ST " + str(value))
             
             
           
@@ -175,9 +176,7 @@ class allcallbacks(Ui_MainWindow):
             flag=1
             self.timer.stop()
             self.peltonflag = 0
-            print("peltier off")
             output.append("P0")
-            #print(output)
         self.runCommands(allcom=output)
         return
     
@@ -189,43 +188,52 @@ class allcallbacks(Ui_MainWindow):
             self.peltieroncallback()       
         return
     
-
     def peltiergettempcallback(self):
-        test = "initial"
         output = "GT"
         self.output1(command=output)
         haltFlag = 1
         while haltFlag==1:
             test=self.ser.readline()
-            
-            #print(test[0:-2])
             if test[0:-2]!='d'.encode('utf-8') and test[0:-2]!='Ready'.encode('utf-8'):
                 haltFlag=0
-                print(test.decode())
-                self.actualtempbar.setValue(int(test[0:2].decode()))
-                value = self.tempslider.value()
-        
-        #self.set    
-        output.append("ST " + str(value))
-
+                actual_temp = test.decode()
                 
-        return test
+                self.actualtempbar.setValue(int(actual_temp[0:2]))
+        return actual_temp
     
-    def peltierlogtemp(self):
+    def peltierloop(self):
+        actual_temp = self.peltiergettempcallback()  
+        self.y.pop(0)
+        self.y.append(float(actual_temp))
+        self.plot.setData(self.x,self.y) 
+        self.tempgraph.setYRange(min = min(self.y)-2, max = max(self.y)+2)
+        
+        if self.tempclosedloop.toggled:
+            set_temp = self.tempslider.value()
+            output = "ST " + str(set_temp)
+            self.output1(command=output)
         
         if self.logtempcheck.isChecked():
-            temp = self.peltiergettempcallback()
-            folderPath = self.create_folder(self,
-                      folderPath="~/Desktop/flypi_output/",
-                      folderName="temperatures")
-       
+            self.peltierlogtemp(actual_temp)
+
+        
+        
     
-            fid = self.create_file(self,
-                    filePath=folderPath,
+    def peltierlogtemp(self,temp):
+        
+        
+        if self.logtempcheck.isChecked():
+            folderPath = self.create_folder(
+                      folderPath="/home/pi/Desktop/flypi_output/",
+                      folderName="temperatures")
+            
+            //print(folderPath)
+            fid = self.create_file(
+                    filePath=folderPath+"/",
                     fileName="templog_"+time.strftime('%Y-%m-%d') + ".txt")
             
             fid.write(time.strftime('%Y-%m-%d-%H-%M-%S') + (','))
-            fid.write(temp[0][2:7]+(',\r\n')) 
+            fid.write(str(temp)+(',\r\n')) 
             fid.close()
     
     ################## Servo functions ########################################
@@ -1028,6 +1036,7 @@ class allcallbacks(Ui_MainWindow):
                       folderPath="/home/pi/Desktop/flypi_output/",
                       folderName="output1"):
         absPath = folderPath+folderName
+        #print(os.path.exists(absPath))
         if not os.path.exists(absPath):
             #if not, create it:
             os.makedirs(absPath)
