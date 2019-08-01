@@ -6,12 +6,23 @@ Created on Mon May 13 13:53:17 2019
 @author: andre
 """
 
-from PyQt5 import QtCore, QtGui, QtWidgets #, QFileDialog
-from PyQt5.QtCore import QBasicTimer
+from PyQt5 import QtCore, QtGui, QtWidgets, QtChart
+from PyQt5.QtCore import QTimer
 import time
 import subprocess
 import os
 from flypi_GUI import Ui_MainWindow
+import pyqtgraph as pg
+import pyqtgraph.exporters
+import numpy as np
+# define the data
+theTitle = "pyqtgraph plot"
+y = [2,4,6,8,10,12,14,16,18,20]
+x = range(0,10)
+
+# create plot
+plt = pg.plot(x, y, title=theTitle, pen='r')
+plt.showGrid(x=True,y=True)
 
 
 try:
@@ -36,7 +47,7 @@ class allcallbacks(Ui_MainWindow):
         
         self.basePath = "/home/pi/Desktop/flypi_output/" 
         
-        self.timer = QBasicTimer()
+        self.timer = QTimer()
         self.led2onflag = 0
         self.led1onflag = 0
         self.mat1onflag = 0
@@ -153,14 +164,16 @@ class allcallbacks(Ui_MainWindow):
             flag = 0
             value = self.tempslider.value()
             print ("pelt on")
-            
+            self.timer.timeout.connect(self.peltiergettempcallback)
+            self.timer.start(500)   # ms
             output.append("P1 ")
-            output.append("ST " + str(value))
+            #output.append("ST " + str(value))
             
             
           
         else:
             flag=1
+            self.timer.stop()
             self.peltonflag = 0
             print("peltier off")
             output.append("P0")
@@ -171,6 +184,7 @@ class allcallbacks(Ui_MainWindow):
     def peltierslidercallback(self):
         value = self.tempslider.value()
         self.desiredtempbar.setValue(value)
+        
         if self.peltonflag == 1:
             self.peltieroncallback()       
         return
@@ -178,22 +192,22 @@ class allcallbacks(Ui_MainWindow):
 
     def peltiergettempcallback(self):
         test = "initial"
-        #self.timer.start(100,self.timer_event)
-        print("timer")
+        output = "GT"
+        self.output1(command=output)
+        haltFlag = 1
+        while haltFlag==1:
+            test=self.ser.readline()
+            
+            #print(test[0:-2])
+            if test[0:-2]!='d'.encode('utf-8') and test[0:-2]!='Ready'.encode('utf-8'):
+                haltFlag=0
+                print(test.decode())
+                self.actualtempbar.setValue(int(test[0:2].decode()))
+                value = self.tempslider.value()
+        
+        #self.set    
+        output.append("ST " + str(value))
 
-        if self.tempclosedloop.isChecked():
-            #print("here")
-            output = "GT"
-            self.output1(command=output)
-            haltFlag = 1
-            while haltFlag==1:
-                test=self.ser.readline()
-                print(test)
-                #print(test[0:-2])
-                if test[0:-2]!='d'.encode('utf-8') and test[0:-2]!='Ready'.encode('utf-8'):
-                    haltFlag=0
-                else:
-                    print("ops")
                 
         return test
     
@@ -202,8 +216,8 @@ class allcallbacks(Ui_MainWindow):
         if self.logtempcheck.isChecked():
             temp = self.peltiergettempcallback()
             folderPath = self.create_folder(self,
-                      folderPath="/home/pi/Desktop/flypi_output/",
-                      folderName="output1")
+                      folderPath="~/Desktop/flypi_output/",
+                      folderName="temperatures")
        
     
             fid = self.create_file(self,
@@ -471,6 +485,7 @@ class allcallbacks(Ui_MainWindow):
         return
 
     def ringonupdate(self):
+        
         if loadSerial == 1:
             if self.ringonbutton.isChecked():
                 output = "R1"
@@ -1040,6 +1055,5 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     dialog = QtWidgets.QDialog()
     ui = allcallbacks(dialog)
-    #ui.setupUi(Camera)
     dialog.show()
     sys.exit(app.exec_())
