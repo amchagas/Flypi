@@ -227,7 +227,7 @@ class allcallbacks(Ui_MainWindow):
                       folderPath="/home/pi/Desktop/flypi_output/",
                       folderName="temperatures")
             
-            //print(folderPath)
+            
             fid = self.create_file(
                     filePath=folderPath+"/",
                     fileName="templog_"+time.strftime('%Y-%m-%d') + ".txt")
@@ -300,29 +300,24 @@ class allcallbacks(Ui_MainWindow):
     
     def led1On(self):
         flag = 1
+        
         if self.led1onbutton.isChecked() and flag==1:
             flag=0
             self.led1onflag=1
-            output = "L11 255 "
+            value = self.led1slider.value()
+            value = int(value *(255./100.))
+            output = "L11 " + str(value)
             
-            #value = self.led1slider.value()
-            #value = int(value *(255./100.))
-            #print (value)
-            #output = "L11 " + str(value)
-            #self.ser.write('L11 255 \n'.encode('utf-8')) #change here when PWM  issue is fixed.
-          
+            
         else:
             self.led1onflag=0
             flag=1
-            #print("led1 off")
-            output = "L10 0"
+            
+            output = "L10"
+        
+            
         self.output1(command = output)
-        #output = str(output+' ')
-        #print(output)
-        #self.runCommands(  allcom=[output])
-        #self.ser.write(str(output+'\n').encode('utf-8'))
-        #if self.ser.in_waiting!=0:
-        #    print(self.ser.readline())
+        
 
         return
     
@@ -347,16 +342,17 @@ class allcallbacks(Ui_MainWindow):
     
     def led1bright(self):
         self.l1value = self.led1slider.value()
+        
         self.led1brightindicator.setValue(self.l1value)
-        #if self.led1onflag ==1:
-        #    self.led1On()
+        if self.led1onflag==1:
+            self.led1On()
         return  
         
     ################## LED2 functions #########################################
     
     def led2On(self):
         flag = 1
-        if self.led1onbutton.isChecked() and flag==1:
+        if self.led2onbutton.isChecked() and flag==1:
             flag=0
             self.led2onflag = 1
             value = self.led2slider.value()
@@ -527,6 +523,12 @@ class allcallbacks(Ui_MainWindow):
         if self.runbutton.isChecked():
             print("run")
             allcom = list()
+            if self.protled1button.ischecked():
+                allcom.append('L1 255')
+                
+            if self.protled2button.ischecked():
+                allcom.append('L2 255')
+                
             if self.protringbutton.isChecked():
                 allcom.append('R1')
                 allcom.append(str('RR '+ str(self.redinput1.text())))
@@ -541,6 +543,10 @@ class allcallbacks(Ui_MainWindow):
             allcom.append(str('TW '+str(self.timeinput1.text())))
             totalDur = totalDur + int(self.timeinput1.text())
 
+            if self.protled1button.ischecked():
+                pass
+            if self.protled2button.ischecked():
+                pass
             if self.protringbutton.isChecked():
                 allcom.append('R1')
                 allcom.append(str('RR '+ str(self.redinput2.text())))
@@ -554,7 +560,11 @@ class allcallbacks(Ui_MainWindow):
 
             allcom.append(str('TW '+str(self.timeinput2.text())))
             totalDur = totalDur + int(self.timeinput2.text())
-
+            
+            if self.protled1button.ischecked():
+                pass
+            if self.protled2button.ischecked():
+                pass
             if self.protringbutton.isChecked():
                 allcom.append('R1')
                 allcom.append(str('RR '+ str(self.redinput3.text())))
@@ -568,6 +578,11 @@ class allcallbacks(Ui_MainWindow):
 
             allcom.append(str('TW '+str(self.timeinput3.text())))
             totalDur = totalDur + int(self.timeinput3.text())
+            
+            if self.protled1button.ischecked():
+                pass
+            if self.protled2button.ischecked():
+                pass
 
             if self.protringbutton.isChecked():
                 allcom.append('R1')
@@ -584,7 +599,10 @@ class allcallbacks(Ui_MainWindow):
             totalDur = totalDur + int(self.timeinput4.text())
 
 
-
+            if self.protled1button.ischecked():
+                pass
+            if self.protled2button.ischecked():
+                pass
             if self.protringbutton.isChecked():
                 allcom.append('R1')
                 allcom.append(str('RR '+ str(self.redinput5.text())))
@@ -1009,7 +1027,7 @@ class allcallbacks(Ui_MainWindow):
             
         return
     
-    def runCommands(self,allcom=['P0','R0','L10','L20','S0']): 
+    def runCommands(self,allcom=['P0','R0','L1 0','L2 0','S0']): 
         x=1
         for command in allcom:
             haltFlag=1
