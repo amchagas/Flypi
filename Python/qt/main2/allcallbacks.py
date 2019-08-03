@@ -45,6 +45,7 @@ class allcallbacks(Ui_MainWindow):
         self.led1onflag = 0
         self.mat1onflag = 0
         self.peltonflag = 0
+        self.camon = 0
         Ui_MainWindow.__init__(self)
         #load camera library
         try:
@@ -506,28 +507,21 @@ class allcallbacks(Ui_MainWindow):
 
 
     ############# Protocol functions ##########################################
-    def runUpdate(self, Protocol):
+    def runUpdate(self): #Protocol):
         #print("here")
         totalDur = 0
-        basePath = '/home/pi/flypi_test/videos/'
-        folderName = "protocols"
-        timenow = time.strftime('%Y-%m-%d-%H-%M-%S')
-        recFileName = 'video_'+ timenow + '.h264'
-        print(recFileName)
+        
         #print(self.basePath)
         
-        if not os.path.exists(basePath+folderName+'/'):
-            #if not, create it:
-            os.makedirs(basePath+folderName+'/')
-            os.chown(basePath+folderName+'/', 1000, 1000)
+        
         
         if self.runbutton.isChecked():
             print("run")
             allcom = list()
-            if self.protled1button.ischecked():
+            if self.protled1button.isChecked():
                 allcom.append(str('L11 ' + str(self.led1box1.text())))
                 
-            if self.protled2button.ischecked():
+            if self.protled2button.isChecked():
                 allcom.append(str('L21 ' + str(self.led2box1.text())))
                 
             if self.protringbutton.isChecked():
@@ -555,9 +549,9 @@ class allcallbacks(Ui_MainWindow):
             allcom.append(str('TW '+str(self.timeinput1.text())))
             totalDur = totalDur + int(self.timeinput1.text())
 
-            if self.protled1button.ischecked():
+            if self.protled1button.isChecked():
                 allcom.append(str('L11 ' + str(self.led1box2.text())))
-            if self.protled2button.ischecked():
+            if self.protled2button.isChecked():
                 allcom.append(str('L21 ' + str(self.led2box2.text())))
             if self.protringbutton.isChecked():
                 allcom.append('R1')
@@ -573,9 +567,9 @@ class allcallbacks(Ui_MainWindow):
             allcom.append(str('TW '+str(self.timeinput2.text())))
             totalDur = totalDur + int(self.timeinput2.text())
             
-            if self.protled1button.ischecked():
+            if self.protled1button.isChecked():
                 allcom.append(str('L11 ' + str(self.led1box3.text())))
-            if self.protled2button.ischecked():
+            if self.protled2button.isChecked():
                 allcom.append(str('L21 ' + str(self.led2box3.text())))
             if self.protringbutton.isChecked():
                 allcom.append('R1')
@@ -591,9 +585,9 @@ class allcallbacks(Ui_MainWindow):
             allcom.append(str('TW '+str(self.timeinput3.text())))
             totalDur = totalDur + int(self.timeinput3.text())
             
-            if self.protled1button.ischecked():
+            if self.protled1button.isChecked():
                 allcom.append(str('L11 ' + str(self.led1box4.text())))
-            if self.protled2button.ischecked():
+            if self.protled2button.isChecked():
                 allcom.append(str('L21 ' + str(self.led2box4.text())))
 
             if self.protringbutton.isChecked():
@@ -611,9 +605,9 @@ class allcallbacks(Ui_MainWindow):
             totalDur = totalDur + int(self.timeinput4.text())
 
 
-            if self.protled1button.ischecked():
+            if self.protled1button.isChecked():
                 allcom.append(str('L11 ' + str(self.led1box5.text())))
-            if self.protled2button.ischecked():
+            if self.protled2button.isChecked():
                 allcom.append(str('L21 ' + str(self.led2box5.text())))
             if self.protringbutton.isChecked():
                 allcom.append('R1')
@@ -645,6 +639,11 @@ class allcallbacks(Ui_MainWindow):
 
             x=1
             print(allcom)
+            if self.checkBox.isChecked():                
+                
+                self.durationbox.setValue(totalDur)
+                self.videobutton_callback()
+            print(self.redinput5.text())    
             for i in range(reps):
                 if i+1==reps:
                     allcom.append('R0')
@@ -670,7 +669,7 @@ class allcallbacks(Ui_MainWindow):
                             print(test)
                             print("ops")
             
-            self.runbutton.isClicked(False)
+            self.runbutton.setChecked(False)
         return
    
     ################## Camera functions #######################################    
@@ -749,12 +748,12 @@ class allcallbacks(Ui_MainWindow):
             for i in range(totalphotos):
                 self.cam.capture(thistlpath + '/TL' + str(x)+'.jpg')
                 x = x + 1
-                print("photo " + str(x) + " out of " + str(totalphotos))
+                print("photo " + str(x-1) + " out of " + str(totalphotos))
                 time.sleep(float(dur)/float(ntl))
             print ("done")
         return
 
-    def videobutton_callback(self,Camera):
+    def videobutton_callback(self):
         if self.camFlag==1:
             dur = self.durationbox.text()
             print(dur)
