@@ -540,7 +540,18 @@ class allcallbacks(Ui_MainWindow):
                 allcom.append('P1')
                 allcom.append(str('ST '+str(self.peltinput1.text())))
                 allcom.append(str('GT'))
-
+                breaktime = int(self.timeinput1.text())
+                # test this code for using the peltier in protocol
+                # the idea is to give more read and set commands during the 
+                # execution phase of the protocol, so that the peltier temperature
+                # is more accurate.
+                
+                #for i in range(int(breaktime)/4):
+                #    allcom.append(str('ST '+str(self.peltinput1.text())))
+                #    allcom.append(str('GT'))
+                #    allcom.append(str('TW '+str(int(breaktime/4))))
+            #else:        
+            #    allcom.append(str('TW '+str(self.timeinput1.text())))
             allcom.append(str('TW '+str(self.timeinput1.text())))
             totalDur = totalDur + int(self.timeinput1.text())
 
