@@ -303,6 +303,7 @@ class allcallbacks(Ui_MainWindow):
         
         if self.led1onbutton.isChecked() and flag==1:
             flag=0
+            
             self.led1onflag=1
             value = self.led1slider.value()
             value = int(value *(255./100.))
@@ -524,10 +525,10 @@ class allcallbacks(Ui_MainWindow):
             print("run")
             allcom = list()
             if self.protled1button.ischecked():
-                allcom.append('L1 255')
+                allcom.append(str('L11 ' + str(self.led1box1.text())))
                 
             if self.protled2button.ischecked():
-                allcom.append('L2 255')
+                allcom.append(str('L21 ' + str(self.led2box1.text())))
                 
             if self.protringbutton.isChecked():
                 allcom.append('R1')
@@ -544,9 +545,9 @@ class allcallbacks(Ui_MainWindow):
             totalDur = totalDur + int(self.timeinput1.text())
 
             if self.protled1button.ischecked():
-                pass
+                allcom.append(str('L11 ' + str(self.led1box2.text())))
             if self.protled2button.ischecked():
-                pass
+                allcom.append(str('L21 ' + str(self.led2box2.text())))
             if self.protringbutton.isChecked():
                 allcom.append('R1')
                 allcom.append(str('RR '+ str(self.redinput2.text())))
@@ -562,9 +563,9 @@ class allcallbacks(Ui_MainWindow):
             totalDur = totalDur + int(self.timeinput2.text())
             
             if self.protled1button.ischecked():
-                pass
+                allcom.append(str('L11 ' + str(self.led1box3.text())))
             if self.protled2button.ischecked():
-                pass
+                allcom.append(str('L21 ' + str(self.led2box3.text())))
             if self.protringbutton.isChecked():
                 allcom.append('R1')
                 allcom.append(str('RR '+ str(self.redinput3.text())))
@@ -580,9 +581,9 @@ class allcallbacks(Ui_MainWindow):
             totalDur = totalDur + int(self.timeinput3.text())
             
             if self.protled1button.ischecked():
-                pass
+                allcom.append(str('L11 ' + str(self.led1box4.text())))
             if self.protled2button.ischecked():
-                pass
+                allcom.append(str('L21 ' + str(self.led2box4.text())))
 
             if self.protringbutton.isChecked():
                 allcom.append('R1')
@@ -600,9 +601,9 @@ class allcallbacks(Ui_MainWindow):
 
 
             if self.protled1button.ischecked():
-                pass
+                allcom.append(str('L11 ' + str(self.led1box5.text())))
             if self.protled2button.ischecked():
-                pass
+                allcom.append(str('L21 ' + str(self.led2box5.text())))
             if self.protringbutton.isChecked():
                 allcom.append('R1')
                 allcom.append(str('RR '+ str(self.redinput5.text())))
