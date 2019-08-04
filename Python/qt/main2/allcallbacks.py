@@ -455,39 +455,16 @@ class allcallbacks(Ui_MainWindow):
             print(self.greenpulse.text())
             print(self.bluepulse.text())
             print(self.ringpulsedurinput.text())
-            #print(redSlider.value())
-            #print(greenSlider.value())
-            #print(blueSlider.value())
             if loadSerial == 1:
                 output = list()
-                
                 output.append("RR " + self.redpulse.text())
-                #self.output1(command = output)
-                
-                output.append("RG " + self.greenpulse.text())
-                #self.output1(command = output)
-                
-                
-                output.append("RB " + self.bluepulse.text())                 
-                #self.output1(command = output)
-                
+                output.append("RG " + self.greenpulse.text())                
+                output.append("RB " + self.bluepulse.text())          
                 output.append("TW " + self.ringpulsedurinput.text())
-                
-                #self.output1(command = output)
-                
-                #self.ser.write(output.encode("utf-8"))  
-                    
-                    
-                    
                 output.append("RR " + str(self.redslider.value()))
-                #self.output1(command = output)
-                
                 output.append("RG " + str(self.greenslider.value()))
-                #self.output1(command = output)
                 output.append("RB " + str(self.blueslider.value()))
-                #self.output1(command = output)
                 self.runCommands(allcom=output)
-                #self.ser.write(output.encode("utf-8"))  
         return
 
     def ringonupdate(self):
@@ -495,26 +472,17 @@ class allcallbacks(Ui_MainWindow):
         if loadSerial == 1:
             if self.ringonbutton.isChecked():
                 output = "R1"
-                
-                #self.ser.write(str(output+'\n').encode('utf-8'))
                 print("ring ON")
             else:
-                output = "R0"
-                #self.ser.write(output.encode("utf-8")) 
+                output = "R0" 
                 print("ring OFF")
             self.output1(command = output)
         return
 
 
     ############# Protocol functions ##########################################
-    def runUpdate(self): #Protocol):
-        #print("here")
+    def runUpdate(self):
         totalDur = 0
-        
-        #print(self.basePath)
-        
-        
-        
         if self.runbutton.isChecked():
             print("run")
             allcom = list()
@@ -614,7 +582,6 @@ class allcallbacks(Ui_MainWindow):
                 allcom.append(str('RR '+ str(self.redinput5.text())))
                 allcom.append(str('RG '+ str(self.greeninput5.text())))
                 allcom.append(str('RB '+ str(self.blueinput5.text())))
-                #print(self.protpeltierbutton.isChecked())
             if self.protpeltierbutton.isChecked():
                 allcom.append('P1')
                 allcom.append(str('ST '+str(self.peltinput5.text())))
@@ -729,18 +696,9 @@ class allcallbacks(Ui_MainWindow):
             dur = self.durationbox.text()
             ntl = self.intervalbox.text()
             
-            
-            alltlpath = self.basePath + 'time_lapses/'
-            #thistlpath = alltlpath+time.strftime("%Y-%m-%d-%H-%M-%S")
-            
+            alltlpath = self.basePath + 'time_lapses/'            
             thistlpath = self.create_folder(folderPath=alltlpath,
                                folderName=time.strftime("%Y-%m-%d-%H-%M-%S")+"/")
-            #check to see if the tl output folder is present:
-            
-            #if not os.path.exists(thistlpath):
-            #    #if not, create it:
-            #    os.makedirs(thistlpath)
-            #    os.chown(thistlpath, 1000, 1000)
             
             # Camera warm-up time
             time.sleep(1)
@@ -814,7 +772,6 @@ class allcallbacks(Ui_MainWindow):
             print("done.")
             return
         command = ['MP4Box', '-add', fileName, outname]
-        #command = ['ffmpeg', '-i', fileName,"-allcom=['P0',b",str(self.bitRate) ,"-pix_fmt","nv12","-f:v","-vcodec rawvideo", outname]
         subprocess.call(command,shell=False)
         print("done.")
         return
@@ -844,7 +801,6 @@ class allcallbacks(Ui_MainWindow):
     
     def brightness_callback(self,Camera):
         self.brightnesslcd.setProperty("intValue",self.brightnessbar.value())
-        #print(self.brightnessbar.value())
         if self.camFlag==1:
             self.cam.brightness = (self.brightnessbar.value())
         return    
@@ -881,7 +837,6 @@ class allcallbacks(Ui_MainWindow):
                     self.cam.color_effects = (0, 0)
                 else:
                     self.cam.color_effects = None
-            #print("here")
             
         
     def zoom_callback(self, Camera):
@@ -935,27 +890,24 @@ class allcallbacks(Ui_MainWindow):
         
     def bin_callback(self,Camera):
         self.binlcd.setProperty("intValue",self.binbar.value())
-        
-        #if self.binbarval == 1:
-        #        self.cam.resolution = (2592, 1944)
-        #        self.cam.framerate = (15)
-        #        self.fpsbar.value = 15
-        #        self.binVar.set(0)
-        #        #self.cam.zoom(0)
-        #        self.zoomVar.set(1)
-        #    if self.resVal == "1920x1080":
-        #        self.cam.resolution = (1920, 1080)
-        #        self.cam.framerate = (30)
-        #        self.FPSVar.set(30)
-        #        self.binVar.set(0)
-        #        #self.zoomVar.set(3)
-        if self.binbar.value == 2:
+        resVal = self.resolutionbox.currentText()
+        print("here")
+        print(self.binbar.value())
+        if self.binbar.value() == 1:
+            ind = resVal.find("x")
+            print(resVal[ind:])
+            if self.camFlag == 1 and int(resVal[:ind]) >= 1920:
+                self.cam.resolution = (int(resVal[0:ind]), int(resVal[ind+1:]))
+                self.cam.framerate = (15)
+                self.fpsbar.value = 15
+                #self.FPSVar.set(15)
+        if self.binbar.value() == 2:
             if self.camFlag==1:
                 self.cam.resolution = (1296, 972)
                 self.cam.framerate = (42)
             self.fpsbar.value = 42
             
-        if self.binbar.value == 4:
+        if self.binbar.value() == 4:
             self.fpsbar.setValue(90)
             if self.camFlag==1:
                 self.cam.resolution = (640, 480)
@@ -989,7 +941,6 @@ class allcallbacks(Ui_MainWindow):
         return values
         
     def mode_callback(self,Camera):
-         #print("here")
          print(self.modebox.currentText())
          if self.camFlag==1:
              if self.cam.image_effect != self.modebox.currentText():
