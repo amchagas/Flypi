@@ -324,6 +324,8 @@ void PELT_stemp(){
    if (arg != NULL) {
       newTemp = atoi(arg);
    }
+   HoldTemp(newTemp, tempSensorPin,
+                peltierCoolPin1,  peltierHeatPin1);
    waited();
 
 }
