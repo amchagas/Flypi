@@ -7,14 +7,14 @@ Created on Mon May 13 13:53:17 2019
 """
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QFileDialog 
 from PyQt5.QtCore import QTimer
 import time
 import subprocess
 import os
 from flypi_GUI import Ui_MainWindow
 import pyqtgraph as pg
-#import pyqtgraph.exporters
-#import numpy as np
+
 
 
 
@@ -724,6 +724,7 @@ class allcallbacks(Ui_MainWindow):
             if self.resolutionbox.currentText() == "2592x1944":
                 resVal = "2592x1944" 
                 self.resolutionbox.setCurrentText ("1920x1080")
+                
                 if self.camFlag == 1:
                     self.cam.resolution = (1920, 1080)
                 
@@ -749,11 +750,22 @@ class allcallbacks(Ui_MainWindow):
                     self.cam.resolution = (2592, 1944)
             return
 
-            
-    def to_avibutton_callback(self,Camera):
+    def openFileNameDialog(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*);;Python Files (*.py)", options=options)
+        if fileName:
+            print(fileName)  
+                  
+    def to_avibutton_callback(self):
+        
         options = QtWidgets.QFileDialog.Options()
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, QFileDialog.getOpenFileName(), "","h264 Files (.h264);;Python Files (*.py)", options=options)
-
+        #fname = QFileDialog.getOpenFileName(QtWidgets.QDialog(), 'Open file', 
+        #    '/home/',"Image files (*.jpg *.gif)")
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(QtWidgets.QDialog(), 'open file',
+                                "","h264 Files (*.h264);;Python Files (*.py)", options=options)
+        
+        print("filename: "+fileName)
         if fileName == '':
             print ('no files selected')
             return
@@ -766,7 +778,7 @@ class allcallbacks(Ui_MainWindow):
         lastInd=fileName.rindex("/")
         files = os.listdir(fileName[0:lastInd])
         outCore = outname.rindex("/")
-        print ("out:" + outname[outCore:])
+        print ("out: " + outname[outCore+1:])
         if outname[outCore+1:] in files:
             print ("file is already converted! Skipping...")
             print("done.")
@@ -899,13 +911,13 @@ class allcallbacks(Ui_MainWindow):
             if self.camFlag == 1 and int(resVal[:ind]) >= 1920:
                 self.cam.resolution = (int(resVal[0:ind]), int(resVal[ind+1:]))
                 self.cam.framerate = (15)
-                self.fpsbar.value = 15
+                self.fpsbar.setValue(15)
                 #self.FPSVar.set(15)
         if self.binbar.value() == 2:
             if self.camFlag==1:
                 self.cam.resolution = (1296, 972)
                 self.cam.framerate = (42)
-            self.fpsbar.value = 42
+            self.fpsbar.setValue (42)
             
         if self.binbar.value() == 4:
             self.fpsbar.setValue(90)
@@ -937,6 +949,9 @@ class allcallbacks(Ui_MainWindow):
         index = text.find('x')
         values = [int(text[0:index]),int(text[index+1:])]
         if self.camFlag==1:
+            if int(text[:index]) == 2592:
+                self.cam.framerate = (15)
+                self.fpsbar.setValue(15)
             self.cam.resolution = (int(text[0:index]),int(text[index+1:]))
         return values
         
@@ -950,8 +965,11 @@ class allcallbacks(Ui_MainWindow):
     def camConv2(self,Camera):
 
         
-        options = QtWidgets.QFileDialog.Options()
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","h264 Files (.h264);;Python Files (*.py)", options=options)
+        options = QFileDialog.Options()
+        fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*);;Python Files (*.py)", options=options)
+        if fileName:
+            print(fileName)
+        #fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","h264 Files (.h264)", options=options)
 
         if fileName == '':
             print ('no files selected')
