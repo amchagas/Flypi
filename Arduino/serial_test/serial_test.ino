@@ -3,6 +3,7 @@
 // May 2011
 
 // Import libraries
+
 #include <Adafruit_NeoPixel.h> // LED Ring
 #include <Wire.h> // LED Matrix
 
@@ -28,8 +29,11 @@
 
 
 
+
 //Timing Variables////////////////////////
 long int millistowait;
+
+
 
 
 ////////////////////////////////////////
@@ -58,6 +62,7 @@ void setup() {
 
   // Setup callbacks for SerialCommand commands
 
+
   sCmd.addCommand("S1",    SERVO_on);
   sCmd.addCommand("S0",    SERVO_off);
   //sCmd.addCommand("M1",    MATRIX_on);
@@ -69,6 +74,7 @@ void setup() {
   
 
   
+
   sCmd.addCommand("L11",    LED1_on);          // Turns LED1 on and sets intensity
 
   //sCmd.addCommand("L12",    LED1_PWM);         // Set intensity LED1
@@ -78,6 +84,7 @@ void setup() {
   
   //sCmd.addCommand("L22",    LED2_PWM);         // Set intensity LED2
   
+
   sCmd.addCommand("L20",    LED2_off);         // Turns LED2 off
   sCmd.addCommand("R1",     RING_on);          // Turns RING on
   sCmd.addCommand("R0",     RING_off);         // Turns RING off
@@ -103,9 +110,11 @@ void setup() {
 }
 
 void loop() {
+
   sCmd.readSerial();     // We don't do much, just process serial commands
 
 }// void loop
+
 
 ///////// servo callbacks ////////////////////////////
 void SERVO_on(){
@@ -193,6 +202,7 @@ void MATRIX_pat3(){
   waited();
   }
 */
+
 /////////ring callbacks //////////////////////////////
 
 
@@ -210,7 +220,9 @@ void RING_off() {
   updateRing(0, 0, 0, ringOn);
   ringOn=0;
   waited();
+
   pixels.show();
+
 
   }
 
@@ -287,6 +299,7 @@ void LED2_on() {
 void LED2_off() {
   //Serial.println("LED2 off");
   analogWrite(LED2Pin, 0);
+
   waited();
 }
 
@@ -326,6 +339,7 @@ void PELT_stemp(){
    }
    HoldTemp(newTemp, tempSensorPin,
                 peltierCoolPin1,  peltierHeatPin1);
+
    waited();
 
 }
@@ -334,6 +348,7 @@ void TEMP_read(){
   currTemp = checkTemp(tempSensorPin);
   //Serial.print("temp: ");
   Serial.println(currTemp);
+
   waited();
 }//temp read
 
