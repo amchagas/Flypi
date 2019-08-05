@@ -6,12 +6,16 @@ Created on Mon May 13 13:53:17 2019
 @author: andre
 """
 
-from PyQt5 import QtCore, QtGui, QtWidgets #, QFileDialog
-from PyQt5.QtCore import QBasicTimer
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QFileDialog 
+from PyQt5.QtCore import QTimer
 import time
 import subprocess
 import os
 from flypi_GUI import Ui_MainWindow
+import pyqtgraph as pg
+
+
 
 
 try:
@@ -36,11 +40,12 @@ class allcallbacks(Ui_MainWindow):
         
         self.basePath = "/home/pi/Desktop/flypi_output/" 
         
-        self.timer = QBasicTimer()
+        self.timer = QTimer()
         self.led2onflag = 0
         self.led1onflag = 0
         self.mat1onflag = 0
         self.peltonflag = 0
+        self.camon = 0
         Ui_MainWindow.__init__(self)
         #load camera library
         try:
@@ -127,7 +132,8 @@ class allcallbacks(Ui_MainWindow):
         #peltier callbacks
         self.peltonbutton.clicked.connect(self.peltieroncallback)
         self.tempslider.valueChanged.connect(self.peltierslidercallback)
-        self.tempclosedloop.toggled.connect(self.peltiergettempcallback)
+        #self.tempclosedloop.toggled.connect(self.peltiergettempcallback)
+        self.logtempcheck.clicked.connect(self.peltierlogtemp)
         
 
         #matrix callbacks
@@ -145,73 +151,90 @@ class allcallbacks(Ui_MainWindow):
 
     ################## peltier functions ######################################
     def peltieroncallback(self):
-        print("here")
+        #print("here")
+        self.tempgraph.clear()
         flag = 1
         output = list()
         if self.peltonbutton.isChecked() and flag==1:
             self.peltonflag = 1
             flag = 0
-            value = self.tempslider.value()
+            temp = float(self.peltiergettempcallback())
+            self.y = [temp for i in range(10)]
+            self.x = list(range(0,10))
+
+            theTitle = "pyqtgraph plot"
+            self.plot = self.tempgraph.plot(self.x, self.y)
+            
             print ("pelt on")
             
+            self.timer.timeout.connect(self.peltierloop)
+            self.timer.start(250)   # ms
             output.append("P1 ")
-            output.append("ST " + str(value))
             
             
           
         else:
             flag=1
+            self.timer.stop()
             self.peltonflag = 0
-            print("peltier off")
             output.append("P0")
-            #print(output)
         self.runCommands(allcom=output)
         return
     
     def peltierslidercallback(self):
         value = self.tempslider.value()
         self.desiredtempbar.setValue(value)
+        
         if self.peltonflag == 1:
             self.peltieroncallback()       
         return
     
-
     def peltiergettempcallback(self):
-        test = "initial"
-        #self.timer.start(100,self.timer_event)
-        print("timer")
-
-        if self.tempclosedloop.isChecked():
-            #print("here")
-            output = "GT"
-            self.output1(command=output)
-            haltFlag = 1
-            while haltFlag==1:
-                test=self.ser.readline()
-                print(test)
-                #print(test[0:-2])
-                if test[0:-2]!='d'.encode('utf-8') and test[0:-2]!='Ready'.encode('utf-8'):
-                    haltFlag=0
-                else:
-                    print("ops")
+        output = "GT"
+        self.output1(command=output)
+        haltFlag = 1
+        while haltFlag==1:
+            test=self.ser.readline()
+            if test[0:-2]!='d'.encode('utf-8') and test[0:-2]!='Ready'.encode('utf-8'):
+                haltFlag=0
+                actual_temp = test.decode()
                 
-        return test
+                self.actualtempbar.setValue(int(actual_temp[0:2]))
+        return actual_temp
     
-    def peltierlogtemp(self):
+    def peltierloop(self):
+        actual_temp = self.peltiergettempcallback()  
+        self.y.pop(0)
+        self.y.append(float(actual_temp))
+        self.plot.setData(self.x,self.y) 
+        self.tempgraph.setYRange(min = min(self.y)-2, max = max(self.y)+2)
+        
+        if self.tempclosedloop.toggled:
+            set_temp = self.tempslider.value()
+            output = "ST " + str(set_temp)
+            self.output1(command=output)
         
         if self.logtempcheck.isChecked():
-            temp = self.peltiergettempcallback()
-            folderPath = self.create_folder(self,
-                      folderPath="/home/pi/Desktop/flypi_output/",
-                      folderName="output1")
-       
+            self.peltierlogtemp(actual_temp)
+
+        
+        
     
-            fid = self.create_file(self,
-                    filePath=folderPath,
+    def peltierlogtemp(self,temp):
+        
+        
+        if self.logtempcheck.isChecked():
+            folderPath = self.create_folder(
+                      folderPath="/home/pi/Desktop/flypi_output/",
+                      folderName="temperatures")
+            
+            
+            fid = self.create_file(
+                    filePath=folderPath+"/",
                     fileName="templog_"+time.strftime('%Y-%m-%d') + ".txt")
             
             fid.write(time.strftime('%Y-%m-%d-%H-%M-%S') + (','))
-            fid.write(temp[0][2:7]+(',\r\n')) 
+            fid.write(str(temp)+(',\r\n')) 
             fid.close()
     
     ################## Servo functions ########################################
@@ -278,29 +301,25 @@ class allcallbacks(Ui_MainWindow):
     
     def led1On(self):
         flag = 1
+        
         if self.led1onbutton.isChecked() and flag==1:
             flag=0
-            self.led1onflag=1
-            output = "L11 255 "
             
-            #value = self.led1slider.value()
-            #value = int(value *(255./100.))
-            #print (value)
-            #output = "L11 " + str(value)
-            #self.ser.write('L11 255 \n'.encode('utf-8')) #change here when PWM  issue is fixed.
-          
+            self.led1onflag=1
+            value = self.led1slider.value()
+            value = int(value *(255./100.))
+            output = "L11 " + str(value)
+            
+            
         else:
             self.led1onflag=0
             flag=1
-            #print("led1 off")
-            output = "L10 0"
+            
+            output = "L10"
+        
+            
         self.output1(command = output)
-        #output = str(output+' ')
-        #print(output)
-        #self.runCommands(  allcom=[output])
-        #self.ser.write(str(output+'\n').encode('utf-8'))
-        #if self.ser.in_waiting!=0:
-        #    print(self.ser.readline())
+        
 
         return
     
@@ -325,16 +344,17 @@ class allcallbacks(Ui_MainWindow):
     
     def led1bright(self):
         self.l1value = self.led1slider.value()
+        
         self.led1brightindicator.setValue(self.l1value)
-        #if self.led1onflag ==1:
-        #    self.led1On()
+        if self.led1onflag==1:
+            self.led1On()
         return  
         
     ################## LED2 functions #########################################
     
     def led2On(self):
         flag = 1
-        if self.led1onbutton.isChecked() and flag==1:
+        if self.led2onbutton.isChecked() and flag==1:
             flag=0
             self.led2onflag = 1
             value = self.led2slider.value()
@@ -435,75 +455,43 @@ class allcallbacks(Ui_MainWindow):
             print(self.greenpulse.text())
             print(self.bluepulse.text())
             print(self.ringpulsedurinput.text())
-            #print(redSlider.value())
-            #print(greenSlider.value())
-            #print(blueSlider.value())
             if loadSerial == 1:
                 output = list()
-                
                 output.append("RR " + self.redpulse.text())
-                #self.output1(command = output)
-                
-                output.append("RG " + self.greenpulse.text())
-                #self.output1(command = output)
-                
-                
-                output.append("RB " + self.bluepulse.text())                 
-                #self.output1(command = output)
-                
+                output.append("RG " + self.greenpulse.text())                
+                output.append("RB " + self.bluepulse.text())          
                 output.append("TW " + self.ringpulsedurinput.text())
-                
-                #self.output1(command = output)
-                
-                #self.ser.write(output.encode("utf-8"))  
-                    
-                    
-                    
                 output.append("RR " + str(self.redslider.value()))
-                #self.output1(command = output)
-                
                 output.append("RG " + str(self.greenslider.value()))
-                #self.output1(command = output)
                 output.append("RB " + str(self.blueslider.value()))
-                #self.output1(command = output)
                 self.runCommands(allcom=output)
-                #self.ser.write(output.encode("utf-8"))  
         return
 
     def ringonupdate(self):
+        
         if loadSerial == 1:
             if self.ringonbutton.isChecked():
                 output = "R1"
-                
-                #self.ser.write(str(output+'\n').encode('utf-8'))
                 print("ring ON")
             else:
-                output = "R0"
-                #self.ser.write(output.encode("utf-8")) 
+                output = "R0" 
                 print("ring OFF")
             self.output1(command = output)
         return
 
 
     ############# Protocol functions ##########################################
-    def runUpdate(self, Protocol):
-        #print("here")
+    def runUpdate(self):
         totalDur = 0
-        basePath = '/home/pi/flypi_test/videos/'
-        folderName = "protocols"
-        timenow = time.strftime('%Y-%m-%d-%H-%M-%S')
-        recFileName = 'video_'+ timenow + '.h264'
-        print(recFileName)
-        #print(self.basePath)
-        
-        if not os.path.exists(basePath+folderName+'/'):
-            #if not, create it:
-            os.makedirs(basePath+folderName+'/')
-            os.chown(basePath+folderName+'/', 1000, 1000)
-        
         if self.runbutton.isChecked():
             print("run")
             allcom = list()
+            if self.protled1button.isChecked():
+                allcom.append(str('L11 ' + str(self.led1box1.text())))
+                
+            if self.protled2button.isChecked():
+                allcom.append(str('L21 ' + str(self.led2box1.text())))
+                
             if self.protringbutton.isChecked():
                 allcom.append('R1')
                 allcom.append(str('RR '+ str(self.redinput1.text())))
@@ -514,10 +502,25 @@ class allcallbacks(Ui_MainWindow):
                 allcom.append('P1')
                 allcom.append(str('ST '+str(self.peltinput1.text())))
                 allcom.append(str('GT'))
-
+                breaktime = int(self.timeinput1.text())
+                # test this code for using the peltier in protocol
+                # the idea is to give more read and set commands during the 
+                # execution phase of the protocol, so that the peltier temperature
+                # is more accurate.
+                
+                #for i in range(int(breaktime)/4):
+                #    allcom.append(str('ST '+str(self.peltinput1.text())))
+                #    allcom.append(str('GT'))
+                #    allcom.append(str('TW '+str(int(breaktime/4))))
+            #else:        
+            #    allcom.append(str('TW '+str(self.timeinput1.text())))
             allcom.append(str('TW '+str(self.timeinput1.text())))
             totalDur = totalDur + int(self.timeinput1.text())
 
+            if self.protled1button.isChecked():
+                allcom.append(str('L11 ' + str(self.led1box2.text())))
+            if self.protled2button.isChecked():
+                allcom.append(str('L21 ' + str(self.led2box2.text())))
             if self.protringbutton.isChecked():
                 allcom.append('R1')
                 allcom.append(str('RR '+ str(self.redinput2.text())))
@@ -531,7 +534,11 @@ class allcallbacks(Ui_MainWindow):
 
             allcom.append(str('TW '+str(self.timeinput2.text())))
             totalDur = totalDur + int(self.timeinput2.text())
-
+            
+            if self.protled1button.isChecked():
+                allcom.append(str('L11 ' + str(self.led1box3.text())))
+            if self.protled2button.isChecked():
+                allcom.append(str('L21 ' + str(self.led2box3.text())))
             if self.protringbutton.isChecked():
                 allcom.append('R1')
                 allcom.append(str('RR '+ str(self.redinput3.text())))
@@ -545,6 +552,11 @@ class allcallbacks(Ui_MainWindow):
 
             allcom.append(str('TW '+str(self.timeinput3.text())))
             totalDur = totalDur + int(self.timeinput3.text())
+            
+            if self.protled1button.isChecked():
+                allcom.append(str('L11 ' + str(self.led1box4.text())))
+            if self.protled2button.isChecked():
+                allcom.append(str('L21 ' + str(self.led2box4.text())))
 
             if self.protringbutton.isChecked():
                 allcom.append('R1')
@@ -561,13 +573,15 @@ class allcallbacks(Ui_MainWindow):
             totalDur = totalDur + int(self.timeinput4.text())
 
 
-
+            if self.protled1button.isChecked():
+                allcom.append(str('L11 ' + str(self.led1box5.text())))
+            if self.protled2button.isChecked():
+                allcom.append(str('L21 ' + str(self.led2box5.text())))
             if self.protringbutton.isChecked():
                 allcom.append('R1')
                 allcom.append(str('RR '+ str(self.redinput5.text())))
                 allcom.append(str('RG '+ str(self.greeninput5.text())))
                 allcom.append(str('RB '+ str(self.blueinput5.text())))
-                #print(self.protpeltierbutton.isChecked())
             if self.protpeltierbutton.isChecked():
                 allcom.append('P1')
                 allcom.append(str('ST '+str(self.peltinput5.text())))
@@ -592,6 +606,11 @@ class allcallbacks(Ui_MainWindow):
 
             x=1
             print(allcom)
+            if self.checkBox.isChecked():                
+                
+                self.durationbox.setValue(totalDur)
+                self.videobutton_callback()
+            print(self.redinput5.text())    
             for i in range(reps):
                 if i+1==reps:
                     allcom.append('R0')
@@ -617,7 +636,7 @@ class allcallbacks(Ui_MainWindow):
                             print(test)
                             print("ops")
             
-            self.runbutton.isClicked(False)
+            self.runbutton.setChecked(False)
         return
    
     ################## Camera functions #######################################    
@@ -677,18 +696,9 @@ class allcallbacks(Ui_MainWindow):
             dur = self.durationbox.text()
             ntl = self.intervalbox.text()
             
-            
-            alltlpath = self.basePath + 'time_lapses/'
-            #thistlpath = alltlpath+time.strftime("%Y-%m-%d-%H-%M-%S")
-            
+            alltlpath = self.basePath + 'time_lapses/'            
             thistlpath = self.create_folder(folderPath=alltlpath,
                                folderName=time.strftime("%Y-%m-%d-%H-%M-%S")+"/")
-            #check to see if the tl output folder is present:
-            
-            #if not os.path.exists(thistlpath):
-            #    #if not, create it:
-            #    os.makedirs(thistlpath)
-            #    os.chown(thistlpath, 1000, 1000)
             
             # Camera warm-up time
             time.sleep(1)
@@ -696,12 +706,12 @@ class allcallbacks(Ui_MainWindow):
             for i in range(totalphotos):
                 self.cam.capture(thistlpath + '/TL' + str(x)+'.jpg')
                 x = x + 1
-                print("photo " + str(x) + " out of " + str(totalphotos))
+                print("photo " + str(x-1) + " out of " + str(totalphotos))
                 time.sleep(float(dur)/float(ntl))
             print ("done")
         return
 
-    def videobutton_callback(self,Camera):
+    def videobutton_callback(self):
         if self.camFlag==1:
             dur = self.durationbox.text()
             print(dur)
@@ -714,6 +724,7 @@ class allcallbacks(Ui_MainWindow):
             if self.resolutionbox.currentText() == "2592x1944":
                 resVal = "2592x1944" 
                 self.resolutionbox.setCurrentText ("1920x1080")
+                
                 if self.camFlag == 1:
                     self.cam.resolution = (1920, 1080)
                 
@@ -739,11 +750,22 @@ class allcallbacks(Ui_MainWindow):
                     self.cam.resolution = (2592, 1944)
             return
 
-            
-    def to_avibutton_callback(self,Camera):
+    def openFileNameDialog(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*);;Python Files (*.py)", options=options)
+        if fileName:
+            print(fileName)  
+                  
+    def to_avibutton_callback(self):
+        
         options = QtWidgets.QFileDialog.Options()
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self, QFileDialog.getOpenFileName(), "","h264 Files (.h264);;Python Files (*.py)", options=options)
-
+        #fname = QFileDialog.getOpenFileName(QtWidgets.QDialog(), 'Open file', 
+        #    '/home/',"Image files (*.jpg *.gif)")
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(QtWidgets.QDialog(), 'open file',
+                                "","h264 Files (*.h264);;Python Files (*.py)", options=options)
+        
+        print("filename: "+fileName)
         if fileName == '':
             print ('no files selected')
             return
@@ -756,13 +778,12 @@ class allcallbacks(Ui_MainWindow):
         lastInd=fileName.rindex("/")
         files = os.listdir(fileName[0:lastInd])
         outCore = outname.rindex("/")
-        print ("out:" + outname[outCore:])
+        print ("out: " + outname[outCore+1:])
         if outname[outCore+1:] in files:
             print ("file is already converted! Skipping...")
             print("done.")
             return
         command = ['MP4Box', '-add', fileName, outname]
-        #command = ['ffmpeg', '-i', fileName,"-allcom=['P0',b",str(self.bitRate) ,"-pix_fmt","nv12","-f:v","-vcodec rawvideo", outname]
         subprocess.call(command,shell=False)
         print("done.")
         return
@@ -792,7 +813,6 @@ class allcallbacks(Ui_MainWindow):
     
     def brightness_callback(self,Camera):
         self.brightnesslcd.setProperty("intValue",self.brightnessbar.value())
-        #print(self.brightnessbar.value())
         if self.camFlag==1:
             self.cam.brightness = (self.brightnessbar.value())
         return    
@@ -829,7 +849,6 @@ class allcallbacks(Ui_MainWindow):
                     self.cam.color_effects = (0, 0)
                 else:
                     self.cam.color_effects = None
-            #print("here")
             
         
     def zoom_callback(self, Camera):
@@ -883,27 +902,24 @@ class allcallbacks(Ui_MainWindow):
         
     def bin_callback(self,Camera):
         self.binlcd.setProperty("intValue",self.binbar.value())
-        
-        #if self.binbarval == 1:
-        #        self.cam.resolution = (2592, 1944)
-        #        self.cam.framerate = (15)
-        #        self.fpsbar.value = 15
-        #        self.binVar.set(0)
-        #        #self.cam.zoom(0)
-        #        self.zoomVar.set(1)
-        #    if self.resVal == "1920x1080":
-        #        self.cam.resolution = (1920, 1080)
-        #        self.cam.framerate = (30)
-        #        self.FPSVar.set(30)
-        #        self.binVar.set(0)
-        #        #self.zoomVar.set(3)
-        if self.binbar.value == 2:
+        resVal = self.resolutionbox.currentText()
+        print("here")
+        print(self.binbar.value())
+        if self.binbar.value() == 1:
+            ind = resVal.find("x")
+            print(resVal[ind:])
+            if self.camFlag == 1 and int(resVal[:ind]) >= 1920:
+                self.cam.resolution = (int(resVal[0:ind]), int(resVal[ind+1:]))
+                self.cam.framerate = (15)
+                self.fpsbar.setValue(15)
+                #self.FPSVar.set(15)
+        if self.binbar.value() == 2:
             if self.camFlag==1:
                 self.cam.resolution = (1296, 972)
                 self.cam.framerate = (42)
-            self.fpsbar.value = 42
+            self.fpsbar.setValue (42)
             
-        if self.binbar.value == 4:
+        if self.binbar.value() == 4:
             self.fpsbar.setValue(90)
             if self.camFlag==1:
                 self.cam.resolution = (640, 480)
@@ -933,11 +949,13 @@ class allcallbacks(Ui_MainWindow):
         index = text.find('x')
         values = [int(text[0:index]),int(text[index+1:])]
         if self.camFlag==1:
+            if int(text[:index]) == 2592:
+                self.cam.framerate = (15)
+                self.fpsbar.setValue(15)
             self.cam.resolution = (int(text[0:index]),int(text[index+1:]))
         return values
         
     def mode_callback(self,Camera):
-         #print("here")
          print(self.modebox.currentText())
          if self.camFlag==1:
              if self.cam.image_effect != self.modebox.currentText():
@@ -947,8 +965,11 @@ class allcallbacks(Ui_MainWindow):
     def camConv2(self,Camera):
 
         
-        options = QtWidgets.QFileDialog.Options()
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","h264 Files (.h264);;Python Files (*.py)", options=options)
+        options = QFileDialog.Options()
+        fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*);;Python Files (*.py)", options=options)
+        if fileName:
+            print(fileName)
+        #fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","h264 Files (.h264)", options=options)
 
         if fileName == '':
             print ('no files selected')
@@ -986,7 +1007,7 @@ class allcallbacks(Ui_MainWindow):
             
         return
     
-    def runCommands(self,allcom=['P0','R0','L10','L20','S0']): 
+    def runCommands(self,allcom=['P0','R0','L1 0','L2 0','S0']): 
         x=1
         for command in allcom:
             haltFlag=1
@@ -1013,6 +1034,7 @@ class allcallbacks(Ui_MainWindow):
                       folderPath="/home/pi/Desktop/flypi_output/",
                       folderName="output1"):
         absPath = folderPath+folderName
+        #print(os.path.exists(absPath))
         if not os.path.exists(absPath):
             #if not, create it:
             os.makedirs(absPath)
@@ -1040,6 +1062,5 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     dialog = QtWidgets.QDialog()
     ui = allcallbacks(dialog)
-    #ui.setupUi(Camera)
     dialog.show()
     sys.exit(app.exec_())

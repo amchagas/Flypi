@@ -35,5 +35,5 @@ Peltier module;,1,40X40X3.8mm peltier module,CUI Inc,CP85438 ,P&NTechnology,TEC1
 heatsink;,2,36X36X12 aluminum heatsink,CTS Thermal Management Products,BDN14-3CB/A01 ,Fischer eletronik,ICK S 36 X 36 X 10 ,,,,,,,294-1101-ND ,774-BDN143CBA01,6744810,74M2393,1211714
 UV led;,1,EMITTER UV 390NM 1A ,LED Engin inc,LZ1-10UB00-00U4 ,,,,,,,,,1537-1137-ND ,,9053905P,,
 temperature sensor;,1,analog output,Analog devices,AD22100KTZ ,,,,,,,,,AD22100KTZ-ND ,584-AD22100KTZ,5230076,,9605320
-power supply;,1,12V 5A output,Mean well,GSM60A12-P1J ,,,,,,,,,1866-2016-ND ,709-GSM60A12-P1J ,7911058,44AC5087 ,2815822
+power supply;,1,12V 5A output,Mean well,GSM60A12-P1J ,CUI,SDI65-12-U2-P5 ,,,,,,,1866-2016-ND ,490-SDI65-12-U2-P5 ,7911058,44AC5087 ,2815822
 picamera;,1, 5MP 12mm focal distance lens (m12 thread), waveshare,8193, https://www.waveshare.com/product/mini-pc/raspberry-pi/cameras/rpi-camera-b.htm ,,,,,,,,,,,,
