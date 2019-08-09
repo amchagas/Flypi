@@ -1,5 +1,6 @@
 #### Flypi - An open source, modular, affordable tool for imaging experiments.
 
+[![Github All Releases](https://img.shields.io/github/downloadsamchagas/flypi/total.svg)]()
 
 Hi! Thanks for dropping by. This project started during one of the summer courses organized by [Trend in Africa](www.trendinafrica.org). It developed to the current state due to the efforts of many people along the way. In special Tom Baden, Lucia Prieto, and Edwin Cruz. A paper describing the system was published in [Plos Biology](http://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.2002702).
 
