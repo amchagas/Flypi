@@ -1,7 +1,8 @@
 #### Flypi - An open source, modular, affordable tool for imaging experiments.
 
 
-[![Github All Releases](https://img.shields.io/github/downloads/amchagas/flypi/total?style=for-the-badge)]()
+[![Github repo size](https://img.shields.io/github/repo-size/amchagas/flypi?style=for-the-badge)]()
+
 
 
 [![Github license](https://img.shields.io/github/license/amchagas/flypi?style=for-the-badge)]()
