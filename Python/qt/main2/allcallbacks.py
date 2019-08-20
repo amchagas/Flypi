@@ -607,9 +607,37 @@ class allcallbacks(Ui_MainWindow):
             x=1
             print(allcom)
             if self.checkBox.isChecked():                
-                
+                # because we needed a fast solution
+                # bits from the camera functions are copied here
+                self.camon = 1
+                #res = self.resolutionbox.value 
+                size = self.windowbar.value()
+                self.cam.resolution = (1920,1080)
+                self.cam.preview_window = (0, 0, size, size)
+                self.zoombar.setValue (1)
+                self.horizontalbar.setValue (0) 
+                self.verticalbar.setValue (0) 
+                self.cam.zoom = (self.horizontalbar.value(),
+                                 self.verticalbar.value(),
+                                 self.zoombar.value(),
+                                 self.zoombar.value())
+                self.cam.start_preview()
+                self.cam.preview.fullscreen = False
+                time.sleep(1)
                 self.durationbox.setValue(totalDur)
-                self.videobutton_callback()
+                videoPath = self.create_folder(folderPath=self.basePath,
+                               folderName='videos/')
+                
+                self.cam.start_recording(output = videoPath +
+                                'video_' +
+                                time.strftime('%Y-%m-%d-%H-%M-%S') + '.h264',
+                                format = "h264",)
+                                #resize = (1920,1080))
+                #wait a second so the camera adjusts
+                
+                
+                
+                #self.videobutton_callback()
             print(self.redinput5.text())    
             for i in range(reps):
                 if i+1==reps:
@@ -635,7 +663,8 @@ class allcallbacks(Ui_MainWindow):
                         else:
                             print(test)
                             print("ops")
-            
+            self.cam.stop_recording()
+            print("done.")
             self.runbutton.setChecked(False)
         return
    
