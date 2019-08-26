@@ -53,9 +53,9 @@ long int millistowait;
 SerialCommand sCmd;     // The demo SerialCommand object
 
 void setup() {
-  // for analog ports they cannot be defined as OUTPUT
-  //pinMode(LED1Pin, OUTPUT);
-  //pinMode(LED2Pin, OUTPUT);
+  
+  pinMode(LED1Pin, OUTPUT);
+  pinMode(LED2Pin, OUTPUT);
 
   pinMode(RedGBPin, OUTPUT);
   pinMode(RGreenBPin, OUTPUT);
@@ -304,7 +304,8 @@ void LED1_on() {
   arg = sCmd.next();
   if (arg != NULL) {
      aNumber = atoi(arg);
-     analogWrite(LED1Pin, aNumber);
+     
+     //analogWrite(LED1Pin, aNumber);
      waited();
   }//if
 
