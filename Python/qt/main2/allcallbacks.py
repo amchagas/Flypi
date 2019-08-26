@@ -317,7 +317,7 @@ class allcallbacks(Ui_MainWindow):
             
             output = "L10"
         
-            
+        print(output)    
         self.output1(command = output)
         
 

@@ -305,7 +305,7 @@ void LED1_on() {
   if (arg != NULL) {
      aNumber = atoi(arg);
      
-     //analogWrite(LED1Pin, aNumber);
+     analogWrite(LED1Pin, aNumber);
      waited();
   }//if
 
