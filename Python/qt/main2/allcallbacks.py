@@ -610,20 +610,33 @@ class allcallbacks(Ui_MainWindow):
                 # because we needed a fast solution
                 # bits from the camera functions are copied here
                 self.camon = 1
+                if self.resolutionbox.currentText() == "2592x1944":
+                    resVal = "2592x1944" 
+                    self.resolutionbox.setCurrentText ("1920x1080")
+                
+                    if self.camFlag == 1:
+                        self.cam.resolution = (1920, 1080)
+                
+                    if self.fpsbar.value()<30:
+                        self.fpsbar.setValue(30)
+                
+                    print ("impossible to record at 2592X1944,")
+                    print ("due to camera limitations.")
+                    print("dropping to next possible resolution")
                 #res = self.resolutionbox.value 
                 size = self.windowbar.value()
-                self.cam.resolution = (1920,1080)
-                self.cam.preview_window = (0, 0, size, size)
-                self.zoombar.setValue (1)
-                self.horizontalbar.setValue (0) 
-                self.verticalbar.setValue (0) 
-                self.cam.zoom = (self.horizontalbar.value(),
-                                 self.verticalbar.value(),
-                                 self.zoombar.value(),
-                                 self.zoombar.value())
-                self.cam.start_preview()
-                self.cam.preview.fullscreen = False
-                time.sleep(1)
+                #self.cam.resolution = (1920,1080)
+                #self.cam.preview_window = (0, 0, size, size)
+                #self.zoombar.setValue (1)
+                #self.horizontalbar.setValue (0) 
+                #self.verticalbar.setValue (0) 
+                #self.cam.zoom = (self.horizontalbar.value(),
+                #                 self.verticalbar.value(),
+                #                 self.zoombar.value(),
+                #                 self.zoombar.value())
+                #self.cam.start_preview()
+                #self.cam.preview.fullscreen = False
+                #time.sleep(1)
                 self.durationbox.setValue(totalDur)
                 videoPath = self.create_folder(folderPath=self.basePath,
                                folderName='videos/')
@@ -633,11 +646,7 @@ class allcallbacks(Ui_MainWindow):
                                 time.strftime('%Y-%m-%d-%H-%M-%S') + '.h264',
                                 format = "h264",)
                                 #resize = (1920,1080))
-                #wait a second so the camera adjusts
                 
-                
-                
-                #self.videobutton_callback()
             print(self.redinput5.text())    
             for i in range(reps):
                 if i+1==reps:
