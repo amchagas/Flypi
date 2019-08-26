@@ -663,7 +663,8 @@ class allcallbacks(Ui_MainWindow):
                         else:
                             print(test)
                             print("ops")
-            self.cam.stop_recording()
+            if self.checkBox.isChecked():
+                self.cam.stop_recording()
             print("done.")
             self.runbutton.setChecked(False)
         return
