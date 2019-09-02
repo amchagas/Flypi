@@ -307,7 +307,9 @@ class allcallbacks(Ui_MainWindow):
             
             self.led1onflag=1
             value = self.led1slider.value()
-            value = int(value *(255./100.))
+            print("value: ")
+            print(value)
+            value = int((value *255 )/100)
             output = "L11 " + str(value)
             
             
@@ -358,7 +360,7 @@ class allcallbacks(Ui_MainWindow):
             flag=0
             self.led2onflag = 1
             value = self.led2slider.value()
-            value = int(int(value) *(255./100.))
+            value = int((value *255 )/100)
             print ("led2 on")
             output = "L21 " + str(value)
           
