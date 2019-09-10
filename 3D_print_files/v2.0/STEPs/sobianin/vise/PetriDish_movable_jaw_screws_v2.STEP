@@ -6,8 +6,8 @@ FILE_NAME ('PetriDish_movable_jaw_screws_v2.STEP',
     '2019-09-05T16:16:35',
     ( '' ),
     ( '' ),
-    'SwSTEP 2.0',
-    'SolidWorks 2012',
+    '',
+    '',
     '' );
 FILE_SCHEMA (( 'AUTOMOTIVE_DESIGN' ));
 ENDSEC;
