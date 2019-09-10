@@ -6,8 +6,8 @@ FILE_NAME ('PCBCase_Bot_mod_v2_hardened_kurz.STEP',
     '2019-08-28T11:23:05',
     ( '' ),
     ( '' ),
-    'SwSTEP 2.0',
-    'SolidWorks 2012',
+    '',
+    '',
     '' );
 FILE_SCHEMA (( 'AUTOMOTIVE_DESIGN' ));
 ENDSEC;
