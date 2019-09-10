@@ -6,8 +6,8 @@ FILE_NAME ('dubel.STEP',
     '2019-08-06T12:48:44',
     ( '' ),
     ( '' ),
-    'SwSTEP 2.0',
-    'SolidWorks 2012',
+    '',
+    '',
     '' );
 FILE_SCHEMA (( 'AUTOMOTIVE_DESIGN' ));
 ENDSEC;
@@ -18,7 +18,7 @@ DATA;
 #3 = UNCERTAINTY_MEASURE_WITH_UNIT (LENGTH_MEASURE( 1.000000000000000100E-005 ), #41, 'distance_accuracy_value', 'NONE');
 #4 = UNCERTAINTY_MEASURE_WITH_UNIT (LENGTH_MEASURE( 1.000000000000000100E-005 ), #60, 'distance_accuracy_value', 'NONE');
 #5 = ADVANCED_BREP_SHAPE_REPRESENTATION ( 'dubel', ( #6, #184 ), #189 ) ;
-#6 = MANIFOLD_SOLID_BREP ( 'Бобышка-Вытянуть2', #122 ) ;
+#6 = MANIFOLD_SOLID_BREP ( 'ГЃГ®ГЎГ»ГёГЄГ -Г‚Г»ГІГїГ­ГіГІГј2', #122 ) ;
 #7 = UNCERTAINTY_MEASURE_WITH_UNIT (LENGTH_MEASURE( 1.000000000000000100E-005 ), #17, 'distance_accuracy_value', 'NONE');
 #8 = APPLICATION_PROTOCOL_DEFINITION ( 'draft international standard', 'automotive_design', 1998, #9 ) ;
 #9 = APPLICATION_CONTEXT ( 'automotive_design' ) ;
