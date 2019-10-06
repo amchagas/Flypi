@@ -1,0 +1,175 @@
+%Open know-how manifest 0.1
+---
+
+# The content of this manifest file is licensed under a Creative Commons Attribution 4.0 International License.
+# Licenses for modification and distribution of the hardware, documentation, source-code, etc are stated separately.
+
+# Remove any fields that are not used. Comments (beginning with '#') may also be removed.
+
+# Manifest metadata
+
+date-created: 2019-10-06                     # YYYY-MM-DD
+
+#date-updated: [value]                      # YYYY-MM-DD
+
+manifest-author:
+  name:  Andre Maia Chagas                 # required | text
+  affiliation: University of Sussex        # text
+  email: a.maia-chagas@sussex.ac.uk        # email address
+
+manifest-language: English-UK
+
+documentation-language: English-UK
+
+#manifest-is-translation:
+#  title: [value]                           # text | Title of the original
+#  manifest: [value]                        # URL - Absolute path | OKH manifest location
+#  web: [value]                             # URL - Absolute path | web presence location
+#  lang: [language]-[region]                # language of original
+
+#documentation-is-translation:
+#  title: [value]                           # text | Title of the original
+#  manifest: [value]                        # URL - Absolute path | OKH manifest location
+#  web: [value]                             # URL - Absolute path | web presence location
+#  lang: [language]-[region]                # language of original
+
+# Properties
+
+title: FlyPi - A 3D-printable open-source platform for fluorescence microscopy, optogenetics, and accurate temperature control during behaviour of zebrafish, Drosophila, and Caenorhabditis elegans                             # required | text | A title to identify the thing
+
+description: |
+"Flypi" is a 3D printable all in one biology lab that can be used for state of the art experiments in neurosciences as well as for human intestine parasites detection                          # required | paragraph
+
+intended-use: |                            # recommended | Paragraph
+Flypi was developed for researchers to perform experiments using low cost tools as well as educators to train students and do outreach activities with the general public
+
+keywords:                                  # At least one keyword is recommended | text array
+  - neuroscience
+  - open science
+  - microscopy
+  - optogenetics
+  - fluorescence
+  - behavioural tracking
+  - raspberry pi
+  - arduino
+
+project-link: https://github.com/amchagas/flypi       # At least project-link or documentation-home is required, otherwise recommended | absolute path URL
+
+#health-safety-notice: |                    # paragraph
+#  [value]
+
+contact:
+  name: Andre Maia Chagas                            # text
+  affiliation: University of Sussex                     # text
+  email: a.maia-chagas@sussex.ac.uk                           # email address
+  social:
+    - platform: Twitter                    # text
+      user-handle: @chagas_am                 # text
+
+#contributors:                              # recommended
+#  - name: [contributor 1]                  # text
+#    affiliation: [value]                   # text
+#    email: [value]                         # email address
+
+#image: [value]                             # recommended | absolute or relative path
+
+version: 2.0                           # text
+
+development-stage: [value]                 # text
+
+made: true                         # boolean - true or false
+
+made-independently: true           # boolean - true or false
+
+#standards-used:
+#  - standard-title: [value]                # Required where used | Title of the standard used in developing the design or documentation
+#    publisher: [value]                     # Publisher of the standard
+#    reference: [value]                     # Reference indentifier of the standard (e.g. ISO 9001)
+#    certification:                         # If certification has been granted confirming compliance with the standard
+#      - certifier: [value]                 # Individual or organisation granting the certification. Use "Self" for self-certification
+#        date-awarded: [value]              # Date certification was granted
+#        link: [value]                      # Link to evidence of certification (e.g. certificate). Use an an absolute path to an external resource or an absolute or relative path to evidence within the documentation.
+
+#derivative-of:
+#  title: [value]                           # text | Title of the original
+#  manifest: [value]                        # URL - Absolute path | OKH manifest location
+#  web: [value]                             # URL - Absolute path | web presence location
+
+#variant-of:
+#  title: [value]                           # text | Title of the original
+#  manifest: [value]                        # URL - Absolute path | OKH manifest location
+#  web: [value]                             # URL - Absolute path | web presence location
+
+#sub:
+#  title: [sub 1]                           # text | Title of the original
+#  manifest: [value]                        # URL - Absolute path | OKH manifest location
+#  web: [value]                             # URL - Absolute path | web presence location
+
+# License
+
+license:                                   # At least one license is required | The format should be an SPDX identifier. See https://spdx.org/licenses/hardware: [value] # recommended | The license under which the hardware is released
+  hardware: CERN OHL v1.2                        # recommended | The license under which the documentation is released
+  documentation: GPL-2.0                   # recommended | The license under which the documentation is released
+  software: CC-BY-SA v4.0                        # recommended where software is used | The license under which the software is released
+
+licensor:
+  name: Andre Maia Chagas                            # text
+  affiliation: University of Sussex                     # text
+  email: a.maia-chagas@sussex.ac.uk                           # email address
+
+# Documentation
+
+documentation-home: https://github.com/amchagas/Flypi/               # At least one of the project-link or documentation-home fields is required | absolute path
+
+#archive-download: [value]                 # Absolute or relative path
+
+#design-files:                             # recommended
+#  - path: [value]                         # Absolute or relative path
+#    title: [value]                        # text
+
+#schematics:                               # recommended where applicable
+#  - path: [value]                         # Absolute or relative path
+#    title: [value]                        # text
+
+bom: https://github.com/amchagas/Flypi/blob/master/PCB/flypi_pcb_kicad/1-click-bom.csv        # recommended | absolute or relative path | Direct the maker to the Bill of Materials
+
+#tool-list: [value]                        # recommended | absolute or relative path | Direct the maker to a list of tools required to make the thing
+
+making-instructions:                      # recommended
+  - path: https://github.com/amchagas/Flypi/blob/master/User%20and%20Assembly%20Manual_revised.pdf                        # Absolute or relative path
+    title: User and assembly manual revised                        # text
+
+#manufacturing-files:                      # recommended where applicable
+#  - path: [value]                         # Absolute or relative path
+#    title: [value]                        # text
+
+#risk-assessment:                          # recommended
+#  - path: [value]                         # Absolute or relative path
+#    title: [value]                        # text
+
+#tool-settings:                            # recommended where applicable
+#  - path: [value]                         # Absolute or relative path
+#    title: [value]                        # text
+
+#quality-instructions:
+#  - path: [value]                         # Absolute or relative path
+#    title: [value]                        # text
+
+#operating-instructions:                   # recommended
+#  - path: [value]                         # Absolute or relative path
+#    title: [value]                        # text
+
+#maintenance-instructions: [value]         # recommended
+#  - path: [value]                         # Absolute or relative path
+#    title: [value]                        # text
+
+#disposal-instructions: [value]            # recommended
+#  - path: [value]                         # Absolute or relative path
+#    title: [value]                        # text
+
+#software:                                 # recommended where applicable | Source code or executable software that the thing uses
+#  - path: [value]                         # Absolute or relative path
+#    title: [value]                        # text
+
+# User defined Fields
+# Include any custom / extended fields here
