@@ -61,7 +61,7 @@ contact:
   email: a.maia-chagas@sussex.ac.uk                           # email address
   social:
     - platform: Twitter                    # text
-      user-handle: @chagas_am                 # text
+      user-handle: "@chagas_am"                 # text
 
 #contributors:                              # recommended
 #  - name: [contributor 1]                  # text
