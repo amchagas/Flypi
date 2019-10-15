@@ -1,6 +1,3 @@
-%Open know-how manifest 0.1
----
-
 # The content of this manifest file is licensed under a Creative Commons Attribution 4.0 International License.
 # Licenses for modification and distribution of the hardware, documentation, source-code, etc are stated separately.
 
@@ -38,10 +35,10 @@ documentation-language: English-UK
 title: FlyPi - A 3D-printable open-source platform for fluorescence microscopy, optogenetics, and accurate temperature control during behaviour of zebrafish, Drosophila, and Caenorhabditis elegans                             # required | text | A title to identify the thing
 
 description: |
-"Flypi" is a 3D printable all in one biology lab that can be used for state of the art experiments in neurosciences as well as for human intestine parasites detection                          # required | paragraph
+    "Flypi" is a 3D printable all in one biology lab that can be used for state of the art experiments in neurosciences as well as for human intestine parasites detection                          # required | paragraph
 
 intended-use: |                            # recommended | Paragraph
-Flypi was developed for researchers to perform experiments using low cost tools as well as educators to train students and do outreach activities with the general public
+    Flypi was developed for researchers to perform experiments using low cost tools as well as educators to train students and do outreach activities with the general public
 
 keywords:                                  # At least one keyword is recommended | text array
   - neuroscience
