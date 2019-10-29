@@ -388,19 +388,6 @@ void waiting(int millistowait) {
   time4 = time3;
   //wait amount of time
   while ((time4 - time3) < millistowait) {
-    //Serial.flush();
-    //Serial.println("waiting");
-    //Serial.println(millistowait);
     time4 = millis();
-    //Serial.println(time4);
   } //done waiting
-
-  //handshake
-//  while(flag==1){
-//    Serial.println("<wtd>>");
-//    token1=Serial.readStringUntil('>');
-//    index = token.indexOf('<');
-//    if (token.substring(0,index)=="END"){flag=0;}
-//  }
-  //Serial.flush();
 }//waiting

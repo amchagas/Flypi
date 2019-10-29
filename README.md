@@ -50,5 +50,5 @@ sudo apt-get install gpac
 Done via gpac. MP4BOX.
 
 
-## SD Card image containing Raspian image with all things installed:
-https://www.dropbox.com/sh/bibhy2sgadq30dm/AACD2Rdhmad2QdBi9q-pQfd6a?dl=0
+## Zipped SD Card image containing Raspian image with all things installed:
+https://www.dropbox.com/s/12o271wj37rqkj6/flypi_image.zip?dl=0
