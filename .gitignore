@@ -1,3 +1,4 @@
 ./Arduino/servo_test/*.*
 ./Python/__pycache__/*.pyc
 
+Python/qt/__pycache__/*.pyc
