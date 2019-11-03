@@ -75,6 +75,7 @@ class allcallbacks(Ui_MainWindow):
             self.ser = serial.Serial('/dev/ttyUSB0', 115200)
             if self.ser.in_waiting != 0:
                 print(self.ser.readline())
+                print("here")
             #while self.ser.in_waiting==0:
             #    print("init")
             #    print(self.ser.readline())
@@ -489,16 +490,28 @@ class allcallbacks(Ui_MainWindow):
             print("run")
             allcom = list()
             if self.protled1button.isChecked():
-                allcom.append(str('L11 ' + str(self.led1box1.text())))
+                value = int(self.led1box1.text())
+                value = int(value *(255./100.)+1)
+                allcom.append(str('L11 ' + str(value)))
 
             if self.protled2button.isChecked():
-                allcom.append(str('L21 ' + str(self.led2box1.text())))
+                value = int(self.led2box1.text())
+                value = int(value *(255./100.)+1)
+                allcom.append(str('L21 ' + str(255)))
 
             if self.protringbutton.isChecked():
                 allcom.append('R1')
-                allcom.append(str('RR '+ str(self.redinput1.text())))
-                allcom.append(str('RG '+ str(self.greeninput1.text())))
-                allcom.append(str('RB '+ str(self.blueinput1.text())))
+                value = self.redinput1.text()
+                value = int(value) *(255./100.)
+                allcom.append(str('RR '+ str(value)))
+                
+                value = self.greeninput1.text()
+                value = int(value) *(255./100.)
+                allcom.append(str('RG '+ str(value)))
+                
+                value = self.blueinput1.text()
+                value = int(value) *(255./100.)
+                allcom.append(str('RB '+ str(value)))
 
             if self.protpeltierbutton.isChecked():
                 allcom.append('P1')
@@ -520,15 +533,29 @@ class allcallbacks(Ui_MainWindow):
             totalDur = totalDur + int(self.timeinput1.text())
 
             if self.protled1button.isChecked():
-                allcom.append(str('L11 ' + str(self.led1box2.text())))
+                value = int(self.led1box2.text())
+                value = int(value *(255./100.)+1)
+                allcom.append(str('L11 ' + str(value)))
+                
             if self.protled2button.isChecked():
-                allcom.append(str('L21 ' + str(self.led2box2.text())))
+                value = int(self.led2box2.text())
+                value = int(value *(255./100.)+1)
+                allcom.append(str('L21 ' + str(value)))
+                
             if self.protringbutton.isChecked():
                 allcom.append('R1')
-                allcom.append(str('RR '+ str(self.redinput2.text())))
-                allcom.append(str('RG '+ str(self.greeninput2.text())))
-                allcom.append(str('RB '+ str(self.blueinput2.text())))
-
+                value = int(self.redinput2.text())
+                value = int(value *(255./100.)+1)
+                allcom.append(str('RR '+ str(value)))
+                
+                value = self.greeninput2.text()
+                value = int(value) *(255./100.)
+                allcom.append(str('RG '+ str(value)))
+                
+                value = self.blueinput2.text()
+                value = int(value) *(255./100.)
+                allcom.append(str('RB '+ str(value)))
+                
             if self.protpeltierbutton.isChecked():
                 allcom.append('P1')
                 allcom.append(str('ST '+str(self.peltinput2.text())))
@@ -538,14 +565,26 @@ class allcallbacks(Ui_MainWindow):
             totalDur = totalDur + int(self.timeinput2.text())
 
             if self.protled1button.isChecked():
-                allcom.append(str('L11 ' + str(self.led1box3.text())))
+                value = int(self.led1box3.text())
+                value = int(value *(255./100.)+1)
+                allcom.append(str('L11 ' + str(value)))
             if self.protled2button.isChecked():
-                allcom.append(str('L21 ' + str(self.led2box3.text())))
+                value = int(self.led2box3.text())
+                value = int(value *(255./100.)+1)
+                allcom.append(str('L21 ' + str(value)))
             if self.protringbutton.isChecked():
                 allcom.append('R1')
-                allcom.append(str('RR '+ str(self.redinput3.text())))
-                allcom.append(str('RG '+ str(self.greeninput3.text())))
-                allcom.append(str('RB '+ str(self.blueinput3.text())))
+                value = self.redinput3.text()
+                value = int(value) *(255./100.)
+                allcom.append(str('RR '+ str(value)))
+                
+                value = self.greeninput3.text()
+                value = int(value) *(255./100.)
+                allcom.append(str('RG '+ str(value)))
+                
+                value = self.blueinput3.text()
+                value = int(value) *(255./100.)
+                allcom.append(str('RB '+ str(value)))
 
             if self.protpeltierbutton.isChecked():
                 allcom.append('P1')
@@ -556,15 +595,27 @@ class allcallbacks(Ui_MainWindow):
             totalDur = totalDur + int(self.timeinput3.text())
 
             if self.protled1button.isChecked():
-                allcom.append(str('L11 ' + str(self.led1box4.text())))
+                value = int(self.led1box4.text())
+                value = int(value *(255./100.)+1)
+                allcom.append(str('L11 ' + str(value)))
             if self.protled2button.isChecked():
-                allcom.append(str('L21 ' + str(self.led2box4.text())))
+                value = int(self.led2box4.text())
+                value = int(value *(255./100.)+1)
+                allcom.append(str('L21 ' + str(value)))
 
             if self.protringbutton.isChecked():
                 allcom.append('R1')
-                allcom.append(str('RR '+ str(self.redinput4.text())))
-                allcom.append(str('RG '+ str(self.greeninput4.text())))
-                allcom.append(str('RB '+ str(self.blueinput4.text())))
+                value = self.redinput4.text()
+                value = int(value) *(255./100.)
+                allcom.append(str('RR '+ str(value)))
+                
+                value = self.greeninput4.text()
+                value = int(value) *(255./100.)
+                allcom.append(str('RG '+ str(value)))
+                
+                value = self.blueinput4.text()
+                value = int(value) *(255./100.)
+                allcom.append(str('RB '+ str(value)))
 
             if self.protpeltierbutton.isChecked():
                 allcom.append('P1')
@@ -576,14 +627,26 @@ class allcallbacks(Ui_MainWindow):
 
 
             if self.protled1button.isChecked():
-                allcom.append(str('L11 ' + str(self.led1box5.text())))
+                value = int(self.led1box5.text())
+                value = int(value *(255./100.)+1)
+                allcom.append(str('L11 ' + str(value)))
             if self.protled2button.isChecked():
-                allcom.append(str('L21 ' + str(self.led2box5.text())))
+                value = int(self.led1box5.text())
+                value = int(value *(255./100.)+1)
+                allcom.append(str('L21 ' + str(value)))
             if self.protringbutton.isChecked():
                 allcom.append('R1')
-                allcom.append(str('RR '+ str(self.redinput5.text())))
-                allcom.append(str('RG '+ str(self.greeninput5.text())))
-                allcom.append(str('RB '+ str(self.blueinput5.text())))
+                value = self.redinput5.text()
+                value = int(value) *(255./100.)
+                allcom.append(str('RR '+ str(value)))
+                
+                value = self.greeninput5.text()
+                value = int(value) *(255./100.)
+                allcom.append(str('RG '+ str(value)))
+                
+                value = self.blueinput5.text()
+                value = int(value) *(255./100.)
+                allcom.append(str('RB '+ str(value)))
             if self.protpeltierbutton.isChecked():
                 allcom.append('P1')
                 allcom.append(str('ST '+str(self.peltinput5.text())))
@@ -661,6 +724,7 @@ class allcallbacks(Ui_MainWindow):
 
                 for command in allcom:
                     haltFlag=1
+                    print(command)
                     self.ser.write(str(command+'\n').encode('utf-8'))
                     self.ser.flush()
                     x=x+1
