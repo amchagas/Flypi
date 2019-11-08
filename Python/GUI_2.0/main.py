@@ -46,6 +46,7 @@ class allcallbacks(Ui_MainWindow):
         self.mat1onflag = 0
         self.peltonflag = 0
         self.camon = 0
+        self.resVal = "640X480"
         Ui_MainWindow.__init__(self)
         #load camera library
         try:
@@ -504,11 +505,11 @@ class allcallbacks(Ui_MainWindow):
                 value = self.redinput1.text()
                 value = int(value) *(255./100.)
                 allcom.append(str('RR '+ str(value)))
-                
+
                 value = self.greeninput1.text()
                 value = int(value) *(255./100.)
                 allcom.append(str('RG '+ str(value)))
-                
+
                 value = self.blueinput1.text()
                 value = int(value) *(255./100.)
                 allcom.append(str('RB '+ str(value)))
@@ -536,26 +537,26 @@ class allcallbacks(Ui_MainWindow):
                 value = int(self.led1box2.text())
                 value = int(value *(255./100.)+1)
                 allcom.append(str('L11 ' + str(value)))
-                
+
             if self.protled2button.isChecked():
                 value = int(self.led2box2.text())
                 value = int(value *(255./100.)+1)
                 allcom.append(str('L21 ' + str(value)))
-                
+
             if self.protringbutton.isChecked():
                 allcom.append('R1')
                 value = int(self.redinput2.text())
                 value = int(value *(255./100.)+1)
                 allcom.append(str('RR '+ str(value)))
-                
+
                 value = self.greeninput2.text()
                 value = int(value) *(255./100.)
                 allcom.append(str('RG '+ str(value)))
-                
+
                 value = self.blueinput2.text()
                 value = int(value) *(255./100.)
                 allcom.append(str('RB '+ str(value)))
-                
+
             if self.protpeltierbutton.isChecked():
                 allcom.append('P1')
                 allcom.append(str('ST '+str(self.peltinput2.text())))
@@ -577,11 +578,11 @@ class allcallbacks(Ui_MainWindow):
                 value = self.redinput3.text()
                 value = int(value) *(255./100.)
                 allcom.append(str('RR '+ str(value)))
-                
+
                 value = self.greeninput3.text()
                 value = int(value) *(255./100.)
                 allcom.append(str('RG '+ str(value)))
-                
+
                 value = self.blueinput3.text()
                 value = int(value) *(255./100.)
                 allcom.append(str('RB '+ str(value)))
@@ -608,11 +609,11 @@ class allcallbacks(Ui_MainWindow):
                 value = self.redinput4.text()
                 value = int(value) *(255./100.)
                 allcom.append(str('RR '+ str(value)))
-                
+
                 value = self.greeninput4.text()
                 value = int(value) *(255./100.)
                 allcom.append(str('RG '+ str(value)))
-                
+
                 value = self.blueinput4.text()
                 value = int(value) *(255./100.)
                 allcom.append(str('RB '+ str(value)))
@@ -639,11 +640,11 @@ class allcallbacks(Ui_MainWindow):
                 value = self.redinput5.text()
                 value = int(value) *(255./100.)
                 allcom.append(str('RR '+ str(value)))
-                
+
                 value = self.greeninput5.text()
                 value = int(value) *(255./100.)
                 allcom.append(str('RG '+ str(value)))
-                
+
                 value = self.blueinput5.text()
                 value = int(value) *(255./100.)
                 allcom.append(str('RB '+ str(value)))
@@ -676,7 +677,7 @@ class allcallbacks(Ui_MainWindow):
                 # bits from the camera functions are copied here
                 self.camon = 1
                 if self.resolutionbox.currentText() == "2592x1944":
-                    resVal = "2592x1944"
+                    self.resVal = "2592x1944"
                     self.resolutionbox.setCurrentText ("1920x1080")
 
                     if self.camFlag == 1:
@@ -827,7 +828,7 @@ class allcallbacks(Ui_MainWindow):
             #it seems that the raspi-cam doesn't like shooting videos at full res.
             #so the softw. will automatically use a lower resolution for videos
             if self.resolutionbox.currentText() == "2592x1944":
-                resVal = "2592x1944"
+                self.resVal = "2592x1944"
                 self.resolutionbox.setCurrentText ("1920x1080")
 
                 if self.camFlag == 1:
@@ -850,7 +851,7 @@ class allcallbacks(Ui_MainWindow):
             self.cam.stop_recording()
             print("done.")
             #here we restore the preview resolution if it was the maximal one.
-            if resVal == "2592x1944":
+            if self.resVal == "2592x1944":
                 if self.camFlag==1:
                     self.cam.resolution = (2592, 1944)
             return
@@ -861,7 +862,7 @@ class allcallbacks(Ui_MainWindow):
         fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*);;Python Files (*.py)", options=options)
         if fileName:
             print(fileName)
-
+resolution_callback
     def to_avibutton_callback(self):
 
         options = QtWidgets.QFileDialog.Options()
@@ -1007,14 +1008,14 @@ class allcallbacks(Ui_MainWindow):
 
     def bin_callback(self,Camera):
         self.binlcd.setProperty("intValue",self.binbar.value())
-        resVal = self.resolutionbox.currentText()
+        self.resVal = self.resolutionbox.currentText()
         print("here")
         print(self.binbar.value())
         if self.binbar.value() == 1:
-            ind = resVal.find("x")
-            print(resVal[ind:])
-            if self.camFlag == 1 and int(resVal[:ind]) >= 1920:
-                self.cam.resolution = (int(resVal[0:ind]), int(resVal[ind+1:]))
+            ind = self.resVal.find("x")
+            print(self.resVal[ind:])
+            if self.camFlag == 1 and int(self.resVal[:ind]) >= 1920:
+                self.cam.resolution = (int(self.resVal[0:ind]), int(self.resVal[ind+1:]))
                 self.cam.framerate = (15)
                 self.fpsbar.setValue(15)
                 #self.FPSVar.set(15)
