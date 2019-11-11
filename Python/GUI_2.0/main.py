@@ -862,7 +862,7 @@ class allcallbacks(Ui_MainWindow):
         fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*);;Python Files (*.py)", options=options)
         if fileName:
             print(fileName)
-resolution_callback
+
     def to_avibutton_callback(self):
 
         options = QtWidgets.QFileDialog.Options()
