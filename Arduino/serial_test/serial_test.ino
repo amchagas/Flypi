@@ -391,7 +391,7 @@ void TEMP_read(){
 
 void TIME_wait(){
 
-  int aNumber;
+  long int aNumber;
   //int time1;
   //int time2;
   char *arg;
@@ -403,7 +403,8 @@ void TIME_wait(){
 
   arg = sCmd.next();
   if (arg != NULL) {
-    aNumber = atoi(arg);
+    aNumber = atol(arg);
+    
     //Serial.println(aNumber);
     //wait amount of time
     while ((time1 - time2) < aNumber) {
