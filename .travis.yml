@@ -4,4 +4,4 @@ language: python
 
 # command to install dependencies
 install:
-  - pip install picamera, pyserial
+  - pip install python3-picamera, pyserial
