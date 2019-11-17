@@ -13,6 +13,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "TomBaden",
+      "name": "Tom Baden",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/11835617?v=4",
+      "profile": "http://www.badenlab.org",
+      "contributions": [
+        "design",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
