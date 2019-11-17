@@ -63,7 +63,11 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="http://www.openeuroscience.com"><img src="https://avatars3.githubusercontent.com/u/3624486?v=4" width="100px;" alt="Andre Maia Chagas"/><br /><sub><b>Andre Maia Chagas</b></sub></a><br /><a href="https://github.com/amchagas/Flypi/commits?author=amchagas" title="Code">💻</a></td>
+
+    <td align="center"><a href="https://github.com/isobianin"><img src="https://avatars1.githubusercontent.com/u/52375129?v=4" width="100px;" alt="Ihor Sobianin"/><br /><sub><b>Ihor Sobianin</b></sub></a><br /><a href="#design-isobianin" title="Design">🎨</a></td>
+
     <td align="center"><a href="https://kitspace.org"><img src="https://avatars1.githubusercontent.com/u/206854?v=4" width="100px;" alt="Kaspar Emanuel"/><br /><sub><b>Kaspar Emanuel</b></sub></a><br /><a href="https://github.com/amchagas/Flypi/commits?author=kasbah" title="Code">💻</a></td>
+
   </tr>
 </table>
 
