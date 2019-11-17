@@ -11,7 +11,10 @@
       "avatar_url": "https://avatars3.githubusercontent.com/u/3624486?v=4",
       "profile": "http://www.openeuroscience.com",
       "contributions": [
-        "code"
+
+        "code",
+        "design",
+        "doc"
       ]
     },
     {
@@ -40,7 +43,9 @@
       "avatar_url": "https://avatars1.githubusercontent.com/u/11835617?v=4",
       "profile": "http://www.badenlab.org",
             "contributions": [
-        "code"
+         "code",
+        "design",
+        "doc"
       ]
     },
     {
@@ -70,6 +75,7 @@
       "contributions": [
         "design",
         "code"
+
       ]
     }
   ],
