@@ -1,5 +1,5 @@
 #### Flypi - An open source, modular, affordable tool for imaging experiments.
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
 
 
 [![Github size](https://img.shields.io/github/repo-size/amchagas/flypi?style=for-the-badge)]()
@@ -63,6 +63,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="http://www.openeuroscience.com"><img src="https://avatars3.githubusercontent.com/u/3624486?v=4" width="100px;" alt="Andre Maia Chagas"/><br /><sub><b>Andre Maia Chagas</b></sub></a><br /><a href="https://github.com/amchagas/Flypi/commits?author=amchagas" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/GrandeCappuccino"><img src="https://avatars2.githubusercontent.com/u/38787054?v=4" width="100px;" alt="Edwin Cruz"/><br /><sub><b>Edwin Cruz</b></sub></a><br /><a href="#design-GrandeCappuccino" title="Design">🎨</a></td>
   </tr>
 </table>
 
