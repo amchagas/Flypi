@@ -13,6 +13,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "GrandeCappuccino",
+      "name": "Edwin Cruz",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/38787054?v=4",
+      "profile": "https://github.com/GrandeCappuccino",
+      "contributions": [
+        "design"
+      ]
     }
   ],
   "contributorsPerLine": 7,
