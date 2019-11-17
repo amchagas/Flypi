@@ -11,7 +11,9 @@
       "avatar_url": "https://avatars3.githubusercontent.com/u/3624486?v=4",
       "profile": "http://www.openeuroscience.com",
       "contributions": [
-        "code"
+        "code",
+        "design",
+        "doc"
       ]
     }
   ],
