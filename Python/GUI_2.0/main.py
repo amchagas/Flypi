@@ -982,7 +982,7 @@ class allcallbacks(Ui_MainWindow):
                 self.cam.zoom = (0, 0, 1, 1)
             self.horizontalbar.setValue(50)
             self.verticalbar.setValue(50)
-        else:
+        elif self.zoombar.value()!=0:
             zoomSide = 1. / self.zoombar.value()
             edge = (1 - zoomSide)#*0.5
             self.cam.zoom = ((self.horizontalbar.value() / 100.0) * edge,
@@ -998,7 +998,7 @@ class allcallbacks(Ui_MainWindow):
                 self.cam.zoom = (0, 0, 1, 1)
             self.horizontalbar.setValue(50)
             self.verticalbar.setValue(50)
-        else:
+        elif self.zoombar.value()!=0:
             zoomSide = 1. / self.zoombar.value()
             edge = (1 - zoomSide)#*0.5
             self.cam.zoom = ((self.horizontalbar.value() / 100.0) * edge,

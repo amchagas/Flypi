@@ -7,7 +7,6 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-import pyqtgraph as pg
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -464,8 +463,6 @@ class Ui_MainWindow(object):
         self.brightnesslayout.addWidget(self.brightnessbar)
         self.cameragrid.addLayout(self.brightnesslayout, 2, 3, 1, 1)
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-        #self.scrollArea.setWidget(self.cameragrid)
-        #self.scrollAreaWidgetContents.setWidget(self.cameragrid)
         self.tabs.addTab(self.camera, "")
         self.lightdevices = QtWidgets.QWidget()
         self.lightdevices.setObjectName("lightdevices")
@@ -1057,9 +1054,7 @@ class Ui_MainWindow(object):
         self.actualtempbar.setTextDirection(QtWidgets.QProgressBar.BottomToTop)
         self.actualtempbar.setObjectName("actualtempbar")
         self.verticalLayout_15.addWidget(self.actualtempbar)
-        self.tempgraph = pg.PlotWidget(self.horizontalLayoutWidget)
-        #self.tempgraph = QtWidgets.QGraphicsView(self.horizontalLayoutWidget)
-
+        self.tempgraph = QtWidgets.QGraphicsView(self.horizontalLayoutWidget)
         brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
         brush.setStyle(QtCore.Qt.NoBrush)
         self.tempgraph.setForegroundBrush(brush)
@@ -1596,17 +1591,17 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addLayout(self.timegrid)
         self.verticalLayout_6.addWidget(self.timegroup)
         self.tabs.addTab(self.protocol, "")
-        #MainWindow.setCentralWidget(self.centralWidget)
+        MainWindow.setCentralWidget(self.centralWidget)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
         self.menuBar.setGeometry(QtCore.QRect(0, 0, 1023, 22))
         self.menuBar.setObjectName("menuBar")
-        #MainWindow.setMenuBar(self.menuBar)
+        MainWindow.setMenuBar(self.menuBar)
         self.mainToolBar = QtWidgets.QToolBar(MainWindow)
         self.mainToolBar.setObjectName("mainToolBar")
-        #MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.mainToolBar)
+        MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.mainToolBar)
         self.statusBar = QtWidgets.QStatusBar(MainWindow)
         self.statusBar.setObjectName("statusBar")
-        #MainWindow.setStatusBar(self.statusBar)
+        MainWindow.setStatusBar(self.statusBar)
 
         self.retranslateUi(MainWindow)
         self.tabs.setCurrentIndex(0)
@@ -1791,3 +1786,4 @@ class Ui_MainWindow(object):
         self.itilabel.setText(_translate("MainWindow", "ITI"))
         self.checkBox.setText(_translate("MainWindow", "Record video?"))
         self.tabs.setTabText(self.tabs.indexOf(self.protocol), _translate("MainWindow", "Protocol"))
+
