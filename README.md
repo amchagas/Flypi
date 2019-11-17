@@ -1,4 +1,5 @@
 #### Flypi - An open source, modular, affordable tool for imaging experiments.
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 
 
 [![Github size](https://img.shields.io/github/repo-size/amchagas/flypi?style=for-the-badge)]()
@@ -52,3 +53,19 @@ Done via gpac. MP4BOX.
 
 ## Zipped SD Card image containing Raspian image with all things installed:
 https://www.dropbox.com/s/12o271wj37rqkj6/flypi_image.zip?dl=0
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+<table>
+  <tr>
+    <td align="center"><a href="http://www.openeuroscience.com"><img src="https://avatars3.githubusercontent.com/u/3624486?v=4" width="100px;" alt="Andre Maia Chagas"/><br /><sub><b>Andre Maia Chagas</b></sub></a><br /><a href="https://github.com/amchagas/Flypi/commits?author=amchagas" title="Code">💻</a></td>
+  </tr>
+</table>
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

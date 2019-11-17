@@ -1,0 +1,23 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "amchagas",
+      "name": "Andre Maia Chagas",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/3624486?v=4",
+      "profile": "http://www.openeuroscience.com",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "Flypi",
+  "projectOwner": "amchagas",
+  "repoType": "github",
+  "repoHost": "https://github.com"
+}
