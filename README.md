@@ -62,7 +62,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore -->
 <table>
   <tr>
-    <td align="center"><a href="http://www.openeuroscience.com"><img src="https://avatars3.githubusercontent.com/u/3624486?v=4" width="100px;" alt="Andre Maia Chagas"/><br /><sub><b>Andre Maia Chagas</b></sub></a><br /><a href="https://github.com/amchagas/Flypi/commits?author=amchagas" title="Code">💻</a></td>
+    <td align="center"><a href="http://www.openeuroscience.com"><img src="https://avatars3.githubusercontent.com/u/3624486?v=4" width="100px;" alt="Andre Maia Chagas"/><br /><sub><b>Andre Maia Chagas</b></sub></a><br /><a href="https://github.com/amchagas/Flypi/commits?author=amchagas" title="Code">💻</a> <a href="#design-amchagas" title="Design">🎨</a> <a href="https://github.com/amchagas/Flypi/commits?author=amchagas" title="Documentation">📖</a></td>
   </tr>
 </table>
 
