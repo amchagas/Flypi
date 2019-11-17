@@ -1,5 +1,6 @@
 #### Flypi - An open source, modular, affordable tool for imaging experiments.
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors)
+
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors)
 
 
 [![Github size](https://img.shields.io/github/repo-size/amchagas/flypi?style=for-the-badge)]()
@@ -62,10 +63,8 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore -->
 <table>
   <tr>
-    <td align="center"><a href="http://www.openeuroscience.com"><img src="https://avatars3.githubusercontent.com/u/3624486?v=4" width="100px;" alt="Andre Maia Chagas"/><br /><sub><b>Andre Maia Chagas</b></sub></a><br /><a href="https://github.com/amchagas/Flypi/commits?author=amchagas" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/isobianin"><img src="https://avatars1.githubusercontent.com/u/52375129?v=4" width="100px;" alt="Ihor Sobianin"/><br /><sub><b>Ihor Sobianin</b></sub></a><br /><a href="#design-isobianin" title="Design">🎨</a></td>
-    <td align="center"><a href="https://kitspace.org"><img src="https://avatars1.githubusercontent.com/u/206854?v=4" width="100px;" alt="Kaspar Emanuel"/><br /><sub><b>Kaspar Emanuel</b></sub></a><br /><a href="https://github.com/amchagas/Flypi/commits?author=kasbah" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/ifriad"><img src="https://avatars2.githubusercontent.com/u/7543722?v=4" width="100px;" alt="ifriad"/><br /><sub><b>ifriad</b></sub></a><br /><a href="#design-ifriad" title="Design">🎨</a> <a href="https://github.com/amchagas/Flypi/commits?author=ifriad" title="Code">💻</a></td>
+    <td align="center"><a href="http://www.openeuroscience.com"><img src="https://avatars3.githubusercontent.com/u/3624486?v=4" width="100px;" alt="Andre Maia Chagas"/><br /><sub><b>Andre Maia Chagas</b></sub></a><br /><a href="https://github.com/amchagas/Flypi/commits?author=amchagas" title="Code">💻</a></td><td align="center"><a href="http://www.badenlab.org"><img src="https://avatars1.githubusercontent.com/u/11835617?v=4" width="100px;" alt="Tom Baden"/><br /><sub><b>Tom Baden</b></sub></a><br /><a href="#design-TomBaden" title="Design">🎨</a> <a href="https://github.com/amchagas/Flypi/commits?author=TomBaden" title="Code">💻</a></td><td align="center"><a href="https://github.com/isobianin"><img src="https://avatars1.githubusercontent.com/u/52375129?v=4" width="100px;" alt="Ihor Sobianin"/><br /><sub><b>Ihor Sobianin</b></sub></a><br /><a href="#design-isobianin" title="Design">🎨</a></td>
+    <td align="center"><a href="https://kitspace.org"><img src="https://avatars1.githubusercontent.com/u/206854?v=4" width="100px;" alt="Kaspar Emanuel"/><br /><sub><b>Kaspar Emanuel</b></sub></a><br /><a href="https://github.com/amchagas/Flypi/commits?author=kasbah" title="Code">💻</a></td><td align="center"><a href="https://github.com/ifriad"><img src="https://avatars2.githubusercontent.com/u/7543722?v=4" width="100px;" alt="ifriad"/><br /><sub><b>ifriad</b></sub></a><br /><a href="#design-ifriad" title="Design">🎨</a> <a href="https://github.com/amchagas/Flypi/commits?author=ifriad" title="Code">💻</a></td>
   </tr>
 </table>
 
