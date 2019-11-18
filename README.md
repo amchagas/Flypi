@@ -1,5 +1,5 @@
 #### Flypi - An open source, modular, affordable tool for imaging experiments.
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
+
 
 
 [![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors)
