@@ -35,4 +35,5 @@ FORMS += \
     ../Camera/camera.ui \
     ../LED/led.ui \
     ../protocol/protocol.ui \
-    ../Ring/ring.ui
+    ../Ring/ring.ui \
+    mainwindow_copy.ui

@@ -598,7 +598,7 @@ U 1 1 5EE844F4
 P 1950 4150
 F 0 "U2" H 1950 4517 50  0000 C CNN
 F 1 "LM2596S-5" H 1950 4426 50  0000 C CNN
-F 2 "Package_TO_SOT_THT:TO-220-5_P3.4x3.7mm_StaggerOdd_Lead3.8mm_Vertical" H 2000 3900 50  0001 L CIN
+F 2 "Package_TO_SOT_SMD:TO-263-5_TabPin3" H 2000 3900 50  0001 L CIN
 F 3 "http://www.ti.com/lit/ds/symlink/lm2596.pdf" H 1950 4150 50  0001 C CNN
 	1    1950 4150
 	1    0    0    -1  
@@ -691,7 +691,7 @@ U 1 1 5EF69C4A
 P 1750 1450
 F 0 "U1" H 1750 1817 50  0000 C CNN
 F 1 "LM2596S-5" H 1750 1726 50  0000 C CNN
-F 2 "Package_TO_SOT_THT:TO-220-5_P3.4x3.7mm_StaggerOdd_Lead3.8mm_Vertical" H 1800 1200 50  0001 L CIN
+F 2 "Package_TO_SOT_SMD:TO-263-5_TabPin3" H 1800 1200 50  0001 L CIN
 F 3 "http://www.ti.com/lit/ds/symlink/lm2596.pdf" H 1750 1450 50  0001 C CNN
 	1    1750 1450
 	1    0    0    -1  

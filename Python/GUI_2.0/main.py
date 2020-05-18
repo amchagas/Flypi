@@ -29,7 +29,7 @@ except ImportError:
     print ("user interface will not control flypi!")
 
 
-loadSerial = 1
+loadSerial = 0
 
 
 
