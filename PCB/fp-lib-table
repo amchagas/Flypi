@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name footprints)(type KiCad)(uri "$(KIPRJMOD)/custom_components/footprints.pretty")(options "")(descr "")(disabled))
+  (lib (name arduino_nano)(type KiCad)(uri "$(KIPRJMOD)/arduino_nano.pretty")(options "")(descr "")(disabled))
+)
