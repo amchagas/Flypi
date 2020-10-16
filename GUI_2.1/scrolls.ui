@@ -54,7 +54,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideLeft</enum>
@@ -75,6 +75,9 @@
        <property name="autoFillBackground">
         <bool>false</bool>
        </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <attribute name="title">
         <string>Camera</string>
        </attribute>
@@ -85,7 +88,12 @@
            <bool>false</bool>
           </property>
           <property name="styleSheet">
-           <string notr="true"/>
+           <string notr="true">QScrollArea { background: transparent; }
+QScrollArea &gt; QWidget &gt; QWidget { background: transparent; }
+QScrollArea &gt; QWidget &gt; QScrollBar { background: 0; }</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
           </property>
           <property name="widgetResizable">
            <bool>true</bool>
@@ -95,8 +103,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>767</width>
-             <height>413</height>
+             <width>769</width>
+             <height>415</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_11">
@@ -175,6 +183,9 @@
                  </sizepolicy>
                 </property>
                 <property name="acceptDrops">
+                 <bool>false</bool>
+                </property>
+                <property name="autoFillBackground">
                  <bool>false</bool>
                 </property>
                 <property name="minimum">
@@ -1204,6 +1215,14 @@
              <property name="autoFillBackground">
               <bool>false</bool>
              </property>
+             <property name="styleSheet">
+              <string notr="true">QScrollArea { background: transparent; }
+QScrollArea &gt; QWidget &gt; QWidget { background: transparent; }
+QScrollArea &gt; QWidget &gt; QScrollBar { background: 0; }</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
              <property name="lineWidth">
               <number>0</number>
              </property>
@@ -1214,13 +1233,13 @@
               <property name="geometry">
                <rect>
                 <x>0</x>
-                <y>-238</y>
-                <width>750</width>
+                <y>0</y>
+                <width>752</width>
                 <height>679</height>
                </rect>
               </property>
               <property name="autoFillBackground">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
               <layout class="QGridLayout" name="gridLayout_12">
                <item row="0" column="2">
@@ -2277,6 +2296,14 @@
         </item>
         <item row="0" column="0">
          <widget class="QScrollArea" name="scrollArea_3">
+          <property name="styleSheet">
+           <string notr="true">QScrollArea { background: transparent; }
+QScrollArea &gt; QWidget &gt; QWidget { background: transparent; }
+QScrollArea &gt; QWidget &gt; QScrollBar { background: 0; }</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Box</enum>
+          </property>
           <property name="widgetResizable">
            <bool>true</bool>
           </property>
@@ -2285,8 +2312,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>767</width>
-             <height>403</height>
+             <width>765</width>
+             <height>401</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_13">
@@ -2484,6 +2511,14 @@
        <layout class="QFormLayout" name="formLayout">
         <item row="0" column="0" colspan="2">
          <widget class="QScrollArea" name="scrollArea_4">
+          <property name="styleSheet">
+           <string notr="true">QScrollArea { background: transparent; }
+QScrollArea &gt; QWidget &gt; QWidget { background: transparent; }
+QScrollArea &gt; QWidget &gt; QScrollBar { background: 0; }</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
           <property name="widgetResizable">
            <bool>true</bool>
           </property>
@@ -2491,9 +2526,9 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-6</y>
-             <width>750</width>
-             <height>133</height>
+             <y>0</y>
+             <width>769</width>
+             <height>173</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout">
@@ -2597,6 +2632,14 @@
            </property>
            <item row="0" column="0">
             <widget class="QScrollArea" name="scrollArea_5">
+             <property name="styleSheet">
+              <string notr="true">QScrollArea { background: transparent; }
+QScrollArea &gt; QWidget &gt; QWidget { background: transparent; }
+QScrollArea &gt; QWidget &gt; QScrollBar { background: 0; }</string>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
              <property name="widgetResizable">
               <bool>true</bool>
              </property>
@@ -2604,9 +2647,9 @@
               <property name="geometry">
                <rect>
                 <x>0</x>
-                <y>-239</y>
-                <width>748</width>
-                <height>687</height>
+                <y>-256</y>
+                <width>750</width>
+                <height>669</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_15">
