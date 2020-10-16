@@ -11,6 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import pyqtgraph as pg
 
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -48,6 +49,7 @@ class Ui_MainWindow(object):
         self.camera.setSizePolicy(sizePolicy)
         self.camera.setMinimumSize(QtCore.QSize(0, 0))
         self.camera.setAutoFillBackground(False)
+        self.camera.setStyleSheet("")
         self.camera.setObjectName("camera")
         self.gridLayout_5 = QtWidgets.QGridLayout(self.camera)
         self.gridLayout_5.setContentsMargins(11, 11, 11, 11)
@@ -55,11 +57,14 @@ class Ui_MainWindow(object):
         self.gridLayout_5.setObjectName("gridLayout_5")
         self.scrollArea = QtWidgets.QScrollArea(self.camera)
         self.scrollArea.setAutoFillBackground(False)
-        self.scrollArea.setStyleSheet("")
+        self.scrollArea.setStyleSheet("QScrollArea { background: transparent; }\n"
+"QScrollArea > QWidget > QWidget { background: transparent; }\n"
+"QScrollArea > QWidget > QScrollBar { background: 0; }")
+        self.scrollArea.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 767, 413))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 769, 415))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.gridLayout_11 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_11.setContentsMargins(11, 11, 11, 11)
@@ -107,6 +112,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.windowbar.sizePolicy().hasHeightForWidth())
         self.windowbar.setSizePolicy(sizePolicy)
         self.windowbar.setAcceptDrops(False)
+        self.windowbar.setAutoFillBackground(False)
         self.windowbar.setMinimum(240)
         self.windowbar.setMaximum(800)
         self.windowbar.setSingleStep(5)
@@ -534,12 +540,16 @@ class Ui_MainWindow(object):
         self.gridLayout_6.setObjectName("gridLayout_6")
         self.scrollArea_2 = QtWidgets.QScrollArea(self.ringframe)
         self.scrollArea_2.setAutoFillBackground(False)
+        self.scrollArea_2.setStyleSheet("QScrollArea { background: transparent; }\n"
+"QScrollArea > QWidget > QWidget { background: transparent; }\n"
+"QScrollArea > QWidget > QScrollBar { background: 0; }")
+        self.scrollArea_2.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.scrollArea_2.setLineWidth(0)
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollArea_2.setObjectName("scrollArea_2")
         self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, -238, 750, 679))
-        self.scrollAreaWidgetContents_2.setAutoFillBackground(True)
+        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 752, 679))
+        self.scrollAreaWidgetContents_2.setAutoFillBackground(False)
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
         self.gridLayout_12 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_2)
         self.gridLayout_12.setContentsMargins(11, 11, 11, 11)
@@ -1061,10 +1071,14 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addLayout(self.verticalLayout_11)
         self.gridLayout_8.addLayout(self.horizontalLayout_2, 1, 0, 1, 1)
         self.scrollArea_3 = QtWidgets.QScrollArea(self.peltier)
+        self.scrollArea_3.setStyleSheet("QScrollArea { background: transparent; }\n"
+"QScrollArea > QWidget > QWidget { background: transparent; }\n"
+"QScrollArea > QWidget > QScrollBar { background: 0; }")
+        self.scrollArea_3.setFrameShape(QtWidgets.QFrame.Box)
         self.scrollArea_3.setWidgetResizable(True)
         self.scrollArea_3.setObjectName("scrollArea_3")
         self.scrollAreaWidgetContents_3 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_3.setGeometry(QtCore.QRect(0, 0, 767, 403))
+        self.scrollAreaWidgetContents_3.setGeometry(QtCore.QRect(0, 0, 765, 401))
         self.scrollAreaWidgetContents_3.setObjectName("scrollAreaWidgetContents_3")
         self.gridLayout_13 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_3)
         self.gridLayout_13.setContentsMargins(11, 11, 11, 11)
@@ -1160,10 +1174,14 @@ class Ui_MainWindow(object):
         self.formLayout.setSpacing(6)
         self.formLayout.setObjectName("formLayout")
         self.scrollArea_4 = QtWidgets.QScrollArea(self.servo)
+        self.scrollArea_4.setStyleSheet("QScrollArea { background: transparent; }\n"
+"QScrollArea > QWidget > QWidget { background: transparent; }\n"
+"QScrollArea > QWidget > QScrollBar { background: 0; }")
+        self.scrollArea_4.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.scrollArea_4.setWidgetResizable(True)
         self.scrollArea_4.setObjectName("scrollArea_4")
         self.scrollAreaWidgetContents_4 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_4.setGeometry(QtCore.QRect(0, -6, 750, 133))
+        self.scrollAreaWidgetContents_4.setGeometry(QtCore.QRect(0, 0, 769, 173))
         self.scrollAreaWidgetContents_4.setObjectName("scrollAreaWidgetContents_4")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents_4)
         self.verticalLayout.setContentsMargins(11, 11, 11, 11)
@@ -1213,10 +1231,14 @@ class Ui_MainWindow(object):
         self.gridLayout_9.setSpacing(6)
         self.gridLayout_9.setObjectName("gridLayout_9")
         self.scrollArea_5 = QtWidgets.QScrollArea(self.frame)
+        self.scrollArea_5.setStyleSheet("QScrollArea { background: transparent; }\n"
+"QScrollArea > QWidget > QWidget { background: transparent; }\n"
+"QScrollArea > QWidget > QScrollBar { background: 0; }")
+        self.scrollArea_5.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.scrollArea_5.setWidgetResizable(True)
         self.scrollArea_5.setObjectName("scrollArea_5")
         self.scrollAreaWidgetContents_5 = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents_5.setGeometry(QtCore.QRect(0, -239, 748, 687))
+        self.scrollAreaWidgetContents_5.setGeometry(QtCore.QRect(0, -256, 750, 669))
         self.scrollAreaWidgetContents_5.setObjectName("scrollAreaWidgetContents_5")
         self.gridLayout_15 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents_5)
         self.gridLayout_15.setContentsMargins(0, 0, 0, 0)
@@ -1721,7 +1743,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusBar)
 
         self.retranslateUi(MainWindow)
-        self.tabs.setCurrentIndex(0)
+        self.tabs.setCurrentIndex(4)
         self.colourbox.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -1904,7 +1926,7 @@ class Ui_MainWindow(object):
         self.checkBox.setText(_translate("MainWindow", "Record video?"))
         self.tabs.setTabText(self.tabs.indexOf(self.protocol), _translate("MainWindow", "Protocol"))
 
-
+'''
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
@@ -1913,3 +1935,4 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+'''
