@@ -47,7 +47,7 @@ Done via gpac. MP4BOX.
 
 
 ## Zipped SD Card image containing Raspian image with all things installed:
-https://www.dropbox.com/s/12o271wj37rqkj6/flypi_image.zip?dl=0
+[IMAGE](https://bit.ly/flyipimg)
 
 ## Contributors ✨
 
