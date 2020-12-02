@@ -34,6 +34,7 @@ try:
         time.sleep(2)
         start = time.time()
         camera.start_recording(output, format='mjpeg')
+        # Comment the two lines below to have an unlimeted stream
         camera.wait_recording(30)
         camera.stop_recording()
         # Write the terminating 0-length to the connection to let the
