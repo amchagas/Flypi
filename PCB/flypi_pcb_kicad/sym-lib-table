@@ -1,0 +1,5 @@
+(sym_lib_table
+  (lib (name flypi-rescue)(type Legacy)(uri ${KIPRJMOD}/flypi-rescue.lib)(options "")(descr ""))
+  (lib (name arduino)(type Legacy)(uri ${KIPRJMOD}/arduino/arduino.lib)(options "")(descr ""))
+  (lib (name flypi_components)(type Legacy)(uri ${KIPRJMOD}/custom_components/flypi_components.lib)(options "")(descr ""))
+)

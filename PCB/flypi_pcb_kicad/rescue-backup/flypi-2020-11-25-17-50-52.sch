@@ -1,5 +1,38 @@
-EESchema Schematic File Version 4
-EELAYER 30 0
+EESchema Schematic File Version 2
+LIBS:flypi-rescue
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:arduino
+LIBS:flypi_components
+LIBS:flypi-cache
+EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -14,7 +47,7 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L flypi-rescue:BARREL_JACK CON1
+L BARREL_JACK CON1
 U 1 1 577DE532
 P 1600 1550
 F 0 "CON1" H 1600 1800 50  0000 C CNN
@@ -25,7 +58,7 @@ F 3 "" H 1600 1550 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L arduino:arduino_mini U5
+L arduino_mini U5
 U 1 1 577DE666
 P 6750 4900
 F 0 "U5" H 7250 3950 70  0000 C CNN
@@ -36,7 +69,7 @@ F 3 "" H 6750 4900 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L flypi_components:LM2596 U1
+L LM2596 U1
 U 1 1 577DEF55
 P 3300 1300
 F 0 "U1" H 3500 1300 60  0000 C CNN
@@ -47,7 +80,7 @@ F 3 "" H 3500 1300 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L flypi-rescue:CP1 C2
+L CP1 C2
 U 1 1 577DF0B8
 P 2450 1300
 F 0 "C2" H 2475 1400 50  0000 L CNN
@@ -58,7 +91,7 @@ F 3 "" H 2450 1300 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L flypi-rescue:D_Schottky D1
+L D_Schottky D1
 U 1 1 577DF1F1
 P 3300 1100
 F 0 "D1" H 3300 1200 50  0000 C CNN
@@ -69,7 +102,7 @@ F 3 "" H 3300 1100 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L flypi-rescue:CP1 C6
+L CP1 C6
 U 1 1 577DF33D
 P 4350 1700
 F 0 "C6" H 4375 1800 50  0000 L CNN
@@ -80,7 +113,7 @@ F 3 "" H 4350 1700 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L flypi-rescue:2N2219 Q2
+L 2N2219 Q2
 U 1 1 577E148F
 P 5350 2350
 F 0 "Q2" H 5650 2400 50  0000 R CNN
@@ -91,7 +124,7 @@ F 3 "" H 5350 2350 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L flypi-rescue:R R2
+L R R2
 U 1 1 577E166B
 P 5350 2850
 F 0 "R2" V 5430 2850 50  0000 C CNN
@@ -102,7 +135,7 @@ F 3 "" H 5350 2850 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L flypi-rescue:R R7
+L R R7
 U 1 1 577E1F76
 P 10000 1100
 F 0 "R7" V 10080 1100 50  0000 C CNN
@@ -113,7 +146,7 @@ F 3 "" H 10000 1100 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L flypi-rescue:R R8
+L R R8
 U 1 1 577E209A
 P 10000 1300
 F 0 "R8" V 10080 1300 50  0000 C CNN
@@ -124,7 +157,7 @@ F 3 "" H 10000 1300 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L flypi-rescue:R R9
+L R R9
 U 1 1 577E210B
 P 10000 1500
 F 0 "R9" V 10080 1500 50  0000 C CNN
@@ -135,7 +168,7 @@ F 3 "" H 10000 1500 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L flypi-rescue:2N2219 Q3
+L 2N2219 Q3
 U 1 1 577E2D68
 P 6100 2350
 F 0 "Q3" H 6400 2400 50  0000 R CNN
@@ -146,7 +179,7 @@ F 3 "" H 6100 2350 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L flypi-rescue:R R4
+L R R4
 U 1 1 577E2E07
 P 6100 2850
 F 0 "R4" V 6180 2850 50  0000 C CNN
@@ -157,7 +190,7 @@ F 3 "" H 6100 2850 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L flypi-rescue:CP1 C1
+L CP1 C1
 U 1 1 577E326D
 P 2400 3800
 F 0 "C1" H 2425 3900 50  0000 L CNN
@@ -168,7 +201,7 @@ F 3 "" H 2400 3800 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L flypi-rescue:CP1 C5
+L CP1 C5
 U 1 1 577E33E2
 P 4300 4250
 F 0 "C5" H 4325 4350 50  0000 L CNN
@@ -179,7 +212,7 @@ F 3 "" H 4300 4250 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L flypi-rescue:D_Schottky D3
+L D_Schottky D3
 U 1 1 577E34B5
 P 3300 3350
 F 0 "D3" H 3300 3450 50  0000 C CNN
@@ -190,7 +223,7 @@ F 3 "" H 3300 3350 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L flypi_components:LM2596 U2
+L LM2596 U2
 U 1 1 577E3581
 P 3300 3550
 F 0 "U2" H 3500 3550 60  0000 C CNN
@@ -201,7 +234,7 @@ F 3 "" H 3500 3550 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L flypi-rescue:INDUCTOR L1
+L INDUCTOR L1
 U 1 1 577E380E
 P 4000 3350
 F 0 "L1" V 3950 3350 50  0000 C CNN
@@ -212,7 +245,7 @@ F 3 "" H 4000 3350 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L flypi-rescue:INDUCTOR L2
+L INDUCTOR L2
 U 1 1 577E530A
 P 4100 1300
 F 0 "L2" V 4050 1300 50  0000 C CNN
@@ -223,7 +256,7 @@ F 3 "" H 4100 1300 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L flypi-rescue:2N2219 Q4
+L 2N2219 Q4
 U 1 1 577E5AE1
 P 6800 2350
 F 0 "Q4" H 7100 2400 50  0000 R CNN
@@ -234,7 +267,7 @@ F 3 "" H 6800 2350 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L flypi-rescue:R R5
+L R R5
 U 1 1 577E5D84
 P 6800 2850
 F 0 "R5" V 6880 2850 50  0000 C CNN
@@ -245,7 +278,7 @@ F 3 "" H 6800 2850 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L flypi_components:L298N U4
+L L298N U4
 U 1 1 577E6C96
 P 3750 5150
 F 0 "U4" H 4000 5150 60  0000 C CNN
@@ -256,7 +289,7 @@ F 3 "" H 3750 5150 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L flypi-rescue:C C10
+L C C10
 U 1 1 577E79E9
 P 2850 6100
 F 0 "C10" H 2875 6200 50  0000 L CNN
@@ -267,7 +300,7 @@ F 3 "" H 2850 6100 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L flypi-rescue:C C7
+L C C7
 U 1 1 577E7EFE
 P 4700 5550
 F 0 "C7" H 4725 5650 50  0000 L CNN
@@ -284,7 +317,7 @@ NoConn ~ 4400 6000
 NoConn ~ 4400 5800
 NoConn ~ 4400 5600
 $Comp
-L flypi-rescue:R R1
+L R R1
 U 1 1 577E8665
 P 2900 4910
 F 0 "R1" H 2900 4910 60  0000 C CNN
@@ -295,7 +328,7 @@ F 3 "" H 2900 4910 60  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L flypi-rescue:2N2219 Q1
+L 2N2219 Q1
 U 1 1 577EB1CC
 P 5200 4900
 F 0 "Q1" H 5500 4950 50  0000 R CNN
@@ -306,7 +339,7 @@ F 3 "" H 5200 4900 50  0000 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L flypi-rescue:R R3
+L R R3
 U 1 1 577EB79F
 P 5550 5050
 F 0 "R3" V 5630 5050 50  0000 C CNN
@@ -328,7 +361,7 @@ NoConn ~ 7450 5700
 NoConn ~ 7450 4350
 NoConn ~ 6900 3750
 $Comp
-L flypi-rescue:Conn_01x03 P4
+L Conn_01x03 P4
 U 1 1 577F06E4
 P 5200 6650
 F 0 "P4" H 5200 6850 50  0000 C CNN
@@ -339,7 +372,7 @@ F 3 "" H 5200 6650 50  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L flypi-rescue:R 1k1
+L R 1k1
 U 1 1 577F0E14
 P 5200 6100
 F 0 "1k1" V 5280 6100 50  0000 C CNN
@@ -350,7 +383,7 @@ F 3 "" H 5200 6100 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L flypi-rescue:C C8
+L C C8
 U 1 1 577F0EB3
 P 5200 5550
 F 0 "C8" H 5225 5650 50  0000 L CNN
@@ -361,7 +394,7 @@ F 3 "" H 5200 5550 50  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L flypi-rescue:Conn_01x03 P8
+L Conn_01x03 P8
 U 1 1 577F19C2
 P 7900 700
 F 0 "P8" H 7900 900 50  0000 C CNN
@@ -372,7 +405,7 @@ F 3 "" H 7900 700 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L flypi-rescue:Conn_01x04 P9
+L Conn_01x04 P9
 U 1 1 577F1F65
 P 8750 1350
 F 0 "P9" H 8750 1600 50  0000 C CNN
@@ -383,7 +416,7 @@ F 3 "" H 8750 1350 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L flypi-rescue:Conn_01x03 P7
+L Conn_01x03 P7
 U 1 1 577F2704
 P 7100 1350
 F 0 "P7" H 7100 1550 50  0000 C CNN
@@ -394,29 +427,29 @@ F 3 "" H 7100 1350 50  0000 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L flypi-rescue:Conn_01x02 P6
+L Conn_01x02 P6
 U 1 1 577F293A
 P 6350 1350
 F 0 "P6" H 6350 1500 50  0000 C CNN
 F 1 "HP2+-" V 6450 1350 50  0000 C CNN
-F 2 "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical" H 6350 1350 50  0001 C CNN
+F 2 "Connectors_JST:JST_EH_S02B-EH_02x2.50mm_Angled" H 6350 1350 50  0001 C CNN
 F 3 "" H 6350 1350 50  0000 C CNN
 	1    6350 1350
 	0    -1   -1   0   
 $EndComp
 $Comp
-L flypi-rescue:Conn_01x02 P5
+L Conn_01x02 P5
 U 1 1 577F29F3
 P 5650 1350
 F 0 "P5" H 5650 1500 50  0000 C CNN
 F 1 "HP1+-" V 5750 1350 50  0000 C CNN
-F 2 "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical" H 5650 1350 50  0001 C CNN
+F 2 "Connectors_JST:JST_EH_S02B-EH_02x2.50mm_Angled" H 5650 1350 50  0001 C CNN
 F 3 "" H 5650 1350 50  0000 C CNN
 	1    5650 1350
 	0    -1   -1   0   
 $EndComp
 $Comp
-L flypi-rescue:Conn_01x04 P10
+L Conn_01x04 P10
 U 1 1 577F3156
 P 10700 1200
 F 0 "P10" H 10700 1450 50  0000 C CNN
@@ -428,36 +461,36 @@ F 3 "" H 10700 1200 50  0000 C CNN
 $EndComp
 NoConn ~ 6050 6100
 $Comp
-L flypi-rescue:Conn_01x02 P1
+L Conn_01x02 P1
 U 1 1 577F4FBB
 P 1650 5500
 F 0 "P1" H 1650 5650 50  0000 C CNN
 F 1 "PeltS1S2" V 1750 5500 50  0000 C CNN
-F 2 "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical" H 1650 5500 50  0001 C CNN
+F 2 "Connectors_JST:JST_EH_S02B-EH_02x2.50mm_Angled" H 1650 5500 50  0001 C CNN
 F 3 "" H 1650 5500 50  0000 C CNN
 	1    1650 5500
 	-1   0    0    1   
 $EndComp
 $Comp
-L flypi-rescue:Conn_01x02 P3
+L Conn_01x02 P3
 U 1 1 577F82F4
 P 5100 4350
 F 0 "P3" H 5100 4500 50  0000 C CNN
 F 1 "Fan+-" V 5200 4350 50  0000 C CNN
-F 2 "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical" H 5100 4350 50  0001 C CNN
+F 2 "Connectors_JST:JST_EH_S02B-EH_02x2.50mm_Angled" H 5100 4350 50  0001 C CNN
 F 3 "" H 5100 4350 50  0000 C CNN
 	1    5100 4350
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
-	1900 1650 2200 1650
+	1900 1650 2900 1650
 Wire Wire Line
-	1900 1450 2050 1450
+	1900 1450 2900 1450
 Connection ~ 2200 1650
 Wire Wire Line
 	2800 1850 2900 1850
 Wire Wire Line
-	2800 1100 2800 1650
+	2800 1100 2800 1950
 Connection ~ 2800 1650
 Wire Wire Line
 	2300 1300 2300 1450
@@ -470,11 +503,11 @@ Wire Wire Line
 Wire Wire Line
 	3450 1100 3750 1100
 Wire Wire Line
-	3750 1100 3750 1300
+	3750 1100 3750 1550
 Wire Wire Line
 	4100 1750 3750 1750
 Wire Wire Line
-	4100 1550 4350 1550
+	4100 1550 5020 1550
 Wire Wire Line
 	1900 1650 1900 1550
 Connection ~ 2800 1850
@@ -482,14 +515,14 @@ Wire Wire Line
 	4800 1490 4800 1950
 Connection ~ 4350 1550
 Wire Wire Line
-	4800 1950 4350 1950
+	4800 1950 2800 1950
 Wire Wire Line
 	4350 1850 4350 1950
 Connection ~ 4350 1950
 Wire Wire Line
 	5350 2550 5350 2700
 Wire Wire Line
-	5150 2250 5150 2650
+	5150 2250 5150 3350
 Wire Wire Line
 	5550 2250 5600 2250
 Wire Wire Line
@@ -517,23 +550,25 @@ Wire Wire Line
 Wire Wire Line
 	2200 3350 3150 3350
 Wire Wire Line
-	2200 4100 2700 4100
+	2200 4100 2900 4100
 Wire Wire Line
 	2900 3700 2250 3700
 Wire Wire Line
 	2250 3700 2250 3800
+Wire Wire Line
+	2050 1450 2050 5900
 Connection ~ 2050 1450
 Wire Wire Line
 	2250 3800 2050 3800
 Wire Wire Line
-	2200 1650 2200 1900
+	2200 1650 2200 6950
 Wire Wire Line
 	2550 3800 2700 3800
 Wire Wire Line
 	2900 3900 2700 3900
 Connection ~ 2700 3900
 Wire Wire Line
-	4300 3350 4300 4000
+	4300 3350 4300 4100
 Wire Wire Line
 	4300 4000 3750 4000
 Connection ~ 4300 4000
@@ -570,15 +605,15 @@ Wire Wire Line
 Wire Wire Line
 	10500 1500 10150 1500
 Wire Wire Line
-	2050 5900 2850 5900
+	2050 5900 3100 5900
 Connection ~ 2050 3800
 Wire Wire Line
-	2200 6700 2850 6700
+	2200 6700 3100 6700
 Wire Wire Line
 	2850 5900 2850 5950
 Connection ~ 2850 5900
 Wire Wire Line
-	2850 6250 2850 6700
+	2850 6250 2850 7000
 Connection ~ 2850 6700
 Wire Wire Line
 	4400 5400 4700 5400
@@ -597,7 +632,7 @@ Wire Wire Line
 Wire Wire Line
 	8950 1550 8950 3550
 Wire Wire Line
-	4300 3350 5150 3350
+	4300 3350 8650 3350
 Wire Wire Line
 	8850 3450 5800 3450
 Wire Wire Line
@@ -651,7 +686,7 @@ Wire Wire Line
 Wire Wire Line
 	7450 3250 5700 3250
 Wire Wire Line
-	5700 3250 5700 5250
+	5700 3250 5700 7100
 Wire Wire Line
 	5700 7100 2900 7100
 Wire Wire Line
@@ -679,7 +714,7 @@ Wire Wire Line
 Wire Wire Line
 	3000 6500 3100 6500
 Wire Wire Line
-	2200 6950 4850 6950
+	2200 6950 6750 6950
 Wire Wire Line
 	6750 6950 6750 6450
 Wire Wire Line
@@ -694,7 +729,7 @@ Connection ~ 5700 5250
 Wire Wire Line
 	4700 5400 4700 3650
 Wire Wire Line
-	4700 3650 5950 3650
+	4700 3650 6750 3650
 Wire Wire Line
 	6750 3650 6750 3750
 Wire Wire Line
@@ -736,7 +771,7 @@ Connection ~ 2200 4550
 Connection ~ 2200 4400
 Connection ~ 2200 3350
 Wire Wire Line
-	2700 3800 2700 3900
+	2700 3800 2700 4100
 Connection ~ 2200 4100
 Wire Wire Line
 	8750 3100 8750 1550
@@ -761,7 +796,7 @@ Wire Wire Line
 Wire Wire Line
 	5100 6250 4850 6250
 Wire Wire Line
-	4850 5400 4850 6250
+	4850 5400 4850 6950
 Connection ~ 4850 6950
 Connection ~ 2200 6700
 Wire Wire Line
@@ -790,11 +825,17 @@ Wire Wire Line
 Wire Wire Line
 	8650 3350 8650 1550
 Connection ~ 7800 3350
+Wire Wire Line
+	2200 3100 10350 3100
+Connection ~ 4250 3100
 Connection ~ 2200 3100
+Connection ~ 2200 2200
+Connection ~ 2050 2650
+Connection ~ 2200 2750
 Wire Wire Line
 	4800 3750 4800 4450
 $Comp
-L power:GND #PWR01
+L GND #PWR01
 U 1 1 577EB9A4
 P 1800 2000
 F 0 "#PWR01" H 1800 1750 50  0001 C CNN
@@ -812,7 +853,7 @@ Connection ~ 2200 1900
 Wire Wire Line
 	4800 3750 6600 3750
 $Comp
-L flypi-rescue:USB_A-RESCUE-flypi J12
+L USB_A-RESCUE-flypi J12
 U 1 1 59ED406F
 P 4820 1140
 F 0 "J12" H 4620 1590 50  0000 L CNN
@@ -825,7 +866,7 @@ $EndComp
 NoConn ~ 4820 1440
 NoConn ~ 4720 1440
 Wire Wire Line
-	4420 1040 4420 1140
+	4420 1040 4420 1230
 Wire Wire Line
 	4800 1490 4450 1490
 Wire Wire Line
@@ -858,92 +899,6 @@ Wire Wire Line
 Wire Wire Line
 	2300 5500 1850 5500
 Wire Wire Line
-	5150 2650 5900 2650
+	5150 2650 6600 2650
 Connection ~ 5150 3350
-Wire Wire Line
-	2200 1650 2600 1650
-Wire Wire Line
-	2800 1650 2800 1850
-Wire Wire Line
-	2800 1650 2900 1650
-Wire Wire Line
-	2300 1450 2900 1450
-Wire Wire Line
-	2600 1650 2800 1650
-Wire Wire Line
-	2800 1850 2800 1950
-Wire Wire Line
-	4350 1550 5020 1550
-Wire Wire Line
-	4350 1950 2800 1950
-Wire Wire Line
-	5700 3100 6400 3100
-Wire Wire Line
-	5150 2650 5150 3350
-Wire Wire Line
-	2050 1450 2300 1450
-Wire Wire Line
-	2700 3900 2700 4100
-Wire Wire Line
-	4300 4000 4300 4100
-Wire Wire Line
-	2700 4100 2900 4100
-Wire Wire Line
-	3750 1300 3750 1550
-Wire Wire Line
-	5900 2650 6600 2650
-Wire Wire Line
-	6400 3100 7200 3100
-Wire Wire Line
-	2050 3800 2050 4450
-Wire Wire Line
-	2850 5900 3100 5900
-Wire Wire Line
-	2850 6700 3100 6700
-Wire Wire Line
-	2850 6700 2850 7000
-Wire Wire Line
-	5700 5250 5700 7100
-Wire Wire Line
-	2050 4500 2050 5900
-Wire Wire Line
-	2050 4450 2050 4500
-Wire Wire Line
-	2200 4600 2200 6700
-Wire Wire Line
-	2200 4550 2200 4600
-Wire Wire Line
-	2200 4400 2200 4550
-Wire Wire Line
-	2200 3350 2200 4100
-Wire Wire Line
-	2200 4100 2200 4400
-Wire Wire Line
-	7200 3100 7900 3100
-Wire Wire Line
-	7900 3100 8750 3100
-Wire Wire Line
-	8750 3100 10350 3100
-Wire Wire Line
-	5950 3650 6750 3650
-Wire Wire Line
-	4850 6950 6750 6950
-Wire Wire Line
-	2200 6700 2200 6950
-Wire Wire Line
-	4850 6250 4850 6950
-Wire Wire Line
-	7800 3350 8650 3350
-Wire Wire Line
-	2200 3100 2200 3350
-Wire Wire Line
-	4420 1140 4420 1230
-Wire Wire Line
-	5150 3350 7800 3350
-Wire Wire Line
-	2050 1450 2050 3800
-Wire Wire Line
-	2200 3100 5700 3100
-Wire Wire Line
-	2200 1900 2200 3100
 $EndSCHEMATC
