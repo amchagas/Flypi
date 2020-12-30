@@ -1,5 +1,5 @@
 #!/bin/bash
 # Script to start our application
 echo "Starting FlyPi..."
-sudo python3 /home/pi/Desktop/Flypi-master/Python/GUI_2.0/main.py
+python3 /home/pi/Documents/Flypi/Python/GUI_2.2/main.py
 #change something
