@@ -38,4 +38,4 @@ temperature sensor;,1,analog output,Analog devices,AD22100KTZ ,,,,,,,,,AD22100KT
 power supply;,1,12V 5A output,Mean well,GSM60A12-P1J ,CUI,SDI65-12-U2-P5 ,,,,,,,1866-2016-ND ,490-SDI65-12-U2-P5 ,7911058,44AC5087 ,2815822
 picamera;,1, 5MP 12mm focal distance lens (m12 thread), waveshare,8193, https://www.waveshare.com/product/mini-pc/raspberry-pi/cameras/rpi-camera-b.htm ,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,
-,,,1, MountingPin DC with a mounting pin 5.5mmODx2.1mmID PJ-202A,,,,,,,,,CP-202AH-ND,,,,
+,,,,,,,,,,,,,CP-202AH-ND,,,,
