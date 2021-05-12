@@ -17,13 +17,12 @@ The system can be used for optical microscopy, fluorescence, behavioural trackin
 #### Some samples imaged with the device:
 
 |   |   |   |   |   |
-|---|---|---|---|---|
-|![C.Elegans behaviour](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/C_elegans_behaviour.gif)   |![Drosophila Crimson](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/Drosophila_adult_Crimson_PER.gif)   |![Fluorescence ZebraFish GFP expressed in heart tissue](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/Zebrafish_heartbeat_GFP.gif)   |![GCamP_ZebraFish](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/Zebrafish_ubiquious_ChRII.gif)   | ![Zebra Fish Transmission](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/zebrafish_larva_transmission.gif)  |
-|   |   |   |   |   |
-|   |   |   |   |   |
+|---|---|---|
+|![C.Elegans behaviour](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/C_elegans_behaviour.gif)   |![Drosophila Crimson](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/Drosophila_adult_Crimson_PER.gif)   |![Fluorescence ZebraFish GFP expressed in heart tissue](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/Zebrafish_heartbeat_GFP.gif)   | 
+|![GCamP_ZebraFish](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/Zebrafish_ubiquious_ChRII.gif)   |![Zebra Fish Transmission](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/zebrafish_larva_transmission.gif)   |   |   
+|   |   |   |  
 
-||||
-|--|---|--|
+
 
 
 |![C.Elegans behaviour](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/C_elegans_behaviour.gif)|![Drosophila Crimson](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/Drosophila_adult_Crimson_PER.gif) | ![Drosophila walking about](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/drosophila_walking_about.gif)|
