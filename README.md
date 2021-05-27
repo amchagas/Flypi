@@ -1,7 +1,11 @@
 #### Flypi - An open source, modular, affordable tool for imaging experiments.
-||||
-|--|--|--|
-| [![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors)|[![Github size](https://img.shields.io/github/repo-size/amchagas/flypi?style=for-the-badge)]()|[![Github license](https://img.shields.io/github/license/amchagas/flypi?style=for-the-badge)]()|
+
+
+[![Github size](https://img.shields.io/github/repo-size/amchagas/flypi?style=for-the-badge)]()
+
+
+
+[![Github license](https://img.shields.io/github/license/amchagas/flypi?style=for-the-badge)]()
 
 Hi! Thanks for dropping by. This project started during one of the summer courses organized by [Trend in Africa](www.trendinafrica.org). It developed to the current state due to the efforts of many people along the way. In special Tom Baden, Lucia Prieto, and Edwin Cruz. A paper describing the system was published in [Plos Biology](http://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.2002702).
 
@@ -12,17 +16,10 @@ The system can be used for optical microscopy, fluorescence, behavioural trackin
 
 #### Some samples imaged with the device:
 
+| ![C.Elegans behaviour](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/C_elegans_behaviour.gif)    | ![Drosophila Crimson](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/Drosophila_adult_Crimson_PER.gif)  |![Fluorescence ZebraFish GFP expressed in heart tissue](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/Zebrafish_heartbeat_GFP.gif)    |
+|---|---|---|
+|  ![GCamP_ZebraFish](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/Zebrafish_ubiquious_ChRII.gif)  |![Zebra Fish Transmission](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/zebrafish_larva_transmission.gif)   |  ![Drosophila walking about](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/drosophila_walking_about.gif)  |
 
-![Fluorescence ZebraFish GFP expressed in heart tissue](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/Zebrafish_heartbeat_GFP.gif)|
-![GCamP_ZebraFish](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/Zebrafish_ubiquious_ChRII.gif)|![Zebra Fish Transmission](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/zebrafish_larva_transmission.gif)
---|---|--
-![C.Elegans behaviour](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/C_elegans_behaviour.gif)|![Drosophila Crimson](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/Drosophila_adult_Crimson_PER.gif) | ![Drosophila walking about](https://github.com/amchagas/media-for-reps/blob/master/Flypi/example_samples/PLOS_Paper/drosophila_walking_about.gif)
-
-
-
-
-
-### We've created a Forum for users to posts questions and suggestions too! Please take a look [here](http://forum.prometheus-science.com/home/categories/flypi-user-forum)
 
 ### Custom PCB
 
@@ -45,13 +42,10 @@ sudo apt-get install gpac
 ## *.h264 conversion to *.avi:
 Done via gpac. MP4BOX.
 
-
 ## Zipped SD Card image containing Raspian image with all things installed:
-<<<<<<< HEAD
+
 [IMAGE](https://bit.ly/flyipimg)
-=======
-https://www.dropbox.com/s/12o271wj37rqkj6/flypi_image.zip?dl=0
->>>>>>> 1e8cfac8699ab7fb2a87db436dcfd42a49e357c3
+
 
 ## Contributors ✨
 
