@@ -67,7 +67,7 @@ contact:
 #    affiliation: [value]                   # text
 #    email: [value]                         # email address
 
-#image: [value]                             # recommended | absolute or relative path
+image: https://cdn.hackaday.io/images/2601151464713869657.jpg
 
 version: 2.0                           # text
 
